@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
 import { UtilitySessionService } from '../../../../../../shared/services/utility/utility.service';
@@ -11,7 +11,7 @@ import { filter, Subscription } from 'rxjs';
   templateUrl: './navigation.component.html',
   styleUrl: './navigation.component.scss',
 })
-export class NavigationComponent {
+export class NavigationComponent implements OnInit, OnDestroy {
   navItems = [
     { label: 'Feed', icon: 'assets/icons/navigation/homepage.svg' },
     { label: 'People', icon: 'assets/icons/navigation/people.svg' },
@@ -27,14 +27,22 @@ export class NavigationComponent {
   utilitySession = inject(UtilitySessionService);
 
   ngOnInit(): void {
-    this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe((event: NavigationEnd) => {
-        const fullUrl = event.urlAfterRedirects;
-        this.segments = fullUrl.split('/');
-        this.mainRoute = this.segments[1];
-        this.markOption(this.mainRoute);
-      });
+    const fullUrl = this.router.url;
+    this.segments = fullUrl.split('/');
+    this.mainRoute = this.segments[1];
+    this.markOption(this.mainRoute);
+  
+    this.subscriptions.add(
+      this.router.events
+        .pipe(filter((event) => event instanceof NavigationEnd))
+        .subscribe((event: NavigationEnd) => {
+          const fullUrl = event.urlAfterRedirects;
+          this.segments = fullUrl.split('/');
+          this.mainRoute = this.segments[1];
+          this.markOption(this.mainRoute);
+          console.log(fullUrl);
+        })
+    );
   }
 
   selectOption(option: string): void {
@@ -69,7 +77,7 @@ export class NavigationComponent {
         break;
       case 'profile':
         const username = this.utilitySession.userInfo.username;
-        
+
         if (this.segments[2] !== username) {
           this.selectedOption = undefined;
           break;
@@ -80,7 +88,7 @@ export class NavigationComponent {
     }
   }
 
-  onDestroy(): void {
+  ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
 }
