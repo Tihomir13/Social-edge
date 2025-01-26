@@ -99,6 +99,16 @@ export class HeaderComponent {
     );
   }
 
+  friendRequestChose(notification: any) {
+    if(notification.chose === 'accept') {
+      console.log('accept');
+    }
+
+    if(notification.chose === 'remove') {
+      console.log('remove');
+    }
+  }
+
   onDestroy(): void {
     this.subscriptions.unsubscribe();
   }

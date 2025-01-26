@@ -23,9 +23,15 @@
           (click)="toggleNotifications()"
         />
 
+        <span class="notifications-counter">{{this.notifications.length}}</span>
+
         @if (isNotificationsShowed) {
           <div class="notifications-container">
-            <app-notifications-window [notifications]="notifications" (close)="onClickOutSideNotifications()"/>
+            <app-notifications-window 
+            [notifications]="notifications" 
+            (close)="onClickOutSideNotifications()"
+            (friendReqNotificationChoice)="friendRequestChose($event)"
+            />
           </div>
         }
       </div>

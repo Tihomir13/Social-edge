@@ -1,4 +1,10 @@
-import { Component, ElementRef, HostListener, input, output } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  input,
+  output,
+} from '@angular/core';
 import { TimeAgoPipe } from '../../../../../../shared/pipes/time-ago.pipe';
 
 @Component({
@@ -12,12 +18,15 @@ export class NotificationsWindowComponent {
 
   notifications = input<any[]>();
   close = output();
+  friendReqNotificationChoice = output<any>();
 
   @HostListener('document:click', ['$event.target'])
   public onClick(targetElement: HTMLElement): void {
     const clickedInside = this.elementRef.nativeElement.contains(targetElement);
-    console.log(clickedInside, targetElement.closest('.notifications-container'));
-    
+    // console.log(
+    //   clickedInside,
+    //   targetElement.closest('.notifications-container')
+    // );
 
     if (!clickedInside) {
       this.closeNotifications();
@@ -27,6 +36,23 @@ export class NotificationsWindowComponent {
   closeNotifications(): void {
     console.log('Notifications component will be removed');
     this.close.emit();
+  }
+
+  acceptFriendReq(notificationId: string): void {
+    const notification = {
+      id: notificationId,
+      chose: 'accept',
+    };
+    this.friendReqNotificationChoice.emit(notification);
+  }
+
+  removeFriendReq(notificationId: string): void {
+    const notification = {
+      id: notificationId,
+      chose: 'remove',
+    };
+
+    this.friendReqNotificationChoice.emit(notification);
   }
 
   // OnDestroy за почистване на ресурси, ако е необходимо
