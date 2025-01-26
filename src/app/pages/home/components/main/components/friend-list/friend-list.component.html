@@ -10,7 +10,7 @@
   <div class="row">
     <div class="friend-list d-flex flex-column">
       @for (friend of currentFriends; track $index) {
-        <app-user-card-component [username]="friend" (click)="onUserProfileClick(friend)"/>
+        <app-friend-list-user-card [username]="friend" (click)="onUserProfileClick(friend)"/>
       }
     </div>
   </div>

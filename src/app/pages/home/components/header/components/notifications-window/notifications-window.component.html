@@ -1,0 +1,32 @@
+<div class="notifications-container p-2">
+  @for (notification of notifications(); track $index) {
+  <div class="d-flex py-1 gap-1">
+    <div
+      class="image-container d-flex align-items-center justify-content-center"
+    >
+      <img
+        class="profile-image"
+        [src]="notification.profileImage.src"
+        alt="profile image"
+        width="45"
+        height="45"
+      />
+    </div>
+
+    <div class="">
+      <span>{{ notification.content }}</span>
+
+      <div class="d-flex justify-content-between mt-2">
+        <span class="time">{{ notification.createdAt | timeAgo }}</span>
+
+        @if(notification.type === 'ADD_FRIEND') {
+            <div class="d-flex gap-1">
+                <button class="btn btn-accept py-1 px-2" (click)="acceptFriendReq(notification._id)">Accept</button>
+                <button class="btn btn-remove py-1 px-2" (click)="removeFriendReq(notification._id)">Remove</button>
+            </div>
+        }
+      </div>
+    </div>
+  </div>
+  } 
+</div>

@@ -1,0 +1,31 @@
+@use "../../../../../../../styles.scss" as styles;
+
+.navigation-container {
+  padding: 0px 20px;
+
+  .option {
+    cursor: pointer;
+    border-radius: styles.$border-radius;
+    padding: 7px;
+    &:not(.selected-option) {
+      &:hover {
+        background-color: styles.$post-light-color;
+      }
+    }
+  }
+}
+
+.selected-option {
+  color: styles.$primary-purple;
+  font-weight: 600;
+  // border: 1px solid styles.$dark-purple;
+
+  .selected-option-dash {
+    position: absolute;
+    left: 20px;
+    width: 5px;
+    height: 40px;
+    background-color: styles.$primary-purple;
+    border-radius: 50px;
+  }
+}

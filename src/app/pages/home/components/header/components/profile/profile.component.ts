@@ -1,12 +1,12 @@
-import { NgClass } from '@angular/common';
 import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+
 import { UtilitySessionService } from '../../../../../../shared/services/utility/utility.service';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [NgClass],
+  imports: [],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
 })
@@ -44,7 +44,7 @@ export class ProfileComponent implements OnInit {
   }
 
   navToProfilePage(): void {
-    this.router.navigate(['home', 'profile', this.username]);
+    this.router.navigate(['profile', this.username, 'posts']);
   }
 
   onImageClick(): void {

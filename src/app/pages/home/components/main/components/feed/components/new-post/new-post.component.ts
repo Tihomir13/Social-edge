@@ -9,11 +9,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { NgClass, NgStyle } from '@angular/common';
-import {
-  FormArray,
-  FormBuilder,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormArray, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 import { Subscription } from 'rxjs';
@@ -21,7 +17,7 @@ import { Subscription } from 'rxjs';
 import * as nsfwjs from 'nsfwjs';
 import { UtilityService } from '../../../../../../../../shared/services/utility/array-utility.service';
 import { StatusPickerComponent } from './status-picker/status-picker.component';
-import { statuses } from '../../../../../../../../shared/constants/arrays'; 
+import { statuses } from '../../../../../../../../shared/constants/arrays';
 import { maxImageSize } from '../../../../../../../../shared/constants/settings';
 import { ModalService } from '../../../../../../shared/services/modal.service';
 import { NewPostStateService } from './services/new-post-state.service';
@@ -48,7 +44,9 @@ export class NewPostComponent implements OnDestroy {
   }
 
   get imagesFiles(): FormArray {
-    return this.newPostFormService.newPostFormGroup()?.get('images') as FormArray;
+    return this.newPostFormService
+      .newPostFormGroup()
+      ?.get('images') as FormArray;
   }
 
   newPostFormService = inject(NewPostFormServiceService);
@@ -165,7 +163,7 @@ export class NewPostComponent implements OnDestroy {
         const image = new Image();
         image.src = reader.result as string;
         image.onload = async () => {
-          const model = await nsfwjs.load("InceptionV3");
+          const model = await nsfwjs.load('InceptionV3');
           const predictions = await model.classify(image);
           const nsfwResult = predictions.find(
             (p) => p.className === 'Porn' || p.className === 'Hentai'
@@ -208,7 +206,9 @@ export class NewPostComponent implements OnDestroy {
   onStatusChange(index: number): void {
     const newStatus = statuses[index];
     this.newPostState.currentStatus = newStatus.emoji;
-    this.newPostFormService.newPostFormGroup().patchValue({ status: newStatus });
+    this.newPostFormService
+      .newPostFormGroup()
+      .patchValue({ status: newStatus });
     this.startCreatingNewPost();
   }
 
@@ -232,11 +232,16 @@ export class NewPostComponent implements OnDestroy {
             return;
           }
 
-          const isTitleEmpty = this.newPostFormService.newPostFormGroup().value.title;
-          const isTextEmpty = this.newPostFormService.newPostFormGroup().value.text;
-          const isTagsEmpty = this.newPostFormService.newPostFormGroup().value.tags;
-          const isImagesEmpty = this.newPostFormService.newPostFormGroup().value.images;
-          const isStatusEmpty = this.newPostFormService.newPostFormGroup().value.status;
+          const isTitleEmpty =
+            this.newPostFormService.newPostFormGroup().value.title;
+          const isTextEmpty =
+            this.newPostFormService.newPostFormGroup().value.text;
+          const isTagsEmpty =
+            this.newPostFormService.newPostFormGroup().value.tags;
+          const isImagesEmpty =
+            this.newPostFormService.newPostFormGroup().value.images;
+          const isStatusEmpty =
+            this.newPostFormService.newPostFormGroup().value.status;
 
           if (
             isTitleEmpty === null &&
@@ -265,21 +270,23 @@ export class NewPostComponent implements OnDestroy {
     }
   }
 
-  clearFormArrays() {
+  clearFormArrays(): void {
     if (this.newPostFormService.newPostFormGroup()) {
-      Object.keys(this.newPostFormService.newPostFormGroup()!.controls).forEach((key) => {
-        const control = this.newPostFormService.newPostFormGroup()!.get(key);
+      Object.keys(this.newPostFormService.newPostFormGroup()!.controls).forEach(
+        (key) => {
+          const control = this.newPostFormService.newPostFormGroup()!.get(key);
 
-        if (control instanceof FormArray) {
-          while (control.length !== 0) {
-            control.removeAt(0);
+          if (control instanceof FormArray) {
+            while (control.length !== 0) {
+              control.removeAt(0);
+            }
           }
         }
-      });
+      );
     }
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.newPostFormService.newPostFormGroup()?.valid) {
       const formData = this.newPostFormService.newPostFormGroup()?.value;
 
@@ -307,7 +314,7 @@ export class NewPostComponent implements OnDestroy {
     }
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
 }

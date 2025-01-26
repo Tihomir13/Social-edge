@@ -1,13 +1,13 @@
 import { Component, inject, input, output } from '@angular/core';
 
 import { SearchBarComponent } from '../../shared/search-bar/search-bar.component';
-import { UserCardComponentComponent } from '../../shared/user-card-component/user-card-component.component';
+import { FriendListUserCardComponent } from '../../shared/friend-list-user-card/friend-list-user-card.component';
 import { MainStateService } from '../../shared/services/main-state.service';
 
 @Component({
   selector: 'app-friend-list',
   standalone: true,
-  imports: [SearchBarComponent, UserCardComponentComponent],
+  imports: [SearchBarComponent, FriendListUserCardComponent],
   templateUrl: './friend-list.component.html',
   styleUrl: './friend-list.component.scss',
 })

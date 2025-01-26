@@ -11,13 +11,14 @@ import { UserPostsComponent } from './pages/home/components/main/components/prof
 import { UserInformationComponent } from './pages/home/components/main/components/profile/components/user-information/user-information.component';
 import { UserFriendsComponent } from './pages/home/components/main/components/profile/components/user-friends/user-friends.component';
 import { UserPhotosComponent } from './pages/home/components/main/components/profile/components/user-photos/user-photos.component';
-import { ModalComponent } from './shared/components/modal/modal.component';
+import { SearchComponent } from './pages/home/components/main/components/pages/search/search.component';
+import { ChangeProfileModalComponent } from './shared/components/change-profile-modal/change-profile-modal.component';
 
 export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'home',
+    redirectTo: 'feed',
   },
   {
     path: 'register',
@@ -28,7 +29,7 @@ export const routes: Routes = [
     component: LoginComponent,
   },
   {
-    path: 'home',
+    path: '',
     component: HomeComponent,
     canActivate: [AuthGuard],
     children: [
@@ -45,14 +46,19 @@ export const routes: Routes = [
           { path: 'photos', component: UserPhotosComponent },
         ],
       },
+      { path: 'search', component: SearchComponent },
     ],
   },
   {
-    path: 'YesNoModal',
+    path: 'post/:id',
     component: YesNoModalComponent,
   },
   {
     path: 'modal',
-    component: ModalComponent,
+    component: YesNoModalComponent,
+  },
+  {
+    path: 'mod',
+    component: ChangeProfileModalComponent,
   },
 ];

@@ -9,20 +9,25 @@ export class MainStateService {
   friends = signal<any[]>(['aaa']);
   currentChatHeads = signal<any[]>([]);
   isChatActive = signal<boolean>(false);
+  searchedUsers = signal<any[]>([]);
 
-  setPosts(posts: any) {
+  setPosts(posts: any):void {
     this.posts.set(posts);
   }
   
-  setFriends(friends: any) {
+  setFriends(friends: any):void {
     this.friends.set(friends);
   }
 
-  setCurrChatHeads(chat: any) {
+  setCurrChatHeads(chat: any):void {
     this.currentChatHeads.set(chat);
   }
 
-  setChat(isChatOpened: boolean) {
+  setChat(isChatOpened: boolean):void {
     this.isChatActive.set(isChatOpened);
+  }
+
+  setSearchedUsers(users: any):void {
+    this.searchedUsers.set(users);
   }
 }

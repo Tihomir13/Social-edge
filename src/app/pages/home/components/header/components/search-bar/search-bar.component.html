@@ -1,5 +1,5 @@
 <div class="d-flex align-items-center search-bar-container" (click)="searchInput.focus()">
   <img class="search-icon" src="assets/icons/search.svg" alt="search icon" />
 
-  <input #searchInput class="form-control" type="search" (input)="onSearch()"/>
+  <input #searchInput class="form-control" type="search" (keyup)="onSearch($event, searchInput.value)"/>
 </div>

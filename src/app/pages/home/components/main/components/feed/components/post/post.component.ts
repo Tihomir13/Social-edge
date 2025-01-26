@@ -125,7 +125,7 @@ export class PostComponent implements OnInit, OnDestroy {
     });
   }
 
-  onComment() {
+  onComment(): void {
     const comment = this.commentFormGroup.value.comment;
 
     if (this.commentFormGroup.valid) {

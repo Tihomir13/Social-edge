@@ -20,7 +20,7 @@ export class NewPostStateService {
     this.isCreatingNewPost = value;
   }
 
-  resetUI() {
+  resetUI(): void {
     this.imagePreviews = [];
     this.currentStatus = '';
   }
@@ -29,7 +29,7 @@ export class NewPostStateService {
     this.globalClickListener.set(listener);
   }
 
-  removeGlobalClickListener() {
+  removeGlobalClickListener(): void {
     if (this.globalClickListener()) {
       this.globalClickListener()!();
       this.globalClickListener.set(null);

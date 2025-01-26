@@ -1,6 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 import { LoginRequestsService } from '../../../services/login-requests.service';
@@ -9,7 +8,7 @@ import { LoginFormService } from '../../../services/login-form.service';
 @Component({
   selector: 'app-login-form',
   standalone: true,
-  imports: [ReactiveFormsModule, HttpClientModule],
+  imports: [ReactiveFormsModule],
   providers: [LoginFormService, LoginRequestsService],
   templateUrl: './login-form.component.html',
   styleUrl: './login-form.component.scss',
@@ -38,7 +37,7 @@ export class LoginFormComponent implements OnInit {
           sessionStorage.setItem('token', response.token);
           sessionStorage.setItem('userInfo', JSON.stringify(response.userInfo));
 
-          this.router.navigate(['home', 'feed']);
+          this.router.navigate(['feed']);
           this.isErrorMsgShowed = false;
         },
         error: (error) => {

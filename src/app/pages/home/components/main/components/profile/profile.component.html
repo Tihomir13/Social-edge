@@ -1,6 +1,7 @@
 <div class="profile-container mb-4">
   <div class="banner-container">
-    <img class="image" [src]="bannerImage" alt="Banner image" />
+    <img class="banner-image" [src]="bannerImage" alt="Banner image"  (click)="openModalBannerPhotoChange()" />
+    <img class="edit-image" src="assets/icons/profile-page/edit-image.svg" alt="Banner image" (click)="openModalBannerPhotoChange()" />
   </div>
 
   <div
@@ -59,14 +60,19 @@
       class="image-container col-md-4 col-12 order-md-2 order-1 gap-3 d-flex flex-column justify-content-center"
     >
       <div class=" ">
-        <img class="image" [src]="profileImage" alt="Profile icon" />
+        <img
+          class="profile-image"
+          [src]="profileImage"
+          alt="Profile icon"
+          (click)="openModalProfilePhotoChange()"
+        />
       </div>
 
       <h1 class="fs-2 text-center">
         <span>
           {{ fullName }}
         </span>
-        
+
         <span class="fs-4">
           {{ "@" + username }}
         </span>
@@ -77,7 +83,7 @@
     <div
       class="add-btn-container col-md-4 col-12 order-md-3 order-2 d-flex justify-content-center"
     >
-      <button class="btn">Add friend</button>
+      <button class="btn" (click)="onAddFriend()">Add friend</button>
     </div>
     }
   </div>
@@ -86,3 +92,21 @@
 <div class="content">
   <router-outlet></router-outlet>
 </div>
+
+@if (isModalProfilePhotoOpened) {
+  <div class="modal-overlay">
+    <div class="modal-container">
+      <app-change-profile-modal (clickedOption)="onChoseOptionProfile($event)"></app-change-profile-modal>
+      <input class="d-none" type="file" #fileInput (change)="onAddFileProfile($event)" />
+    </div>
+  </div>
+}
+
+@if(isModalBannerPhotoOpened) {
+  <div class="modal-overlay">
+    <div class="modal-container">
+      <app-change-profile-modal (clickedOption)="onChoseOptionBanner($event)" [title]="'Choose Banner Photo'"></app-change-profile-modal>
+      <input class="d-none" type="file" #fileInput (change)="onAddFileBanner($event)" />
+    </div>
+  </div>
+}

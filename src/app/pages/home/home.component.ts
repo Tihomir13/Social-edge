@@ -80,7 +80,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.modalService.toggleModal();
   }
 
-  getNewJwt() {
+  getNewJwt():void {
     const timer = setInterval(() => {
       this.subscriptions.add(
         this.jwtSendService.getNewJwt().subscribe({
