@@ -5,10 +5,11 @@ import { Subscription } from 'rxjs';
 
 import { SearchBarComponent } from './components/search-bar/search-bar.component';
 import { ProfileComponent } from './components/profile/profile.component';
-import { SearchRequestsService } from './components/notifications-window/services/search-requests.service';
+import { SearchRequestsService } from './components/search-bar/services/search-requests.service';
 import { MainStateService } from '../main/shared/services/main-state.service';
 import { NotificationsWindowComponent } from './components/notifications-window/notifications-window.component';
-import { NotificationsService } from './components/search-bar/services/notifications.service';
+import { NotificationsService } from './components/notifications-window/services/notifications.service';
+import { ProfileRequestsService } from '../main/components/profile/services/profile-requests.service';
 
 @Component({
   selector: 'app-header',
@@ -29,6 +30,7 @@ export class HeaderComponent {
   route = inject(ActivatedRoute);
   requestSearchService = inject(SearchRequestsService);
   requestNotificationsService = inject(NotificationsService);
+  requestProfileService = inject(ProfileRequestsService);
   mainState = inject(MainStateService);
 
   ngOnInit(): void {
@@ -87,7 +89,7 @@ export class HeaderComponent {
 
   getNotifications(): void {
     this.subscriptions.add(
-      this.requestNotificationsService.getSearchedProfiles().subscribe({
+      this.requestNotificationsService.getNotifications().subscribe({
         next: (response) => {
           this.notifications = response.allNotifications;
           console.log(this.notifications);
@@ -102,10 +104,28 @@ export class HeaderComponent {
   friendRequestChose(notification: any) {
     if(notification.chose === 'accept') {
       console.log('accept');
-    }
 
+      this.subscriptions.add(this.requestProfileService.acceptFriendRequest(notification.id).subscribe({
+        next: (response) => {
+          console.log(response);
+        },
+        error: (error) => {
+          console.log(error);
+        }
+      }))
+    }
+    
     if(notification.chose === 'remove') {
       console.log('remove');
+
+      this.subscriptions.add(this.requestProfileService.removeFriendRequest(notification.id).subscribe({
+        next: (response) => {
+          console.log(response);
+        },
+        error: (error) => {
+          console.log(error);
+        }
+      }))
     }
   }
 

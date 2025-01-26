@@ -23,7 +23,9 @@
           (click)="toggleNotifications()"
         />
 
-        <span class="notifications-counter">{{this.notifications.length}}</span>
+        @if(notifications.length > 0) {
+          <span class="notifications-counter">{{notifications.length}}</span>
+        }
 
         @if (isNotificationsShowed) {
           <div class="notifications-container">

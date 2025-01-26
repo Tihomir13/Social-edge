@@ -13,7 +13,7 @@ export class NotificationsService {
   http = inject(HttpClient);
   utility = inject(UtilitySessionService);
 
-  getSearchedProfiles(): Observable<any> {
+  getNotifications(): Observable<any> {
     return this.http.get(`${api}/notifications`, { headers: this.utility.headers });
   }
 }
