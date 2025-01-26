@@ -157,6 +157,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.profileImage = this.defaultProfileImg;
     } else {
       this.profileImage = profileImage.src;
+      console.log(this.profileImage);
+      
     }
   }
 
@@ -367,7 +369,21 @@ export class ProfileComponent implements OnInit, OnDestroy {
     });
   }
 
-  onAddFriend(): void {}
+  onAddFriend(): void {
+    console.log(this.username);
+    console.log(this.userInfo.username);
+
+    this.subscriptions.add(
+      this.profileRequestService.addNewFriend(this.username).subscribe({
+        next: (response: any) => {
+          console.log(response);
+        },
+        error: (error: any) => {
+          console.log(error);
+        },
+      })
+    );
+  }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();

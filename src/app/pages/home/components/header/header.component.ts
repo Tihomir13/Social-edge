@@ -5,9 +5,10 @@ import { Subscription } from 'rxjs';
 
 import { SearchBarComponent } from './components/search-bar/search-bar.component';
 import { ProfileComponent } from './components/profile/profile.component';
-import { SearchRequestsService } from './components/search-bar/services/search-requests.service';
+import { SearchRequestsService } from './components/notifications-window/services/search-requests.service';
 import { MainStateService } from '../main/shared/services/main-state.service';
 import { NotificationsWindowComponent } from './components/notifications-window/notifications-window.component';
+import { NotificationsService } from './components/search-bar/services/notifications.service';
 
 @Component({
   selector: 'app-header',
@@ -21,11 +22,13 @@ export class HeaderComponent {
 
   isScrolled = false;
   isNotificationsShowed = false;
+  notifications = [];
   subscriptions = new Subscription();
 
   router = inject(Router);
   route = inject(ActivatedRoute);
-  request = inject(SearchRequestsService);
+  requestSearchService = inject(SearchRequestsService);
+  requestNotificationsService = inject(NotificationsService);
   mainState = inject(MainStateService);
 
   ngOnInit(): void {
@@ -35,6 +38,8 @@ export class HeaderComponent {
     //     this.onSearch(queryValue);
     //   })
     // );
+
+    this.getNotifications();
   }
 
   @HostListener('window:scroll', [])
@@ -51,7 +56,7 @@ export class HeaderComponent {
     this.router.navigate(['search'], { queryParams: { query: value } });
 
     this.subscriptions.add(
-      this.request.getSearchedProfiles(value).subscribe({
+      this.requestSearchService.getSearchedProfiles(value).subscribe({
         next: (response) => {
           console.log(response);
 
@@ -76,11 +81,25 @@ export class HeaderComponent {
     this.isNotificationsShowed = false;
   }
 
-  onDestroy(): void {
-    this.subscriptions.unsubscribe();
-  }
-
   toggleNotifications(): void {
     this.isNotificationsShowed = !this.isNotificationsShowed;
+  }
+
+  getNotifications(): void {
+    this.subscriptions.add(
+      this.requestNotificationsService.getSearchedProfiles().subscribe({
+        next: (response) => {
+          this.notifications = response.allNotifications;
+          console.log(this.notifications);
+        },
+        error: (error) => {
+          console.log(error);
+        },
+      })
+    );
+  }
+
+  onDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 }

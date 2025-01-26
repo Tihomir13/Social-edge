@@ -1,14 +1,16 @@
-import { Component, ElementRef, HostListener, output } from '@angular/core';
+import { Component, ElementRef, HostListener, input, output } from '@angular/core';
+import { TimeAgoPipe } from '../../../../../../shared/pipes/time-ago.pipe';
 
 @Component({
   selector: 'app-notifications-window',
-  imports: [],
+  imports: [TimeAgoPipe],
   templateUrl: './notifications-window.component.html',
   styleUrl: './notifications-window.component.scss',
 })
 export class NotificationsWindowComponent {
   constructor(private elementRef: ElementRef) {}
 
+  notifications = input<any[]>();
   close = output();
 
   @HostListener('document:click', ['$event.target'])

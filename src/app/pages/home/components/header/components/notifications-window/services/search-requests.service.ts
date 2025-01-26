@@ -13,11 +13,7 @@ export class SearchRequestsService {
   http = inject(HttpClient);
   utility = inject(UtilitySessionService);
 
-  get headers(): HttpHeaders {
-    return this.utility.headers ? new HttpHeaders(this.utility.headers) : new HttpHeaders();
-  }
-
   getSearchedProfiles(searchedText: string): Observable<any> {
-    return this.http.get(`${api}/search/${searchedText}`, { headers: this.headers });
+    return this.http.get(`${api}/search/${searchedText}`, { headers: this.utility.headers });
   }
 }

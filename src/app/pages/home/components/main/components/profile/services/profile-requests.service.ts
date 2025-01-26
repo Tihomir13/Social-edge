@@ -56,4 +56,8 @@ export class ProfileRequestsService {
       headers: this.utility.headers,
     });
   }
+
+  addNewFriend(username: string | null): Observable<any> {
+    return this.http.get(`${api}/profiles/${username}/add-friend`, this.headers);
+  }
 }
