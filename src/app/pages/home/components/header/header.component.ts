@@ -60,8 +60,6 @@ export class HeaderComponent {
     this.subscriptions.add(
       this.requestSearchService.getSearchedProfiles(value).subscribe({
         next: (response) => {
-          console.log(response);
-
           const users = response.users.map((user: any) => {
             if (user.profileImage === null) {
               user.profileImage = { src: this.defaultProfileImg };
@@ -92,7 +90,6 @@ export class HeaderComponent {
       this.requestNotificationsService.getNotifications().subscribe({
         next: (response) => {
           this.notifications = response.allNotifications;
-          console.log(this.notifications);
         },
         error: (error) => {
           console.log(error);
@@ -106,8 +103,8 @@ export class HeaderComponent {
       console.log('accept');
 
       this.subscriptions.add(this.requestProfileService.acceptFriendRequest(notification.id).subscribe({
-        next: (response) => {
-          console.log(response);
+        next: () => {
+          this.getNotifications();
         },
         error: (error) => {
           console.log(error);
@@ -119,8 +116,8 @@ export class HeaderComponent {
       console.log('remove');
 
       this.subscriptions.add(this.requestProfileService.removeFriendRequest(notification.id).subscribe({
-        next: (response) => {
-          console.log(response);
+        next: () => {
+          this.getNotifications();
         },
         error: (error) => {
           console.log(error);

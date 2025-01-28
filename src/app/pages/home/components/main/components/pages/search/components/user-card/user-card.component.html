@@ -18,9 +18,15 @@
     </div>
   </div>
 
-  @if(currUserProfileName() !== username()) {
+  @if(currUserProfileName() !== username() && !isFriend()) {
   <div class="btn-container">
     <button class="btn px-4" (click)="onAdd()">Add friend</button>
   </div>
+  }
+
+  @if(isFriend()) {
+    <div class="btn-container">
+      <span class="px-4">Friends</span>
+    </div>
   }
 </div>

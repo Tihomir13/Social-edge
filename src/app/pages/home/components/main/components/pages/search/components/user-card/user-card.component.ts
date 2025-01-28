@@ -12,6 +12,7 @@ export class UserCardComponent {
   fullName = input<string>();
   username = input<string>();
   currUserProfileName = input<string>();
+  isFriend = input<boolean>();
 
   clickProfile = output<string>();
 
@@ -22,6 +23,19 @@ export class UserCardComponent {
   }
 
   onAdd(): void {
-    console.log(this.username());
+    
   }
+
+  // onAddFriend(): void {
+  //   this.subscriptions.add(
+  //     this.profileRequestService.addNewFriend(this.username).subscribe({
+  //       next: (response) => {
+  //         console.log(response);
+  //       },
+  //       error: (error) => {
+  //         console.log(error);
+  //       },
+  //     })
+  //   );
+  // }
 }

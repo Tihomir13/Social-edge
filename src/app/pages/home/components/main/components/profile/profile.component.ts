@@ -40,9 +40,37 @@ export class ProfileComponent implements OnInit, OnDestroy {
   isSelectedInfo = false;
   isSelectedFriends = false;
   isSelectedPhotos = false;
+  isFriend!: boolean;
 
   isModalProfilePhotoOpened = false;
   isModalBannerPhotoOpened = false;
+  isModalRemoveFriendOpened = false;
+
+  modalPhotoOptions = [
+    {
+      optionName: 'Upload Photo',
+      optionColor: 'rgb(143, 30, 255)',
+    },
+    {
+      optionName: 'Remove Photo',
+      optionColor: 'red',
+    },
+    {
+      optionName: 'Cancel',
+      optionColor: 'white',
+    },
+  ];
+
+  modalRemoveFriendOptions = [
+    {
+      optionName: 'Remove',
+      optionColor: 'red',
+    },
+    {
+      optionName: 'Cancel',
+      optionColor: 'white',
+    },
+  ]
 
   subscriptions = new Subscription();
 
@@ -81,12 +109,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.profileRequestService.getInitialUserData(username).subscribe({
         next: (response) => {
-          this.fullName = `${response.data.userData.name.firstName} ${response.data.userData.name.lastName}`;
-          this.username = response.data.userData.username;
-          this.state.setIsProfileOwner(response.data.isProfileOwner);
+          this.fullName = `${response.userData.name.firstName} ${response.userData.name.lastName}`;
+          this.username = response.userData.username;
+          this.state.setIsProfileOwner(response.userData.isProfileOwner);
+          this.isFriend = response.userData.isFriend;
 
-          this.isUserHasProfileImage(response.data.userData.profileImage);
-          this.isUserHasBannerImage(response.data.userData.bannerImage);
+          this.isUserHasProfileImage(response.userData.profileImage);
+          this.isUserHasBannerImage(response.userData.bannerImage);
         },
         error: (error) => {
           console.log(error);
@@ -158,7 +187,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     } else {
       this.profileImage = profileImage.src;
       console.log(this.profileImage);
-      
     }
   }
 
@@ -180,9 +208,19 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.renderer.setStyle(document.body, 'overflow-y', 'hidden');
   }
 
+  openModalRemoveFriend(): void {
+    if (this.state.isProfileOwner()) {
+      return;
+    }
+
+    this.isModalRemoveFriendOpened = true;
+    this.renderer.setStyle(document.body, 'overflow-y', 'hidden');
+  }
+
   closeModal(): void {
     this.isModalProfilePhotoOpened = false;
     this.isModalBannerPhotoOpened = false;
+    this.isModalRemoveFriendOpened = false;
     this.renderer.removeStyle(document.body, 'overflow-y');
   }
 
@@ -211,6 +249,16 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     if (modalOption === 'Remove Photo') {
       this.removeBannerPhoto();
+    }
+
+    if (modalOption === 'Cancel') {
+      this.closeModal();
+    }
+  }
+
+  onChoseOptionRemoveFriend(modalOption: string): void {
+    if (modalOption === 'Remove') {
+      this.onRemoveFriend();
     }
 
     if (modalOption === 'Cancel') {
@@ -370,15 +418,26 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   onAddFriend(): void {
-    console.log(this.username);
-    console.log(this.userInfo.username);
-
     this.subscriptions.add(
       this.profileRequestService.addNewFriend(this.username).subscribe({
-        next: (response: any) => {
+        next: (response) => {
           console.log(response);
         },
-        error: (error: any) => {
+        error: (error) => {
+          console.log(error);
+        },
+      })
+    );
+  }
+
+  onRemoveFriend(): void {
+    this.subscriptions.add(
+      this.profileRequestService.removeFriend(this.username).subscribe({
+        next: (response) => {
+          console.log(response);
+          this.closeModal();
+        },
+        error: (error) => {
           console.log(error);
         },
       })

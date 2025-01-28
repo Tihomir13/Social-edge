@@ -85,6 +85,13 @@ export class ProfileRequestsService {
     );
   }
 
+  removeFriend(username: string | null): Observable<any> {
+    return this.http.delete(
+      `${api}/profiles/${username}/remove-friend`,
+      this.headers
+    );
+  }
+
   acceptFriendRequest(notificationId: string): Observable<any> {
     return this.http.post(`${api}/profiles/friend-requests/accept`, {
       notificationId,

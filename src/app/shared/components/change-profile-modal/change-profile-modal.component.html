@@ -5,7 +5,7 @@
       <h4 class="title-container m-0">
         {{ title() }}
       </h4>
-      } @for (option of options; track $index) {
+      } @for (option of options(); track $index) {
       <div
         class="option-container fs-6 fw-bold"
         [ngStyle]="{ color: option.optionColor }"

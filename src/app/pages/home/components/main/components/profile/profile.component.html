@@ -57,9 +57,9 @@
     </div>
 
     <div
-      class="image-container col-md-4 col-12 order-md-2 order-1 gap-3 d-flex flex-column justify-content-center"
+      class="profile-general-container col-md-4 col-12 order-md-2 order-1 gap-3 d-flex flex-column justify-content-center p-0"
     >
-      <div class=" ">
+      <div class="d-flex justify-content-center align-items-center profile-image-container p-0">
         <img
           class="profile-image"
           [src]="profileImage"
@@ -79,12 +79,20 @@
       </h1>
     </div>
 
-    @if(!state.isProfileOwner()) {
+    @if(!state.isProfileOwner() && !isFriend) {
     <div
       class="add-btn-container col-md-4 col-12 order-md-3 order-2 d-flex justify-content-center"
     >
       <button class="btn" (click)="onAddFriend()">Add friend</button>
     </div>
+    }
+
+    @if(isFriend) {
+      <div
+        class="remove-btn-container col-md-4 col-12 order-md-3 order-2 d-flex justify-content-center"
+      >
+        <button class="btn" (click)="openModalRemoveFriend()">Remove friend</button>
+      </div>
     }
   </div>
 </div>
@@ -96,7 +104,7 @@
 @if (isModalProfilePhotoOpened) {
   <div class="modal-overlay">
     <div class="modal-container">
-      <app-change-profile-modal (clickedOption)="onChoseOptionProfile($event)"></app-change-profile-modal>
+      <app-change-profile-modal (clickedOption)="onChoseOptionProfile($event)" [title]="'Choose Profile Photo'" [options]="modalPhotoOptions"></app-change-profile-modal>
       <input class="d-none" type="file" #fileInput (change)="onAddFileProfile($event)" />
     </div>
   </div>
@@ -105,8 +113,16 @@
 @if(isModalBannerPhotoOpened) {
   <div class="modal-overlay">
     <div class="modal-container">
-      <app-change-profile-modal (clickedOption)="onChoseOptionBanner($event)" [title]="'Choose Banner Photo'"></app-change-profile-modal>
+      <app-change-profile-modal (clickedOption)="onChoseOptionBanner($event)" [title]="'Choose Banner Photo'" [options]="modalPhotoOptions"></app-change-profile-modal>
       <input class="d-none" type="file" #fileInput (change)="onAddFileBanner($event)" />
+    </div>
+  </div>
+}
+
+@if(isModalRemoveFriendOpened) {
+  <div class="modal-overlay">
+    <div class="modal-container">
+      <app-change-profile-modal (clickedOption)="onChoseOptionRemoveFriend($event)" [title]="'Are you sure you want to remove?'" [options]="modalRemoveFriendOptions"></app-change-profile-modal>
     </div>
   </div>
 }

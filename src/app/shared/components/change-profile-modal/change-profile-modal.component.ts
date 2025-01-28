@@ -9,24 +9,9 @@ import { Component, HostListener, input, output } from '@angular/core';
   styleUrl: './change-profile-modal.component.scss',
 })
 export class ChangeProfileModalComponent {
-  title = input('Change Profile Photo');
-  // options = input<{ optionName: string; optionColor: string }[]>([]);
+  title = input();
+  options = input<{ optionName: string; optionColor: string }[]>();
   clickedOption = output<string>();
-
-  options: { optionName: string; optionColor: string }[] = [
-    {
-      optionName: 'Upload Photo',
-      optionColor: 'rgb(143, 30, 255)',
-    },
-    {
-      optionName: 'Remove Photo',
-      optionColor: 'red',
-    },
-    {
-      optionName: 'Cancel',
-      optionColor: 'white',
-    },
-  ];
 
   onChosenOption(optionName: string) {
     this.clickedOption.emit(optionName);
