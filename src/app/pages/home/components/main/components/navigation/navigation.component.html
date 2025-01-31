@@ -1,6 +1,6 @@
 <nav class="navigation-container mt-5">
   <div class="row">
-    <ul class="list-unstyled d-flex flex-column gap-2">
+    <ul class="list-unstyled d-flex justify-content-center flex-md-column gap-5 gap-md-2 ">
       @for (item of navItems; track $index) {
       <li
         class="option"
@@ -12,7 +12,7 @@
         }
 
         <img [src]="item.icon" [alt]="item.label" />
-        <span>{{ item.label }}</span>
+        <span class="label">{{ item.label }}</span>
       </li>
       }
     </ul>
