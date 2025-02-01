@@ -241,6 +241,7 @@ $square-width: 110px;
 @media screen and (max-width: 768px) {
   .new-post-container {
     border-radius: 0px;
+    width: 100%;
 
     .new-post-title {
       .status-picker-component {

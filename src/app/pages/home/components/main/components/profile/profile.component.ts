@@ -70,7 +70,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       optionName: 'Cancel',
       optionColor: 'white',
     },
-  ]
+  ];
 
   subscriptions = new Subscription();
 
@@ -433,8 +433,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   onRemoveFriend(): void {
     this.subscriptions.add(
       this.profileRequestService.removeFriend(this.username).subscribe({
-        next: (response) => {
-          console.log(response);
+        next: () => {
+          this.isFriend = false;
           this.closeModal();
         },
         error: (error) => {

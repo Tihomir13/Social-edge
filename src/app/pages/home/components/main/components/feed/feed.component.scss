@@ -5,7 +5,7 @@
 
 @media screen and (max-width: 768px) {
   .feed-container {
-    border-top: 1px solid rgb(200, 200, 200);
     margin: 0px auto;
+    max-width: none;
   }
 }
