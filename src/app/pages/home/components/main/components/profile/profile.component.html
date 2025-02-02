@@ -112,7 +112,7 @@
 @if (isModalProfilePhotoOpened) {
   <div class="modal-overlay">
     <div class="modal-container">
-      <app-change-profile-modal (clickedOption)="onChoseOptionProfile($event)" [title]="'Choose Profile Photo'" [options]="modalPhotoOptions"></app-change-profile-modal>
+      <app-custom-modal (clickedOption)="onChoseOptionProfile($event)" [title]="'Choose Profile Photo'" [options]="modalPhotoOptions"></app-custom-modal>
       <input class="d-none" type="file" #fileInput (change)="onAddFileProfile($event)" />
     </div>
   </div>
@@ -121,7 +121,7 @@
 @if(isModalBannerPhotoOpened) {
   <div class="modal-overlay">
     <div class="modal-container">
-      <app-change-profile-modal (clickedOption)="onChoseOptionBanner($event)" [title]="'Choose Banner Photo'" [options]="modalPhotoOptions"></app-change-profile-modal>
+      <app-custom-modal (clickedOption)="onChoseOptionBanner($event)" [title]="'Choose Banner Photo'" [options]="modalPhotoOptions"></app-custom-modal>
       <input class="d-none" type="file" #fileInput (change)="onAddFileBanner($event)" />
     </div>
   </div>
@@ -130,7 +130,7 @@
 @if(isModalRemoveFriendOpened) {
   <div class="modal-overlay">
     <div class="modal-container">
-      <app-change-profile-modal (clickedOption)="onChoseOptionRemoveFriend($event)" [title]="'Are you sure you want to remove?'" [options]="modalRemoveFriendOptions"></app-change-profile-modal>
+      <app-custom-modal (clickedOption)="onChoseOptionRemoveFriend($event)" [title]="'Are you sure you want to remove?'" [options]="modalRemoveFriendOptions"></app-custom-modal>
     </div>
   </div>
 }

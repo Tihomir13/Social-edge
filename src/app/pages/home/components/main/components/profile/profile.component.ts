@@ -16,14 +16,14 @@ import { UtilitySessionService } from '../../../../../../shared/services/utility
 import { ProfileRequestsService } from './services/profile-requests.service';
 import { ProfileStateService } from './services/profile-state.service';
 import { ModalService } from '../../../../shared/services/modal.service';
-import { ChangeProfileModalComponent } from '../../../../../../shared/components/change-profile-modal/change-profile-modal.component';
+import { CustomModalComponent } from '../../../../../../shared/components/custom-modal/custom-modal.component';
 import { maxImageSize } from '../../../../../../shared/constants/settings';
 import * as nsfwjs from 'nsfwjs';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [RouterOutlet, ChangeProfileModalComponent],
+  imports: [RouterOutlet, CustomModalComponent],
   providers: [ProfileRequestsService],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',

@@ -10,7 +10,6 @@ import {
 } from '@angular/core';
 import { NgClass, NgStyle } from '@angular/common';
 import { FormArray, FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
 
 import { Subscription } from 'rxjs';
 
@@ -23,6 +22,8 @@ import { ModalService } from '../../../../../../shared/services/modal.service';
 import { NewPostStateService } from './services/new-post-state.service';
 import { NewPostRequestsService } from './services/new-post-requests.service';
 import { NewPostFormServiceService } from '../../../../../../shared/services/new-post-form-service.service';
+import { MainStateService } from '../../../../shared/services/main-state.service';
+import { CustomModalComponent } from '../../../../../../../../shared/components/custom-modal/custom-modal.component';
 
 @Component({
   selector: 'app-new-post',
@@ -32,7 +33,7 @@ import { NewPostFormServiceService } from '../../../../../../shared/services/new
     ReactiveFormsModule,
     NgClass,
     NgStyle,
-    HttpClientModule,
+    CustomModalComponent,
   ],
   providers: [UtilityService, NewPostRequestsService],
   templateUrl: './new-post.component.html',
@@ -49,6 +50,18 @@ export class NewPostComponent implements OnDestroy {
       ?.get('images') as FormArray;
   }
 
+  modalOptions = [
+    {
+      optionName: 'Delete current post',
+      optionColor: 'red',
+    },
+    {
+      optionName: 'Cancel',
+      optionColor: 'white',
+    },
+  ];
+  isDeletionModalOpened: boolean = false;
+
   newPostFormService = inject(NewPostFormServiceService);
 
   subscriptions = new Subscription();
@@ -59,6 +72,7 @@ export class NewPostComponent implements OnDestroy {
   arrUtilService = inject(UtilityService);
   private renderer = inject(Renderer2);
   private elRef = inject(ElementRef);
+  mainState = inject(MainStateService);
   private cdr = inject(ChangeDetectorRef);
   private modalService = inject(ModalService);
   private formBuilder = inject(FormBuilder);
@@ -254,7 +268,7 @@ export class NewPostComponent implements OnDestroy {
             this.newPostState.removeGlobalClickListener();
             return;
           } else {
-            this.modalService.isModalToggled.set(true);
+            this.isDeletionModalOpened = true;
           }
         }
       );
@@ -312,6 +326,28 @@ export class NewPostComponent implements OnDestroy {
     } else {
       console.error('Form is invalid');
     }
+  }
+
+  onChoseOptionProfile(modalOption: string): void {
+    if (modalOption === 'Delete current post') {
+      const tagsArray = this.newPostFormService
+        .newPostFormGroup()
+        .get('tags') as FormArray;
+      tagsArray.clear();
+
+      const imagesArray = this.newPostFormService
+        .newPostFormGroup()
+        ?.get('images') as FormArray;
+      imagesArray.clear();
+      this.newPostState.imagePreviews = [];
+      this.newPostState.currentStatus = '';
+
+      this.newPostFormService.newPostFormGroup().reset();
+      this.newPostState.toggleNewPost(false);
+      this.newPostState.removeGlobalClickListener();
+    }
+
+    this.isDeletionModalOpened = false;
   }
 
   ngOnDestroy(): void {

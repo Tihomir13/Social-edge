@@ -2,13 +2,13 @@ import { NgStyle } from '@angular/common';
 import { Component, HostListener, input, output } from '@angular/core';
 
 @Component({
-  selector: 'app-change-profile-modal',
+  selector: 'app-custom-modal',
   standalone: true,
   imports: [NgStyle],
-  templateUrl: './change-profile-modal.component.html',
-  styleUrl: './change-profile-modal.component.scss',
+  templateUrl: './custom-modal.component.html',
+  styleUrl: './custom-modal.component.scss',
 })
-export class ChangeProfileModalComponent {
+export class CustomModalComponent {
   title = input();
   options = input<{ optionName: string; optionColor: string }[]>();
   clickedOption = output<string>();
