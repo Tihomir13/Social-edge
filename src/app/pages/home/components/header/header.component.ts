@@ -34,14 +34,8 @@ export class HeaderComponent {
   mainState = inject(MainStateService);
 
   ngOnInit(): void {
-    // this.subscriptions.add(
-    //   this.route.queryParamMap.subscribe((params) => {
-    //     const queryValue = params.get('query');
-    //     this.onSearch(queryValue);
-    //   })
-    // );
-
     this.getNotifications();
+    this.getProfileImage();
   }
 
   @HostListener('window:scroll', [])
@@ -99,31 +93,52 @@ export class HeaderComponent {
     );
   }
 
+  getProfileImage(): void {
+    this.subscriptions.add(
+      this.requestProfileService.getProfileImage().subscribe({
+        next: (response) => {
+          this.mainState.setProfileImage(response.profileImage.src);
+        },
+        error: (error) => {
+          console.log(error);
+        },
+      })
+    );
+  }
+
   friendRequestChose(notification: any) {
-    if(notification.chose === 'accept') {
+    if (notification.chose === 'accept') {
       console.log('accept');
 
-      this.subscriptions.add(this.requestProfileService.acceptFriendRequestById(notification.id).subscribe({
-        next: () => {
-          this.getNotifications();
-        },
-        error: (error) => {
-          console.log(error);
-        }
-      }))
+      this.subscriptions.add(
+        this.requestProfileService
+          .acceptFriendRequestById(notification.id)
+          .subscribe({
+            next: () => {
+              this.getNotifications();
+            },
+            error: (error) => {
+              console.log(error);
+            },
+          })
+      );
     }
-    
-    if(notification.chose === 'remove') {
+
+    if (notification.chose === 'remove') {
       console.log('remove');
 
-      this.subscriptions.add(this.requestProfileService.removeFriendRequestById(notification.id).subscribe({
-        next: () => {
-          this.getNotifications();
-        },
-        error: (error) => {
-          console.log(error);
-        }
-      }))
+      this.subscriptions.add(
+        this.requestProfileService
+          .removeFriendRequestById(notification.id)
+          .subscribe({
+            next: () => {
+              this.getNotifications();
+            },
+            error: (error) => {
+              console.log(error);
+            },
+          })
+      );
     }
   }
 

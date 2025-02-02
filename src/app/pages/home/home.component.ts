@@ -24,7 +24,6 @@ import { UtilitySessionService } from '../../shared/services/utility/utility.ser
     MainComponent,
     YesNoModalComponent,
     NgClass,
-    HttpClientModule,
   ],
   providers: [
     {

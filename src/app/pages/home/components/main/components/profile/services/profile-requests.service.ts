@@ -84,7 +84,7 @@ export class ProfileRequestsService {
       this.headers
     );
   }
-  
+
   removeFriendRequestByUsername(username: string | null): Observable<any> {
     return this.http.delete(
       `${api}/profiles/${username}/remove-friend-request`,
@@ -100,15 +100,26 @@ export class ProfileRequestsService {
   }
 
   acceptFriendRequestById(notificationId: string): Observable<any> {
-    return this.http.post(`${api}/profiles/friend-requests/accept`, {
-      notificationId,
-    }, this.headers);
+    return this.http.post(
+      `${api}/profiles/friend-requests/accept`,
+      {
+        notificationId,
+      },
+      this.headers
+    );
   }
 
   removeFriendRequestById(notificationId: string): Observable<any> {
-    return this.http.post(`${api}/profiles/friend-requests/reject`, {
-      notificationId,
-    }, this.headers);
+    return this.http.post(
+      `${api}/profiles/friend-requests/reject`,
+      {
+        notificationId,
+      },
+      this.headers
+    );
   }
 
+  getProfileImage(): Observable<any> {
+    return this.http.get(`${api}/profiles/profile-image`, this.headers);
+  }
 }

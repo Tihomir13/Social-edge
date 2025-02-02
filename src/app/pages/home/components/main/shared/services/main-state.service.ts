@@ -5,11 +5,14 @@ import { PostModel } from '../../components/feed/components/post/model/post.mode
   providedIn: 'root',
 })
 export class MainStateService {
+  defaultProfileImg = 'assets/images/default-images/profile-image.png';
+
   posts = signal<any[]>([]);
   friends = signal<any[]>(['aaa']);
   currentChatHeads = signal<any[]>([]);
   isChatActive = signal<boolean>(false);
   searchedUsers = signal<any[]>([]);
+  userProfileImg = signal<any>(this.defaultProfileImg);
 
   setPosts(posts: any):void {
     this.posts.set(posts);
@@ -29,5 +32,9 @@ export class MainStateService {
 
   setSearchedUsers(users: any):void {
     this.searchedUsers.set(users);
+  }
+
+  setProfileImage(image: any):void {
+    this.userProfileImg.set(image);
   }
 }

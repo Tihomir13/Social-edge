@@ -3,7 +3,8 @@
 >
   <img
     class="profile-image"
-    src="./assets/images/image.png"
+    [src]="mainState.userProfileImg() ? mainState.userProfileImg() : mainState.defaultProfileImg"
+
     alt="profile image"
     (click)="navToProfilePage()"
   />

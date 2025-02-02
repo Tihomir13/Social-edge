@@ -2,6 +2,7 @@ import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { UtilitySessionService } from '../../../../../../shared/services/utility/utility.service';
+import { MainStateService } from '../../../main/shared/services/main-state.service';
 
 @Component({
   selector: 'app-profile',
@@ -18,6 +19,7 @@ export class ProfileComponent implements OnInit {
   username = '';
 
   router = inject(Router);
+  mainState = inject(MainStateService);
   utilitySession = inject(UtilitySessionService);
 
   ngOnInit(): void {

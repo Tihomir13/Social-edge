@@ -5,7 +5,8 @@
   width: 350px;
   padding: 10px;
   border-radius: $border-radius $border-radius 0px 0px;
-  background-color: $light-purple;
+  background-color: $post-light-color;
+  border: 2px solid $light-purple;
 
   .header {
     .minimize-icon,
