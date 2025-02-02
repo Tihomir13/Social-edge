@@ -20,9 +20,15 @@
     </div>
   </div>
 
-  @if(currUserProfileName() !== username() && !isFriend()) {
+  @if(currUserProfileName() !== username() && !isFriend() && !isRequested()) {
   <div class="btn-container">
     <button class="btn px-4" (click)="onAdd()">Add friend</button>
+  </div>
+  }
+
+  @if(currUserProfileName() !== username() && isRequested()) {
+  <div class="btn-container">
+    <button class="btn request-btn px-4" (click)="onRemoveRequest()">Remove request</button>
   </div>
   }
 

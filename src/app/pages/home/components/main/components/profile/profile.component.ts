@@ -41,6 +41,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   isSelectedFriends = false;
   isSelectedPhotos = false;
   isFriend!: boolean;
+  isRequested!: boolean;
 
   isModalProfilePhotoOpened = false;
   isModalBannerPhotoOpened = false;
@@ -113,6 +114,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
           this.username = response.userData.username;
           this.state.setIsProfileOwner(response.userData.isProfileOwner);
           this.isFriend = response.userData.isFriend;
+          this.isRequested = response.userData.isRequested;
 
           this.isUserHasProfileImage(response.userData.profileImage);
           this.isUserHasBannerImage(response.userData.bannerImage);
@@ -422,6 +424,21 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.profileRequestService.addNewFriend(this.username).subscribe({
         next: (response) => {
           console.log(response);
+          this.isRequested = true;
+        },
+        error: (error) => {
+          console.log(error);
+        },
+      })
+    );
+  }
+
+  onRemoveFriendRequest(): void {
+    this.subscriptions.add(
+      this.profileRequestService.removeFriendRequestByUsername(this.username).subscribe({
+        next: (response) => {
+          console.log(response);
+          this.isRequested = false;
         },
         error: (error) => {
           console.log(error);

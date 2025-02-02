@@ -101,6 +101,16 @@
           background-color: $primary-purple;
         }
       }
+
+      .request {
+        background-color: transparent;
+        border-color: $primary-purple;
+        color: $primary-purple;
+
+        &:hover {
+          color: white;
+        }
+      }
     }
 
     .remove-btn-container {

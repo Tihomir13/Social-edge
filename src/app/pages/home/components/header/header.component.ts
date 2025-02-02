@@ -66,6 +66,7 @@ export class HeaderComponent {
             }
             return user;
           });
+          console.log(users);
 
           this.mainState.setSearchedUsers(users);
         },
@@ -102,7 +103,7 @@ export class HeaderComponent {
     if(notification.chose === 'accept') {
       console.log('accept');
 
-      this.subscriptions.add(this.requestProfileService.acceptFriendRequest(notification.id).subscribe({
+      this.subscriptions.add(this.requestProfileService.acceptFriendRequestById(notification.id).subscribe({
         next: () => {
           this.getNotifications();
         },
@@ -115,7 +116,7 @@ export class HeaderComponent {
     if(notification.chose === 'remove') {
       console.log('remove');
 
-      this.subscriptions.add(this.requestProfileService.removeFriendRequest(notification.id).subscribe({
+      this.subscriptions.add(this.requestProfileService.removeFriendRequestById(notification.id).subscribe({
         next: () => {
           this.getNotifications();
         },

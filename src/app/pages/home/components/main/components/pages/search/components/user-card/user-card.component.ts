@@ -13,8 +13,11 @@ export class UserCardComponent {
   username = input<string>();
   currUserProfileName = input<string>();
   isFriend = input<boolean>();
+  isRequested = input<boolean>();
 
   clickProfile = output<string>();
+  addFriend = output<string>();
+  removeRequest = output<string>();
 
   onClick(): void {
     console.log(this.username());
@@ -23,19 +26,10 @@ export class UserCardComponent {
   }
 
   onAdd(): void {
-    
+    this.addFriend.emit(this.username()!);
   }
 
-  // onAddFriend(): void {
-  //   this.subscriptions.add(
-  //     this.profileRequestService.addNewFriend(this.username).subscribe({
-  //       next: (response) => {
-  //         console.log(response);
-  //       },
-  //       error: (error) => {
-  //         console.log(error);
-  //       },
-  //     })
-  //   );
-  // }
+  onRemoveRequest(): void {
+    this.removeRequest.emit(this.username()!);
+  }
 }
