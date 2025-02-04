@@ -52,7 +52,7 @@ export class NewPostComponent implements OnDestroy {
 
   modalOptions = [
     {
-      optionName: 'Delete current post',
+      optionName: 'Delete',
       optionColor: 'red',
     },
     {
@@ -258,11 +258,11 @@ export class NewPostComponent implements OnDestroy {
             this.newPostFormService.newPostFormGroup().value.status;
 
           if (
-            isTitleEmpty === null &&
-            isTextEmpty === null &&
+            !isTitleEmpty &&
+            !isTextEmpty &&
+            !isStatusEmpty &&
             isTagsEmpty.length === 0 &&
-            isImagesEmpty.length === 0 &&
-            isStatusEmpty === null
+            isImagesEmpty.length === 0
           ) {
             this.newPostState.toggleNewPost();
             this.newPostState.removeGlobalClickListener();
@@ -329,8 +329,15 @@ export class NewPostComponent implements OnDestroy {
   }
 
   onChoseOptionProfile(modalOption: string): void {
-    if (modalOption === 'Delete current post') {
-      const tagsArray = this.newPostFormService
+    if (modalOption === 'Delete') {
+      this.resetPost();
+    }
+
+    this.isDeletionModalOpened = false;
+  }
+
+  resetPost() {
+    const tagsArray = this.newPostFormService
         .newPostFormGroup()
         .get('tags') as FormArray;
       tagsArray.clear();
@@ -345,9 +352,6 @@ export class NewPostComponent implements OnDestroy {
       this.newPostFormService.newPostFormGroup().reset();
       this.newPostState.toggleNewPost(false);
       this.newPostState.removeGlobalClickListener();
-    }
-
-    this.isDeletionModalOpened = false;
   }
 
   ngOnDestroy(): void {

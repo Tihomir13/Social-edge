@@ -7,8 +7,8 @@ export class GenerateNewPostForm {
 
   generateNewPostForm(): FormGroup {
     return this.formBuilder.group({
-      title: this.formBuilder.control<string>(''),
-      text: this.formBuilder.control<string>(''),
+      title: this.formBuilder.control<string | null>(null),
+      text: this.formBuilder.control<string | null>(null),
       tags: this.formBuilder.array<string[] | []>([]),
       images: this.formBuilder.array<File[] | []>([]),
       status: this.formBuilder.control<postStatusModel | null>(null),

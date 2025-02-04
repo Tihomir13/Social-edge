@@ -128,7 +128,9 @@
     <div class="error">{{ this.newPostState.errorMsgPhoto }}</div>
     }
 
-    <div class="btn-container d-flex justify-content-center">
+    <div class="btn-container d-flex justify-content-between mt-5">
+      <button type="button" class="btn btn-cancel" (click)="resetPost()">Cancel</button>
+      
       <button type="submit" class="btn">Post</button>
     </div>
   </div>

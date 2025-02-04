@@ -221,6 +221,17 @@ $square-width: 110px;
         background-color: $light-purple;
       }
     }
+
+    .btn-cancel {
+      background-color: transparent;
+      color: red;
+      border-color: red;
+
+      &:hover {
+        color: white;
+        background-color: red;
+      }
+    }
   }
 
   .error {
@@ -233,7 +244,7 @@ $square-width: 110px;
     margin-top: 10px;
 
     .btn {
-      padding: 0px 30px 0px 30px;
+      padding: 0px 20px 0px 20px;
     }
   }
 }
