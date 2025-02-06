@@ -5,6 +5,8 @@ import { FriendListUserCardComponent } from '../../shared/friend-list-user-card/
 import { MainStateService } from '../../shared/services/main-state.service';
 import { StatusSocketService } from '../../../../../../shared/services/status-socket.service';
 import { UtilitySessionService } from '../../../../../../shared/services/utility/utility.service';
+import { Subscription } from 'rxjs';
+import { FriendListRequestsService } from './services/friend-list-requests.service';
 
 @Component({
   selector: 'app-friend-list',
@@ -14,39 +16,52 @@ import { UtilitySessionService } from '../../../../../../shared/services/utility
   styleUrl: './friend-list.component.scss',
 })
 export class FriendListComponent {
-  friends = input<string[]>();
   open = output<any>();
+  subscription = new Subscription();
 
   state = inject(MainStateService);
   private statusSocketService = inject(StatusSocketService);
   private utilitySession = inject(UtilitySessionService);
+  private friendRequest = inject(FriendListRequestsService);
 
-  userId = this.utilitySession.userInfo.name._id;
+  username = this.utilitySession.userInfo.username;
   private statusInterval: any;
   currentFriends?: string[] = this.state.friends();
 
-  onSearch(value: string): void {
-    this.currentFriends = this.friends()?.filter((friend) =>
-      friend.includes(value)
+  ngOnInit() {
+    this.statusSocketService.sendStatus(this.username);
+
+    this.statusInterval = setInterval(() => {
+      this.statusSocketService.sendStatus(this.username);
+      this.statusSocketService.getOnlineUsers();
+    }, 3000);
+
+    this.subscription.add(
+      this.friendRequest.getAllFriends(this.username).subscribe({
+        next: (response) => {
+          if (response.userFriends) {
+            this.state.setFriends(response.userFriends);
+          }
+        },
+        error: (error) => {
+          console.log(error);
+        },
+      })
     );
+  }
+
+  onSearch(value: string): void {
+    this.currentFriends = this.state
+      .friends()
+      ?.filter((friend) => friend.includes(value));
   }
 
   onUserProfileClick(friend: any): void {
     this.open.emit(friend);
   }
 
-  //
-
-  constructor() {
-    this.statusSocketService.sendStatus(this.userId);
-
-    this.statusInterval = setInterval(() => {      
-      this.statusSocketService.sendStatus(this.userId);
-      this.statusSocketService.getOnlineUsers();
-    }, 3000);
-  }
-
   ngOnDestroy() {
+    this.subscription.unsubscribe();
     clearInterval(this.statusInterval);
   }
 }

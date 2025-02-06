@@ -97,7 +97,9 @@ export class HeaderComponent {
     this.subscriptions.add(
       this.requestProfileService.getProfileImage().subscribe({
         next: (response) => {
-          this.mainState.setProfileImage(response.profileImage.src);
+          if(response.profileImage) {
+            this.mainState.setProfileImage(response.profileImage.src);
+          }
         },
         error: (error) => {
           console.log(error);

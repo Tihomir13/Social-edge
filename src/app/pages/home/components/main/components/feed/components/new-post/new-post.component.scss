@@ -16,7 +16,9 @@ $square-width: 110px;
     .profile-icon {
       cursor: pointer;
       border-radius: 50%;
+      aspect-ratio: 1/1;
       width: 45px;
+      height: 45px;
     }
 
     .form-control {

@@ -4,6 +4,8 @@
   <img
     class="profile-image"
     [src]="mainState.userProfileImg() ? mainState.userProfileImg() : mainState.defaultProfileImg"
+    width="50"
+    height="50"
 
     alt="profile image"
     (click)="navToProfilePage()"

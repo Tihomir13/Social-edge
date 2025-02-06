@@ -14,17 +14,16 @@ export class StatusSocketService {
     this.listenForUserStatus();
   }
 
-  sendStatus(userId: string) {
-    this.socket.emit('set-status', { userId });
+  sendStatus(username: string) {
+    this.socket.emit('set-status', { username });
   }
 
   private listenForUserStatus() {
-    this.socket.on('user-status-update', (data: { userId: string; online: boolean }) => {
+    this.socket.on('user-status-update', (data: { username: string; online: boolean }) => {
       console.log(data);
-      
       this.onlineUsers.update((users) => ({
         ...users,
-        [data.userId]: data.online,
+        [data.username]: data.online,
       }));
     });
   }
