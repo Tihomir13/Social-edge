@@ -8,33 +8,33 @@ export class MainStateService {
   defaultProfileImg = 'assets/images/default-images/profile-image.png';
 
   posts = signal<any[]>([]);
-  friends = signal<any[]>([]);
+  friends = signal<{ username: string; isOnline: boolean }[]>([]);
   currentChatHeads = signal<any[]>([]);
   isChatActive = signal<boolean>(false);
   searchedUsers = signal<any[]>([]);
   userProfileImg = signal<any>(this.defaultProfileImg);
 
-  setPosts(posts: any):void {
+  setPosts(posts: any): void {
     this.posts.set(posts);
   }
-  
-  setFriends(friends: any):void {
+
+  setFriends(friends: any): void {
     this.friends.set(friends);
   }
 
-  setCurrChatHeads(chat: any):void {
+  setCurrChatHeads(chat: any): void {
     this.currentChatHeads.set(chat);
   }
 
-  setChat(isChatOpened: boolean):void {
+  setChat(isChatOpened: boolean): void {
     this.isChatActive.set(isChatOpened);
   }
 
-  setSearchedUsers(users: any):void {
+  setSearchedUsers(users: any): void {
     this.searchedUsers.set(users);
   }
 
-  setProfileImage(image: any):void {
+  setProfileImage(image: any): void {
     this.userProfileImg.set(image);
   }
 }

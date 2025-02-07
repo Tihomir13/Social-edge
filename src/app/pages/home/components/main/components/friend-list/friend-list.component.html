@@ -9,8 +9,8 @@
 
   <div class="row">
     <div class="friend-list d-flex flex-column">
-      @for (friend of state.friends(); track $index) {
-        <app-friend-list-user-card [username]="friend" (click)="onUserProfileClick(friend)"/>
+      @for (friend of currentFriends(); track $index) {
+        <app-friend-list-user-card [username]="friend.username" [isOnline]="friend.isOnline" (click)="onUserProfileClick(friend)"/>
       }
     </div>
   </div>

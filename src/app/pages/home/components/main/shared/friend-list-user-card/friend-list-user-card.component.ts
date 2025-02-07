@@ -9,5 +9,5 @@ import { Component, input } from '@angular/core';
 })
 export class FriendListUserCardComponent {
   username = input<string>();
-  isOnline = input<boolean>(false);
+  isOnline = input<boolean>();
 }

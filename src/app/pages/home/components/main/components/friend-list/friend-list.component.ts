@@ -1,4 +1,11 @@
-import { Component, inject, input, output } from '@angular/core';
+import {
+  Component,
+  effect,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 
 import { SearchBarComponent } from '../../shared/search-bar/search-bar.component';
 import { FriendListUserCardComponent } from '../../shared/friend-list-user-card/friend-list-user-card.component';
@@ -26,7 +33,14 @@ export class FriendListComponent {
 
   username = this.utilitySession.userInfo.username;
   private statusInterval: any;
-  currentFriends?: string[] = this.state.friends();
+  currentFriends = signal<{ username: string; isOnline: boolean }[]>([]);
+
+  constructor() {
+    effect(() => {
+      const newValue = this.state.friends(); // Взима текущата стойност на signalB
+      this.currentFriends.set(newValue); // Задава я на signalA
+    });
+  }
 
   ngOnInit() {
     this.statusSocketService.sendStatus(this.username);
@@ -41,6 +55,7 @@ export class FriendListComponent {
         next: (response) => {
           if (response.userFriends) {
             this.state.setFriends(response.userFriends);
+            this.statusSocketService.listenForUserStatus();
           }
         },
         error: (error) => {
@@ -51,9 +66,9 @@ export class FriendListComponent {
   }
 
   onSearch(value: string): void {
-    this.currentFriends = this.state
-      .friends()
-      ?.filter((friend) => friend.includes(value));
+    this.currentFriends?.update((currFriends) => {
+      return currFriends?.filter((friend) => friend.username.includes(value));
+    });
   }
 
   onUserProfileClick(friend: any): void {
