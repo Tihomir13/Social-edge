@@ -165,7 +165,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     );
   }
 
-  resetErrors() {
+  resetErrors(): void {
     this.isUsernameExists = false;
     this.isEmailExists = false;
     this.isUserYounger = false;

@@ -1,0 +1,21 @@
+<div class="search-container">
+  <h1 class="px-2 my-3">People</h1>
+
+  <div
+    class="profile-cards-container d-flex flex-column gap-2 px-2 px-md-0 gap-md-4"
+  >
+    @for (user of mainState.searchedUsers(); track $index) {
+    <app-user-card
+      [fullName]="user.name"
+      [profileImg]="user.profileImage.src"
+      [username]="user.username"
+      [currUserProfileName]="this.utility.userInfo.username"
+      (clickProfile)="onClickProfile($event)"
+      [isFriend]="user.isFriend"
+      [isRequested]="user.isRequested"
+      (addFriend)="onAddFriend($event)"
+      (removeRequest)="onRemoveFriendRequest($event)"
+    />
+    }
+  </div>
+</div>

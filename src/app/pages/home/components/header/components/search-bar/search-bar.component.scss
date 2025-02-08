@@ -14,6 +14,7 @@
     width: 100%;
     border-radius: 25px;
     height: 50px;
+    padding-left: 50px;
 
     &:focus {
       outline: none;
@@ -21,7 +22,13 @@
     }
   }
 
-  &:focus-within .search-icon {
-    display: none;
-  }
+  &:focus-within {
+    .search-icon {
+      display: none;
+    }
+
+    .form-control {
+      padding-left: 15px;
+    }
+  } 
 }

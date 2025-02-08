@@ -1,0 +1,14 @@
+@use '../../../../../../../../styles.scss' as styles;
+
+
+.search-container {
+    max-width: 600px;
+    margin: 50px auto;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .search-container {
+      margin: 0px auto;
+    }
+  }
+  

@@ -16,6 +16,7 @@ import { UtilitySessionService } from '../../../../../../../../shared/services/u
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { GenerateCommentForm } from './helper/comment.form';
 import { CommentModel } from '../../../../../../../../shared/interfaces/post';
+import { MainStateService } from '../../../../shared/services/main-state.service';
 
 @Component({
   selector: 'app-post',
@@ -50,6 +51,7 @@ export class PostComponent implements OnInit, OnDestroy {
   commentFormGroup!: FormGroup;
 
   private postRequests = inject(PostsRequestsService);
+  mainState = inject(MainStateService);
   utilityService = inject(UtilitySessionService);
   formBuilder = inject(FormBuilder);
 
@@ -125,7 +127,7 @@ export class PostComponent implements OnInit, OnDestroy {
     });
   }
 
-  onComment() {
+  onComment(): void {
     const comment = this.commentFormGroup.value.comment;
 
     if (this.commentFormGroup.valid) {

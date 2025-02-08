@@ -4,11 +4,15 @@
       <div class="position-relative">
         <img class="profile-icon" src="assets/images/image.png" alt="profile-icon" />
 
-        <span class="online-status-icon bg-success"></span>
+        @if (isOnline()) {
+          <span class="status-icon bg-success"></span>
+        }
+        @else {
+          <span class="status-icon bg-dark"></span>
+        }
       </div>
 
       <span>{{ username() }}</span>
-
     </div>
   </div>
 </div>

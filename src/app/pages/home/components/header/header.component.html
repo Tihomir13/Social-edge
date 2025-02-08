@@ -1,18 +1,44 @@
 <header class="container-fluid">
-    <div class="row">
-        <div class="container-content d-flex align-items-center justify-content-center" [class.shadow]="isScrolled">
-            <div class="d-none d-lg-block logo-container">
-                <img class="logo" src="./assets/images/Social Edge Logo prod.png" alt="Social Edge Logo image" 
-                (click)="navigateToFeed()">
-            </div>
-            
-            <app-search-bar class="search-bar" />
+  <div class="row">
+    <div
+      class="container-content d-flex align-items-center justify-content-center"
+      [class.shadow]="isScrolled"
+    >
+      <div class="d-none d-lg-block logo-container">
+        <img
+          class="logo"
+          src="./assets/images/Social Edge Logo prod.png"
+          alt="Social Edge Logo image"
+          (click)="navigateToFeed()"
+        />
+      </div>
 
-            <div class="icons-container">
-                <img class="icon" src="./assets/icons/notification.svg" alt="notification image">
-            </div>
-            
-            <app-profile />
-        </div>
+      <app-search-bar class="search-bar" (searchProfile)="onSearch($event)" />
+
+      <div class="icons-container">
+        <img
+          class="notification-icon"
+          src="./assets/icons/notification.svg"
+          alt="notification image"
+          (click)="toggleNotifications()"
+        />
+
+        @if(notifications.length > 0) {
+          <span class="notifications-counter">{{notifications.length}}</span>
+        }
+
+        @if (isNotificationsShowed) {
+          <div class="notifications-container">
+            <app-notifications-window 
+            [notifications]="notifications" 
+            (close)="onClickOutSideNotifications()"
+            (friendReqNotificationChoice)="friendRequestChose($event)"
+            />
+          </div>
+        }
+      </div>
+
+      <app-profile />
     </div>
+  </div>
 </header>

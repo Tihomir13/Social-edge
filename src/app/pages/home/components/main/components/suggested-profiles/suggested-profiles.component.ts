@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 
-import { UserCardComponentComponent } from '../../shared/user-card-component/user-card-component.component';
+import { FriendListUserCardComponent } from '../../shared/friend-list-user-card/friend-list-user-card.component';
 
 @Component({
   selector: 'app-suggested-profiles',
   standalone: true,
-  imports: [UserCardComponentComponent],
+  imports: [FriendListUserCardComponent],
   templateUrl: './suggested-profiles.component.html',
   styleUrl: './suggested-profiles.component.scss',
 })

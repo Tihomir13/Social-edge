@@ -9,24 +9,21 @@ import {
   ViewChild,
 } from '@angular/core';
 import { NgClass, NgStyle } from '@angular/common';
-import {
-  FormArray,
-  FormBuilder,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { FormArray, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 import { Subscription } from 'rxjs';
 
 import * as nsfwjs from 'nsfwjs';
 import { UtilityService } from '../../../../../../../../shared/services/utility/array-utility.service';
 import { StatusPickerComponent } from './status-picker/status-picker.component';
-import { statuses } from '../../../../../../../../shared/constants/arrays'; 
+import { statuses } from '../../../../../../../../shared/constants/arrays';
 import { maxImageSize } from '../../../../../../../../shared/constants/settings';
 import { ModalService } from '../../../../../../shared/services/modal.service';
 import { NewPostStateService } from './services/new-post-state.service';
 import { NewPostRequestsService } from './services/new-post-requests.service';
 import { NewPostFormServiceService } from '../../../../../../shared/services/new-post-form-service.service';
+import { MainStateService } from '../../../../shared/services/main-state.service';
+import { CustomModalComponent } from '../../../../../../../../shared/components/custom-modal/custom-modal.component';
 
 @Component({
   selector: 'app-new-post',
@@ -36,7 +33,7 @@ import { NewPostFormServiceService } from '../../../../../../shared/services/new
     ReactiveFormsModule,
     NgClass,
     NgStyle,
-    HttpClientModule,
+    CustomModalComponent,
   ],
   providers: [UtilityService, NewPostRequestsService],
   templateUrl: './new-post.component.html',
@@ -48,8 +45,22 @@ export class NewPostComponent implements OnDestroy {
   }
 
   get imagesFiles(): FormArray {
-    return this.newPostFormService.newPostFormGroup()?.get('images') as FormArray;
+    return this.newPostFormService
+      .newPostFormGroup()
+      ?.get('images') as FormArray;
   }
+
+  modalOptions = [
+    {
+      optionName: 'Delete',
+      optionColor: 'red',
+    },
+    {
+      optionName: 'Cancel',
+      optionColor: 'white',
+    },
+  ];
+  isDeletionModalOpened: boolean = false;
 
   newPostFormService = inject(NewPostFormServiceService);
 
@@ -61,6 +72,7 @@ export class NewPostComponent implements OnDestroy {
   arrUtilService = inject(UtilityService);
   private renderer = inject(Renderer2);
   private elRef = inject(ElementRef);
+  mainState = inject(MainStateService);
   private cdr = inject(ChangeDetectorRef);
   private modalService = inject(ModalService);
   private formBuilder = inject(FormBuilder);
@@ -165,7 +177,7 @@ export class NewPostComponent implements OnDestroy {
         const image = new Image();
         image.src = reader.result as string;
         image.onload = async () => {
-          const model = await nsfwjs.load("InceptionV3");
+          const model = await nsfwjs.load('InceptionV3');
           const predictions = await model.classify(image);
           const nsfwResult = predictions.find(
             (p) => p.className === 'Porn' || p.className === 'Hentai'
@@ -208,7 +220,9 @@ export class NewPostComponent implements OnDestroy {
   onStatusChange(index: number): void {
     const newStatus = statuses[index];
     this.newPostState.currentStatus = newStatus.emoji;
-    this.newPostFormService.newPostFormGroup().patchValue({ status: newStatus });
+    this.newPostFormService
+      .newPostFormGroup()
+      .patchValue({ status: newStatus });
     this.startCreatingNewPost();
   }
 
@@ -232,24 +246,29 @@ export class NewPostComponent implements OnDestroy {
             return;
           }
 
-          const isTitleEmpty = this.newPostFormService.newPostFormGroup().value.title;
-          const isTextEmpty = this.newPostFormService.newPostFormGroup().value.text;
-          const isTagsEmpty = this.newPostFormService.newPostFormGroup().value.tags;
-          const isImagesEmpty = this.newPostFormService.newPostFormGroup().value.images;
-          const isStatusEmpty = this.newPostFormService.newPostFormGroup().value.status;
+          const isTitleEmpty =
+            this.newPostFormService.newPostFormGroup().value.title;
+          const isTextEmpty =
+            this.newPostFormService.newPostFormGroup().value.text;
+          const isTagsEmpty =
+            this.newPostFormService.newPostFormGroup().value.tags;
+          const isImagesEmpty =
+            this.newPostFormService.newPostFormGroup().value.images;
+          const isStatusEmpty =
+            this.newPostFormService.newPostFormGroup().value.status;
 
           if (
-            isTitleEmpty === null &&
-            isTextEmpty === null &&
+            !isTitleEmpty &&
+            !isTextEmpty &&
+            !isStatusEmpty &&
             isTagsEmpty.length === 0 &&
-            isImagesEmpty.length === 0 &&
-            isStatusEmpty === null
+            isImagesEmpty.length === 0
           ) {
             this.newPostState.toggleNewPost();
             this.newPostState.removeGlobalClickListener();
             return;
           } else {
-            this.modalService.isModalToggled.set(true);
+            this.isDeletionModalOpened = true;
           }
         }
       );
@@ -265,21 +284,23 @@ export class NewPostComponent implements OnDestroy {
     }
   }
 
-  clearFormArrays() {
+  clearFormArrays(): void {
     if (this.newPostFormService.newPostFormGroup()) {
-      Object.keys(this.newPostFormService.newPostFormGroup()!.controls).forEach((key) => {
-        const control = this.newPostFormService.newPostFormGroup()!.get(key);
+      Object.keys(this.newPostFormService.newPostFormGroup()!.controls).forEach(
+        (key) => {
+          const control = this.newPostFormService.newPostFormGroup()!.get(key);
 
-        if (control instanceof FormArray) {
-          while (control.length !== 0) {
-            control.removeAt(0);
+          if (control instanceof FormArray) {
+            while (control.length !== 0) {
+              control.removeAt(0);
+            }
           }
         }
-      });
+      );
     }
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.newPostFormService.newPostFormGroup()?.valid) {
       const formData = this.newPostFormService.newPostFormGroup()?.value;
 
@@ -307,7 +328,33 @@ export class NewPostComponent implements OnDestroy {
     }
   }
 
-  ngOnDestroy() {
+  onChoseOptionProfile(modalOption: string): void {
+    if (modalOption === 'Delete') {
+      this.resetPost();
+    }
+
+    this.isDeletionModalOpened = false;
+  }
+
+  resetPost() {
+    const tagsArray = this.newPostFormService
+        .newPostFormGroup()
+        .get('tags') as FormArray;
+      tagsArray.clear();
+
+      const imagesArray = this.newPostFormService
+        .newPostFormGroup()
+        ?.get('images') as FormArray;
+      imagesArray.clear();
+      this.newPostState.imagePreviews = [];
+      this.newPostState.currentStatus = '';
+
+      this.newPostFormService.newPostFormGroup().reset();
+      this.newPostState.toggleNewPost(false);
+      this.newPostState.removeGlobalClickListener();
+  }
+
+  ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
 }

@@ -12,6 +12,7 @@
     .left,
     .right {
       position: fixed;
+      z-index: 1;
     }
 
     .left {
@@ -54,8 +55,19 @@
 @media screen and (max-width: 768px) {
   .container-fluid {
     margin-top: 10px;
+
     .content {
       padding: 0px;
+
+      .left {
+        z-index: 10000;
+        bottom: 100px;
+        display: block;
+
+        .suggested-profiles {
+          display: none;
+        }
+      }
     }
   }
 }

@@ -2,22 +2,21 @@ import { Routes } from '@angular/router';
 import { RegisterComponent } from './pages/register/register.component';
 import { LoginComponent } from './pages/login/login.component';
 import { HomeComponent } from './pages/home/home.component';
-import { YesNoModalComponent } from './shared/components/yes-no-modal/yes-no-modal.component';
 import { AuthGuard } from './shared/guards/auth.guard';
-import { MainComponent } from './pages/home/components/main/main.component';
 import { ProfileComponent } from './pages/home/components/main/components/profile/profile.component';
 import { FeedComponent } from './pages/home/components/main/components/feed/feed.component';
 import { UserPostsComponent } from './pages/home/components/main/components/profile/components/user-posts/user-posts.component';
 import { UserInformationComponent } from './pages/home/components/main/components/profile/components/user-information/user-information.component';
 import { UserFriendsComponent } from './pages/home/components/main/components/profile/components/user-friends/user-friends.component';
 import { UserPhotosComponent } from './pages/home/components/main/components/profile/components/user-photos/user-photos.component';
-import { ModalComponent } from './shared/components/modal/modal.component';
+import { SearchComponent } from './pages/home/components/main/components/pages/search/search.component';
+import { CustomModalComponent } from './shared/components/custom-modal/custom-modal.component';
 
 export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'home',
+    redirectTo: 'feed',
   },
   {
     path: 'register',
@@ -28,7 +27,7 @@ export const routes: Routes = [
     component: LoginComponent,
   },
   {
-    path: 'home',
+    path: '',
     component: HomeComponent,
     canActivate: [AuthGuard],
     children: [
@@ -45,14 +44,7 @@ export const routes: Routes = [
           { path: 'photos', component: UserPhotosComponent },
         ],
       },
+      { path: 'search', component: SearchComponent },
     ],
-  },
-  {
-    path: 'YesNoModal',
-    component: YesNoModalComponent,
-  },
-  {
-    path: 'modal',
-    component: ModalComponent,
   },
 ];

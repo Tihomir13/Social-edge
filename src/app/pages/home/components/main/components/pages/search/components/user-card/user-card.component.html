@@ -1,0 +1,40 @@
+<div class="user-card-container d-flex justify-content-between align-items-center">
+  <div class="d-flex gap-3 align-items-center">
+    <img
+      class="image"
+      [src]="profileImg()"
+      alt="profile image"
+      (click)="onClick()"
+      width="70"
+      height="70"
+    />
+
+    <div class="d-flex flex-column" (click)="onClick()">
+      <span class="full-name">
+        {{ fullName() }}
+      </span>
+
+      <span class="username">
+        {{ "@" + username() }}
+      </span>
+    </div>
+  </div>
+
+  @if(currUserProfileName() !== username() && !isFriend() && !isRequested()) {
+  <div class="btn-container">
+    <button class="btn px-4" (click)="onAdd()">Add friend</button>
+  </div>
+  }
+
+  @if(currUserProfileName() !== username() && isRequested()) {
+  <div class="btn-container">
+    <button class="btn request-btn px-4" (click)="onRemoveRequest()">Remove request</button>
+  </div>
+  }
+
+  @if(isFriend()) {
+    <div class="btn-container">
+      <span class="px-4">Friends</span>
+    </div>
+  }
+</div>

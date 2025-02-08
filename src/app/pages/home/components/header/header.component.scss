@@ -16,7 +16,7 @@
 
     .logo-container {
       cursor: pointer;
-      
+
       .logo {
         width: 80px;
       }
@@ -28,9 +28,10 @@
     }
 
     .icons-container {
+      position: relative;
       margin-right: 20px;
 
-      .icon {
+      .notification-icon {
         width: 50px;
         cursor: pointer;
         border-radius: 50%;
@@ -39,6 +40,23 @@
         &:hover {
           background-color: $light-purple;
         }
+      }
+
+      .notifications-counter {
+        position: absolute;
+        background-color: red;
+        color: white;
+        font-weight: 700;
+        padding: 0px 8px;
+        transform: scale(0.8);
+        border-radius: 50%;
+        top: 5px;
+        left: 24px;
+      }
+
+      .notifications-container {
+        position: absolute;
+        right: 0px;
       }
     }
   }
@@ -51,6 +69,7 @@ app-profile {
 
 @media screen and (max-width: 768px) {
   .container-fluid {
+    border-bottom: 1px solid rgb(200, 200, 200);
     .container-content {
       .search-bar {
         margin-left: 0px;

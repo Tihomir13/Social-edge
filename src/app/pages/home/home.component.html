@@ -1,9 +1,2 @@
 <app-header />
-
-<app-main
-[ngClass]="{ 'blurred': this.modalService.isModalToggled() }"
-/>
-
-@if(this.modalService.isModalToggled()) {
-<app-yes-no-modal class="dialog" (option)="onChoseOption($event)" />
-}
+<app-main/>

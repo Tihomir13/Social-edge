@@ -11,7 +11,7 @@ import { MainStateService } from '../../shared/services/main-state.service';
 export class ChatComponent {
   state = inject(MainStateService);
 
-  closeChat() {
+  closeChat():void {
     this.state.setChat(false);
   }
 }
