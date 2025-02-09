@@ -37,12 +37,14 @@ export class PostComponent implements OnInit, OnDestroy {
 
   postId = input<string>('');
   username = input<string>('');
+  authorProfileImg = input();
   title = input<string>('');
   text = input<string>('');
   tags = input<string[]>([]);
   likes = input<string[]>([]);
   images = input<imagePostModel[]>([]);
   comments = input<CommentModel[]>([]);
+  currUserImg = input();
 
   currentImageIndex = 0;
 

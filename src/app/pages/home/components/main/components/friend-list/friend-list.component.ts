@@ -10,7 +10,7 @@ import {
 import { SearchBarComponent } from '../../shared/search-bar/search-bar.component';
 import { FriendListUserCardComponent } from '../../shared/friend-list-user-card/friend-list-user-card.component';
 import { MainStateService } from '../../shared/services/main-state.service';
-import { StatusSocketService } from '../../../../../../shared/services/status-socket.service';
+import { StatusSocketService } from '../../../../../../shared/services/websocket/status-socket.service';
 import { UtilitySessionService } from '../../../../../../shared/services/utility/utility.service';
 import { Subscription } from 'rxjs';
 import { FriendListRequestsService } from './services/friend-list-requests.service';
@@ -43,10 +43,10 @@ export class FriendListComponent {
   }
 
   ngOnInit() {
-    this.statusSocketService.sendStatus(this.username);
+    this.statusSocketService.sendStatus();
 
     this.statusInterval = setInterval(() => {
-      this.statusSocketService.sendStatus(this.username);
+      this.statusSocketService.sendStatus();
       this.statusSocketService.getOnlineUsers();
     }, 3000);
 

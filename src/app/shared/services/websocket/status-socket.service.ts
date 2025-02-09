@@ -1,20 +1,21 @@
 import { inject, Injectable, Signal, signal } from '@angular/core';
 
-import { api } from '../constants/api';
+import { api } from '../../constants/api';
 import io from 'socket.io-client';
-import { MainStateService } from '../../pages/home/components/main/shared/services/main-state.service';
+import { MainStateService } from '../../../pages/home/components/main/shared/services/main-state.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StatusSocketService {
-  private socket = io(api);
-  private onlineUsers = signal<{ [key: string]: boolean }>({});
+  token = sessionStorage.getItem('token');
+  private socket = io(`${api}?token=${this.token}`);
 
+  private onlineUsers = signal<{ [key: string]: boolean }>({});
   private state = inject(MainStateService);
 
-  sendStatus(username: string) {
-    this.socket.emit('set-status', { username });
+  sendStatus() {
+    this.socket.emit('set-status');
   }
 
   listenForUserStatus() {

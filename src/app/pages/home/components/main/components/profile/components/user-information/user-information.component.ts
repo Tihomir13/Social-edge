@@ -45,6 +45,7 @@ export class UserInformationComponent implements OnInit, OnDestroy {
   }
 
   getUserInfo(): void {
+    console.log('aa');
     this.username = this.route.parent?.snapshot.paramMap.get('username')!;
 
     if (!this.username) {

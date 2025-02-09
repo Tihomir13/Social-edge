@@ -2,10 +2,13 @@ import {
   Component,
   ElementRef,
   HostListener,
+  inject,
   input,
   output,
 } from '@angular/core';
 import { TimeAgoPipe } from '../../../../../../shared/pipes/time-ago.pipe';
+import { NotificationService } from '../../../../../../shared/services/websocket/notifications.service';
+import { UtilitySessionService } from '../../../../../../shared/services/utility/utility.service';
 
 @Component({
   selector: 'app-notifications-window',
@@ -14,11 +17,11 @@ import { TimeAgoPipe } from '../../../../../../shared/pipes/time-ago.pipe';
   styleUrl: './notifications-window.component.scss',
 })
 export class NotificationsWindowComponent {
-  constructor(private elementRef: ElementRef) {}
-
   notifications = input<any[]>();
   close = output();
   friendReqNotificationChoice = output<any>();
+
+  private elementRef = inject(ElementRef);
 
   @HostListener('document:click', ['$event.target'])
   public onClick(targetElement: HTMLElement): void {
@@ -32,6 +35,8 @@ export class NotificationsWindowComponent {
       this.closeNotifications();
     }
   }
+
+  ngOnInit() {}
 
   closeNotifications(): void {
     console.log('Notifications component will be removed');
