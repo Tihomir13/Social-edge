@@ -12,6 +12,7 @@ import { NotificationsService } from './components/notifications-window/services
 import { ProfileRequestsService } from '../main/components/profile/services/profile-requests.service';
 import { NotificationService } from '../../../../shared/services/websocket/notifications.service';
 import { UtilitySessionService } from '../../../../shared/services/utility/utility.service';
+import { StatusSocketService } from '../../../../shared/services/websocket/status-socket.service';
 
 @Component({
   selector: 'app-header',
@@ -35,17 +36,25 @@ export class HeaderComponent {
   requestProfileService = inject(ProfileRequestsService);
   mainState = inject(MainStateService);
   private notificationService = inject(NotificationService);
+  private statusSocketService = inject(StatusSocketService);
   private utilitySessionService = inject(UtilitySessionService);
 
   ngOnInit(): void {
     this.getNotifications();
     this.getProfileImage();
 
-    this.notificationService.requestNotifications(this.utilitySessionService.userInfo.username);
+    this.notificationService.requestNotifications(
+      this.utilitySessionService.userInfo.username
+    );
 
-    this.notificationService.onNewNotification().subscribe((notification) => {
-      this.notifications.unshift(notification);
-    });
+    this.subscriptions.add(
+      this.statusSocketService.onNewNotification().subscribe((notification) => {
+        if (notification) {
+          console.log('New notification received:', notification);
+          this.notifications.unshift(notification);
+        }
+      })
+    );
   }
 
   @HostListener('window:scroll', [])
@@ -107,7 +116,7 @@ export class HeaderComponent {
     this.subscriptions.add(
       this.requestProfileService.getProfileImage().subscribe({
         next: (response) => {
-          if(response.profileImage) {
+          if (response.profileImage) {
             this.mainState.setProfileImage(response.profileImage.src);
           }
         },

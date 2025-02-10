@@ -3,6 +3,7 @@ import { inject, Injectable, Signal, signal } from '@angular/core';
 import { api } from '../../constants/api';
 import io from 'socket.io-client';
 import { MainStateService } from '../../../pages/home/components/main/shared/services/main-state.service';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -33,6 +34,18 @@ export class StatusSocketService {
         );
       }
     );
+  }
+
+  onNewNotification(): Observable<any> {
+    return new Observable((observer) => {
+      this.socket.on('new-notification', (notification: any) => {
+        observer.next(notification);
+
+        console.log('notifications', notification);
+      });
+
+      return () => this.socket.off('new-notification');
+    });
   }
 
   getOnlineUsers(): Signal<{ [key: string]: boolean }> {
