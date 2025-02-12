@@ -150,7 +150,15 @@
     </div>
 
     @if(isCommentsClicked) {
-    <div class="comments-container"></div>
+    <div class="comments-container">
+      @for (comment of comments(); track $index) {
+      <app-comment
+        [text]="comment.text"
+        [likes]="comment.likes"
+        [username]="comment.author.username"
+      />
+      }
+    </div>
     }
   </div>
 </div>
