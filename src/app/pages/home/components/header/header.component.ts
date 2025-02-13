@@ -10,8 +10,6 @@ import { MainStateService } from '../main/shared/services/main-state.service';
 import { NotificationsWindowComponent } from './components/notifications-window/notifications-window.component';
 import { NotificationsService } from './components/notifications-window/services/notifications.service';
 import { ProfileRequestsService } from '../main/components/profile/services/profile-requests.service';
-import { NotificationService } from '../../../../shared/services/websocket/notifications.service';
-import { UtilitySessionService } from '../../../../shared/services/utility/utility.service';
 import { StatusSocketService } from '../../../../shared/services/websocket/status-socket.service';
 
 @Component({
@@ -35,17 +33,11 @@ export class HeaderComponent {
   requestNotificationsService = inject(NotificationsService);
   requestProfileService = inject(ProfileRequestsService);
   mainState = inject(MainStateService);
-  private notificationService = inject(NotificationService);
   private statusSocketService = inject(StatusSocketService);
-  private utilitySessionService = inject(UtilitySessionService);
 
   ngOnInit(): void {
     this.getNotifications();
     this.getProfileImage();
-
-    this.notificationService.requestNotifications(
-      this.utilitySessionService.userInfo.username
-    );
 
     this.subscriptions.add(
       this.statusSocketService.onNewNotification().subscribe((notification) => {

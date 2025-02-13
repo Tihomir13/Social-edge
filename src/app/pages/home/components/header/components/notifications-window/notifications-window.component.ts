@@ -7,7 +7,6 @@ import {
   output,
 } from '@angular/core';
 import { TimeAgoPipe } from '../../../../../../shared/pipes/time-ago.pipe';
-import { NotificationService } from '../../../../../../shared/services/websocket/notifications.service';
 import { UtilitySessionService } from '../../../../../../shared/services/utility/utility.service';
 
 @Component({
