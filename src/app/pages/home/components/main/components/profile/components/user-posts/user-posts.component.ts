@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 
 import { PostComponent } from '../../../feed/components/post/post.component';
 import { ProfileRequestsService } from '../../services/profile-requests.service';
+import { MainStateService } from '../../../../shared/services/main-state.service';
 
 @Component({
   selector: 'app-user-posts',
@@ -21,12 +22,11 @@ export class UserPostsComponent {
   username: string | null = '';
 
   private profileRequestService = inject(ProfileRequestsService);
+  state = inject(MainStateService);
   route = inject(ActivatedRoute);
 
   ngOnInit(): void {
     this.username = this.route.parent?.snapshot.paramMap.get('username')!;
-
-    console.log(this.username);
 
     this.getUserPosts();
   }

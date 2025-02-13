@@ -2,7 +2,7 @@
   <div class="header d-flex align-items-center justify-content-between">
     <div class="d-flex gap-10px">
       <div class="profile-icon-container">
-        <img class="icon" src="assets/images/image.png" alt="" />
+        <img class="icon" [src]="authorProfileImg()" alt="" />
       </div>
 
       <span class="username-container"> {{ username() }} </span>
@@ -127,7 +127,7 @@
 
     <div class="add-comment-container d-flex gap-10px">
       <div class="profile-icon-container">
-        <img class="icon" src="assets/images/image.png" alt="" />
+        <img class="icon" [src]="currUserImg()" alt="profile image" />
       </div>
 
       <form
@@ -150,7 +150,15 @@
     </div>
 
     @if(isCommentsClicked) {
-    <div class="comments-container"></div>
+    <div class="comments-container">
+      @for (comment of comments(); track $index) {
+      <app-comment
+        [text]="comment.text"
+        [likes]="comment.likes"
+        [username]="comment.author.username"
+      />
+      }
+    </div>
     }
   </div>
 </div>

@@ -10,18 +10,18 @@ import { SlicePipe } from '@angular/common';
 
 import { Subscription } from 'rxjs';
 
-import { imagePostModel } from './model/post.model';
+import { CommentsModel, imagePostModel } from './model/post.model';
 import { PostsRequestsService } from './services/posts-requests.service';
 import { UtilitySessionService } from '../../../../../../../../shared/services/utility/utility.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { GenerateCommentForm } from './helper/comment.form';
-import { CommentModel } from '../../../../../../../../shared/interfaces/post';
 import { MainStateService } from '../../../../shared/services/main-state.service';
+import { CommentComponent } from './components/comment/comment.component';
 
 @Component({
   selector: 'app-post',
   standalone: true,
-  imports: [SlicePipe, ReactiveFormsModule],
+  imports: [SlicePipe, ReactiveFormsModule, CommentComponent],
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss',
   providers: [],
@@ -37,12 +37,14 @@ export class PostComponent implements OnInit, OnDestroy {
 
   postId = input<string>('');
   username = input<string>('');
+  authorProfileImg = input();
   title = input<string>('');
   text = input<string>('');
   tags = input<string[]>([]);
   likes = input<string[]>([]);
   images = input<imagePostModel[]>([]);
-  comments = input<CommentModel[]>([]);
+  comments = input<CommentsModel[]>([]);
+  currUserImg = input();
 
   currentImageIndex = 0;
 
@@ -62,6 +64,10 @@ export class PostComponent implements OnInit, OnDestroy {
     this.commentFormGroup = new GenerateCommentForm(
       this.formBuilder
     ).generateCommentPost();
+
+
+    console.log(this.comments());
+    
   }
 
   nextImage(): void {
