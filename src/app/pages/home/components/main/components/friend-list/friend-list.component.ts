@@ -48,7 +48,7 @@ export class FriendListComponent {
     this.statusInterval = setInterval(() => {
       this.statusSocketService.sendStatus();
       this.statusSocketService.getOnlineUsers();
-    }, 3000);
+    }, 30000);
 
     this.subscription.add(
       this.friendRequest.getAllFriends(this.username).subscribe({

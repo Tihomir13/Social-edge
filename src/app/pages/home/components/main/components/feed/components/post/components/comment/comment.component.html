@@ -1,0 +1,45 @@
+<div class="comment-container d-flex gap-3 mt-3">
+  <div class="d-flex flex-column align-items-center gap-2">
+    <img
+      class="profile-image"
+      [src]="authorProfileImage()"
+      alt="author profile image"
+      width="45px"
+      height="45px"
+    />
+
+    <img
+      class="like-icon"
+      src="./assets/icons/sparkle.png"
+      alt="like icon"
+      width="23px"
+      height="23px"
+    />
+  </div>
+
+  <div class="d-flex flex-column">
+    <span>
+      {{ username() }}
+    </span>
+
+    <p
+      class="text mb-1"
+      [class.collapsed]="isCollapsed"
+      [class.expanded]="!isCollapsed"
+    >
+      {{ isCollapsed ? (text() | slice : 0 : 75) + "..." : text() }}
+    </p>
+
+    @if (text()!.length > 100) {
+    <span (click)="toggleReadMore()" class="read-more">
+      {{ isCollapsed ? "more" : "less" }}
+    </span>
+    }
+
+    <div class="d-flex gap-3">
+      <span> {{ date() | timeAgo }} </span>
+      <span> {{ likes() }} likes </span>
+      <span> Reply </span>
+    </div>
+  </div>
+</div>

@@ -216,6 +216,8 @@
           width: 100%;
           border-radius: 25px;
           height: 45px;
+          resize: none;
+          overflow-y: hidden;
 
           &:focus {
             outline: none;
@@ -223,8 +225,9 @@
           }
         }
 
-        .post-btn {
+        .post-comment-btn {
           position: absolute;
+          bottom: 8px;
           right: 22px;
           border: none;
           background-color: transparent;
@@ -236,6 +239,23 @@
 
           &:hover {
             opacity: 0.8;
+          }
+        }
+
+        .cancel-comment-btn {
+          position: absolute;
+          bottom: 8px;
+          right: 70px;
+          border: none;
+          background-color: transparent;
+
+          color: red;
+          cursor: pointer;
+          font-weight: bold;
+          display: inline-block;
+
+          &:hover {
+            opacity: 0.5;
           }
         }
       }

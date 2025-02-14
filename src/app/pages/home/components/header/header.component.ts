@@ -38,14 +38,14 @@ export class HeaderComponent {
   private utilitySessionService = inject(UtilitySessionService);
 
   ngOnInit(): void {
-    this.getNotifications();
-    this.getProfileImage();
-
     this.notificationService.requestNotifications(this.utilitySessionService.userInfo.username);
-
+    
     this.notificationService.onNewNotification().subscribe((notification) => {
       this.notifications.unshift(notification);
     });
+    
+    this.getNotifications();
+    this.getProfileImage();
   }
 
   @HostListener('window:scroll', [])

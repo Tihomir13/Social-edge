@@ -7,21 +7,22 @@ import {
   signal,
 } from '@angular/core';
 import { SlicePipe } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { Subscription } from 'rxjs';
 
 import { imagePostModel } from './model/post.model';
 import { PostsRequestsService } from './services/posts-requests.service';
 import { UtilitySessionService } from '../../../../../../../../shared/services/utility/utility.service';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { GenerateCommentForm } from './helper/comment.form';
-import { CommentModel } from '../../../../../../../../shared/interfaces/post';
 import { MainStateService } from '../../../../shared/services/main-state.service';
+import { CommentComponent } from './components/comment/comment.component';
+import { AutoResizeTextareaDirective } from '../../../../../../../../shared/directives/auto-resize-textarea.directive';
 
 @Component({
   selector: 'app-post',
   standalone: true,
-  imports: [SlicePipe, ReactiveFormsModule],
+  imports: [SlicePipe, ReactiveFormsModule, CommentComponent, AutoResizeTextareaDirective],
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss',
   providers: [],
@@ -43,7 +44,8 @@ export class PostComponent implements OnInit, OnDestroy {
   tags = input<string[]>([]);
   likes = input<string[]>([]);
   images = input<imagePostModel[]>([]);
-  comments = input<CommentModel[]>([]);
+  comments = input<any[]>([]);
+  totalCommentsCount = input<number>(0);
   currUserImg = input();
 
   currentImageIndex = 0;
@@ -130,12 +132,13 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   onComment(): void {
-    const comment = this.commentFormGroup.value.comment;
+    const comment = this.commentFormGroup.value.comment.trim();
 
     if (this.commentFormGroup.valid) {
       this.subscriptions.add(
         this.postRequests.commentPost(comment, this.postId()).subscribe({
           next: (response) => {
+            this.commentFormGroup.reset();
             console.log(response);
           },
           error: (error) => {
@@ -144,6 +147,10 @@ export class PostComponent implements OnInit, OnDestroy {
         })
       );
     }
+  }
+
+  onCancelComment(): void {
+    this.commentFormGroup.reset();
   }
 
   ngOnDestroy(): void {

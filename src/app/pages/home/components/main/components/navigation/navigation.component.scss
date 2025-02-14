@@ -33,9 +33,9 @@
 @media screen and (max-width: 768px) {
   .navigation-container {
     background-color: styles.$light-plus-purple;
+    position: fixed !important;
     width: 100%;
-    position: fixed;
-
+    padding: 0px;
     .option {
       position: relative;
       .label {

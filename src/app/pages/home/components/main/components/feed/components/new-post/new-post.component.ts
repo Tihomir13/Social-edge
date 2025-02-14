@@ -315,6 +315,7 @@ export class NewPostComponent implements OnDestroy {
             this.newPostState.isCreatingNewPost = false;
             this.newPostState.resetUI();
             console.log(this.newPostFormService.newPostFormGroup()?.value);
+            this.resetPost();
 
             this.creatingNewPost.emit();
           },
