@@ -62,7 +62,7 @@
       <div class="d-flex justify-content-center align-items-center profile-image-container p-0">
         <img
           class="profile-image"
-          [src]="this.mainState.userProfileImg()"
+          [src]="state.isProfileOwner()? this.mainState.userProfileImg(): profileImage"
           alt="Profile icon"
           (click)="openModalProfilePhotoChange()"
         />

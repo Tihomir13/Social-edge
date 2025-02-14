@@ -11,7 +11,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { Subscription } from 'rxjs';
 
-import { imagePostModel } from './model/post.model';
+import { CommentsModel, imagePostModel } from './model/post.model';
 import { PostsRequestsService } from './services/posts-requests.service';
 import { UtilitySessionService } from '../../../../../../../../shared/services/utility/utility.service';
 import { GenerateCommentForm } from './helper/comment.form';
@@ -66,6 +66,10 @@ export class PostComponent implements OnInit, OnDestroy {
     this.commentFormGroup = new GenerateCommentForm(
       this.formBuilder
     ).generateCommentPost();
+
+
+    console.log(this.comments());
+    
   }
 
   nextImage(): void {

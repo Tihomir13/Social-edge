@@ -10,8 +10,7 @@ import { MainStateService } from '../main/shared/services/main-state.service';
 import { NotificationsWindowComponent } from './components/notifications-window/notifications-window.component';
 import { NotificationsService } from './components/notifications-window/services/notifications.service';
 import { ProfileRequestsService } from '../main/components/profile/services/profile-requests.service';
-import { NotificationService } from '../../../../shared/services/websocket/notifications.service';
-import { UtilitySessionService } from '../../../../shared/services/utility/utility.service';
+import { StatusSocketService } from '../../../../shared/services/websocket/status-socket.service';
 
 @Component({
   selector: 'app-header',
@@ -34,18 +33,20 @@ export class HeaderComponent {
   requestNotificationsService = inject(NotificationsService);
   requestProfileService = inject(ProfileRequestsService);
   mainState = inject(MainStateService);
-  private notificationService = inject(NotificationService);
-  private utilitySessionService = inject(UtilitySessionService);
+  private statusSocketService = inject(StatusSocketService);
 
   ngOnInit(): void {
-    this.notificationService.requestNotifications(this.utilitySessionService.userInfo.username);
-    
-    this.notificationService.onNewNotification().subscribe((notification) => {
-      this.notifications.unshift(notification);
-    });
-    
     this.getNotifications();
     this.getProfileImage();
+
+    this.subscriptions.add(
+      this.statusSocketService.onNewNotification().subscribe((notification) => {
+        if (notification) {
+          console.log('New notification received:', notification);
+          this.notifications.unshift(notification);
+        }
+      })
+    );
   }
 
   @HostListener('window:scroll', [])
@@ -107,7 +108,7 @@ export class HeaderComponent {
     this.subscriptions.add(
       this.requestProfileService.getProfileImage().subscribe({
         next: (response) => {
-          if(response.profileImage) {
+          if (response.profileImage) {
             this.mainState.setProfileImage(response.profileImage.src);
           }
         },
