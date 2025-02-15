@@ -195,6 +195,20 @@
       }
     }
 
+    .view-more-btn {
+      height: 30px;
+      border-radius: 11px;
+      color: $primary-purple;
+      background-color: rgb(238, 238, 238);
+      cursor: pointer;
+
+      &:hover {
+        .view-more-btn {
+          opacity: 0.6;
+        }
+      }
+    }
+
     .add-comment-container {
       margin-top: 20px;
       .profile-icon-container {

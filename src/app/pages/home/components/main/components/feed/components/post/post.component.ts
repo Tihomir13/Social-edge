@@ -9,7 +9,7 @@ import {
 import { SlicePipe } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
-import { Subscription } from 'rxjs';
+import { Subscription, timer } from 'rxjs';
 
 import { CommentsModel, imagePostModel } from './model/post.model';
 import { PostsRequestsService } from './services/posts-requests.service';
@@ -22,7 +22,12 @@ import { AutoResizeTextareaDirective } from '../../../../../../../../shared/dire
 @Component({
   selector: 'app-post',
   standalone: true,
-  imports: [SlicePipe, ReactiveFormsModule, CommentComponent, AutoResizeTextareaDirective],
+  imports: [
+    SlicePipe,
+    ReactiveFormsModule,
+    CommentComponent,
+    AutoResizeTextareaDirective,
+  ],
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss',
   providers: [],
@@ -33,8 +38,9 @@ export class PostComponent implements OnInit, OnDestroy {
   isCommentsClicked: boolean = true;
   isCollapsed = true;
 
-  currLikes = signal<number>(0);
-  localLikes: string[] = [];
+  likeTimer: Subscription | null = null;
+  // currLikes = signal<number>(0);
+  // localLikes: string[] = [];
 
   postId = input<string>('');
   username = input<string>('');
@@ -47,6 +53,10 @@ export class PostComponent implements OnInit, OnDestroy {
   comments = input<any[]>([]);
   totalCommentsCount = input<number>(0);
   currUserImg = input();
+  totalLikes$ = input<number>();
+  isLikedByCurrUser$ = input<boolean>();
+  isLiked: boolean | undefined;
+  totalLikes: number | undefined;
 
   currentImageIndex = 0;
 
@@ -60,25 +70,18 @@ export class PostComponent implements OnInit, OnDestroy {
   formBuilder = inject(FormBuilder);
 
   ngOnInit(): void {
-    this.localLikes = [...this.likes()];
-    this.currLikes.set(this.localLikes.length);
+    this.isLiked = this.isLikedByCurrUser$();
+    this.totalLikes = this.totalLikes$();
 
     this.commentFormGroup = new GenerateCommentForm(
       this.formBuilder
     ).generateCommentPost();
-
-
-    console.log(this.comments());
-    
   }
 
   nextImage(): void {
     if (this.currentImageIndex < this.images().length - 1) {
       this.currentImageIndex++;
     }
-
-    console.log('Current Index:', this.currentImageIndex);
-    console.log('Images:', this.images());
   }
 
   prevImage(): void {
@@ -98,34 +101,28 @@ export class PostComponent implements OnInit, OnDestroy {
     this.isCommentsClicked = !this.isCommentsClicked;
   }
 
-  async toggleLike(): Promise<any> {
-    const username = this.utilityService.userInfo.username;
+  toggleLike() {
+    // Променяме UI веднага
+    this.isLiked = !this.isLiked;
+    this.totalLikes! += this.isLiked ? 1 : -1;
 
-    if (this.localLikes.includes(username)) {
-      const newLikes = this.localLikes.filter((user) => user !== username);
-      this.currLikes.set(this.currLikes() - 1);
-      this.localLikes = newLikes;
-    } else {
-      this.localLikes.push(username);
-      this.currLikes.set(this.currLikes() + 1);
+    // Ако има активен таймер за този пост – анулираме го
+    if (this.likeTimer) {
+      this.likeTimer.unsubscribe();
     }
 
-    try {
-      await this.postLikeDislike();
-    } catch (error) {
-      console.log('Error syncing with server:', error);
-    }
+    // Стартираме нов таймер
+    this.likeTimer = timer(5000).subscribe(() => {
+      this.postLikeDislike();
+      this.likeTimer = null; // След изпращане на заявка нулираме таймера
+    });
   }
 
-  postLikeDislike(): Promise<any> {
-    return new Promise((resolve, reject) => {
+  postLikeDislike(): Promise<void> {
+    return new Promise((_, reject) => {
       this.subscriptions.add(
         this.postRequests.likePost(this.postId()).subscribe({
-          next: (response) => {
-            console.log(response.likes);
-            this.currLikes.set(response.likes.length);
-            resolve(response);
-          },
+          next: () => {},
           error: (error) => {
             console.log(error);
             reject(error);

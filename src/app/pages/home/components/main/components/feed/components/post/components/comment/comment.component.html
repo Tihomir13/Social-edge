@@ -4,8 +4,8 @@
       class="profile-image"
       [src]="authorProfileImage()"
       alt="author profile image"
-      width="45px"
-      height="45px"
+      width="45"
+      height="45"
     />
 
     <img
@@ -27,7 +27,7 @@
       [class.collapsed]="isCollapsed"
       [class.expanded]="!isCollapsed"
     >
-      {{ isCollapsed ? (text() | slice : 0 : 75) + "..." : text() }}
+    {{ isCollapsed && text()!.length > 75 ? (text() | slice : 0 : 75) + "..." : text() }}
     </p>
 
     @if (text()!.length > 100) {
