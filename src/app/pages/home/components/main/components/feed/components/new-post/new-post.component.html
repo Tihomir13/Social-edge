@@ -6,7 +6,11 @@
   <div class="new-post-title d-flex align-items-center justify-content-between">
     <img
       class="profile-icon"
-      [src]="mainState.userProfileImg() ? mainState.userProfileImg() : mainState.defaultProfileImg"
+      [src]="
+        mainState.userProfileImg()
+          ? mainState.userProfileImg()
+          : mainState.defaultProfileImg
+      "
       alt="profile image"
       width="45px"
       height="45px"
@@ -131,8 +135,10 @@
     }
 
     <div class="btn-container d-flex justify-content-between mt-5">
-      <button type="button" class="btn btn-cancel" (click)="resetPost()">Cancel</button>
-      
+      <button type="button" class="btn btn-cancel" (click)="resetPost()">
+        Cancel
+      </button>
+
       <button type="submit" class="btn">Post</button>
     </div>
   </div>
@@ -140,9 +146,13 @@
 </form>
 
 @if(isDeletionModalOpened) {
-  <div class="modal-overlay">
-    <div class="modal-container">
-      <app-custom-modal (clickedOption)="onChoseOptionProfile($event)" [title]="'You are about to delete current post'" [options]="modalOptions"></app-custom-modal>
-    </div>
+<div class="modal-overlay">
+  <div class="modal-container">
+    <app-custom-modal
+      (clickedOption)="onChoseOptionProfile($event)"
+      [title]="'You are about to delete current post'"
+      [options]="modalOptions"
+    ></app-custom-modal>
   </div>
+</div>
 }

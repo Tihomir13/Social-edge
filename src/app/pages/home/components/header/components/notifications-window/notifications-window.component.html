@@ -22,8 +22,13 @@
         @if(notification.type === 'ADD_FRIEND') {
             <div class="d-flex gap-1">
                 <button class="btn btn-accept py-1 px-2" (click)="acceptFriendReq(notification._id)">Accept</button>
-                <button class="btn btn-remove py-1 px-2" (click)="removeFriendReq(notification._id)">Remove</button>
+                <button class="btn btn-remove py-1 px-2" (click)="removeNotification(notification._id)">Remove</button>
             </div>
+        }
+        @else {
+          <div class="d-flex gap-1">
+              <button class="btn btn-remove py-1 px-2" (click)="removeNotification(notification._id)">Remove</button>
+          </div>
         }
       </div>
     </div>

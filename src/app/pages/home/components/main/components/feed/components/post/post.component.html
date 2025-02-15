@@ -2,7 +2,7 @@
   <div class="header d-flex align-items-center justify-content-between">
     <div class="d-flex gap-10px">
       <div class="profile-icon-container">
-        <img class="icon" src="assets/images/image.png" alt="" />
+        <img width="45" height="45" class="icon" [src]="authorProfileImg()" alt="" />
       </div>
 
       <span class="username-container"> {{ username() }} </span>
@@ -26,7 +26,7 @@
       [class.collapsed]="isCollapsed"
       [class.expanded]="!isCollapsed"
     >
-      {{ isCollapsed ? (text() | slice : 0 : 75) + "..." : text() }}
+      {{ isCollapsed && text().length > 75 ? (text() | slice : 0 : 75) + "..." : text() }}
     </p>
 
     @if (text().length > 100) {
@@ -90,7 +90,7 @@
         <div class="d-flex gap-10px">
           <img
             class="interaction-icon"
-            src="assets/icons/sparkle.png"
+            [src]="isLiked ? 'assets/icons/sparkle-colored.png': 'assets/icons/sparkle.png'"
             alt=""
             (click)="toggleLike()"
           />
@@ -119,38 +119,62 @@
 
     <div class="row">
       <div class="d-flex gap-10px">
-        <span class="fw-bold">{{ currLikes() }} likes</span>
+        <span class="fw-bold">{{ totalLikes }} likes</span>
       </div>
 
-      <div>{{ comments().length }} comments</div>
+      <div>{{ totalCommentsCount() }} comments</div>
     </div>
 
-    <div class="add-comment-container d-flex gap-10px">
-      <div class="profile-icon-container">
-        <img class="icon" src="assets/images/image.png" alt="" />
+    <!-- @if(isCommentsClicked) {
+      <div class="comments-container"></div>
+      } -->
+
+    <div class="comments-container">
+      @for (comment of comments(); track $index) {
+      <app-comment
+        [username]="comment.author.username"
+        [authorProfileImage]="comment.author.profileImage.src"
+        [text]="comment.text"
+        [likes]="comment.likes.length"
+        [date]="comment.createdAt"
+      ></app-comment>
+      }
+
+      @if (totalCommentsCount() > 2) {
+        <div class="view-more-btn mt-3 d-flex justify-content-center align-items-center">
+          <span class="view-more-btn d-flex justify-content-center align-items-center fw-semibold">View more</span>
+        </div>
+      }
+
+      <div class="add-comment-container d-flex gap-10px">
+        <div class="profile-icon-container">
+          <img width="45" height="45" class="icon" [src]="currUserImg()" alt="profile image" />
+        </div>
+
+        <form
+          class="my-comment d-flex"
+          [formGroup]="commentFormGroup"
+          (ngSubmit)="onComment()"
+        >
+          <textarea
+            class="form-control"
+            #comment
+            type="text"
+            placeholder="Add a comment..."
+            formControlName="comment"
+            appAutoResizeTextarea
+          >
+          </textarea>
+
+          @if(comment.value.trim() !== '') {
+            <div class="d-flex flex-column">
+              <button class="post-comment-btn" type="submit">Post</button>
+
+              <button class="cancel-comment-btn" type="button" (click)="onCancelComment()">Cancel</button>
+            </div>
+          }
+        </form>
       </div>
-
-      <form
-        class="my-comment d-flex"
-        [formGroup]="commentFormGroup"
-        (ngSubmit)="onComment()"
-      >
-        <input
-          class="form-control"
-          #comment
-          type="text"
-          placeholder="Add a comment..."
-          formControlName="comment"
-        />
-
-        @if(comment.value.trim() !== '') {
-        <button class="post-btn" type="submit">Post</button>
-        }
-      </form>
     </div>
-
-    @if(isCommentsClicked) {
-    <div class="comments-container"></div>
-    }
   </div>
 </div>

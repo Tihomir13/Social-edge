@@ -19,6 +19,7 @@ import { ModalService } from '../../../../shared/services/modal.service';
 import { CustomModalComponent } from '../../../../../../shared/components/custom-modal/custom-modal.component';
 import { maxImageSize } from '../../../../../../shared/constants/settings';
 import * as nsfwjs from 'nsfwjs';
+import { MainStateService } from '../../shared/services/main-state.service';
 
 @Component({
   selector: 'app-profile',
@@ -85,8 +86,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private profileRequestService = inject(ProfileRequestsService);
-
   private renderer = inject(Renderer2);
+  mainState = inject(MainStateService);
 
   modalService = inject(ModalService);
 
@@ -276,8 +277,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.profileRequestService
         .addNewProfilePhoto(this.username, formData)
         .subscribe({
-          next: () => {
-            this.getInitialData(this.username);
+          next: (response: any) => {
+            this.mainState.setProfileImage(response.profileImage.src);
           },
           error: (error) => {
             console.log(error);
@@ -435,15 +436,17 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   onRemoveFriendRequest(): void {
     this.subscriptions.add(
-      this.profileRequestService.removeFriendRequestByUsername(this.username).subscribe({
-        next: (response) => {
-          console.log(response);
-          this.isRequested = false;
-        },
-        error: (error) => {
-          console.log(error);
-        },
-      })
+      this.profileRequestService
+        .removeFriendRequestByUsername(this.username)
+        .subscribe({
+          next: (response) => {
+            console.log(response);
+            this.isRequested = false;
+          },
+          error: (error) => {
+            console.log(error);
+          },
+        })
     );
   }
 
