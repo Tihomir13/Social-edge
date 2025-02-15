@@ -1,14 +1,16 @@
 import { inject, Injectable, Signal, signal } from '@angular/core';
 
-import { api } from '../../constants/api';
-import io from 'socket.io-client';
-import { MainStateService } from '../../../pages/home/components/main/shared/services/main-state.service';
 import { Observable } from 'rxjs';
+
+import io from 'socket.io-client';
+import { api } from '../../constants/api';
+import { MainStateService } from '../../../pages/home/components/main/shared/services/main-state.service';
+
 
 @Injectable({
   providedIn: 'root',
 })
-export class StatusSocketService {
+export class MainSocketService {
   token = sessionStorage.getItem('token');
   private socket = io(`${api}?token=${this.token}`);
 

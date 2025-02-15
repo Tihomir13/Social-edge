@@ -11,6 +11,9 @@
     [postId]="post._id"
     [comments]="post.comments"
     [currUserImg]="state.userProfileImg()"
+    [totalCommentsCount]="post.commentsCount"
+    [totalLikes$]="post.totalLikes"
+    [isLikedByCurrUser$]="post.isLiked"
   />
   }
 </div>

@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
@@ -16,4 +16,12 @@ export class NotificationsService {
   getNotifications(): Observable<any> {
     return this.http.get(`${api}/notifications`, { headers: this.utility.headers });
   }
+
+   // Създаваме signal със стартова стойност 0
+   refreshFriends = signal(0);
+
+   // Метод, който актуализира signal-а
+   triggerRefreshFriends() {
+     this.refreshFriends.update((value) => value + 1);
+   }
 }
