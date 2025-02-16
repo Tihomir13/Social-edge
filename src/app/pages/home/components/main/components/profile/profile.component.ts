@@ -20,6 +20,7 @@ import { CustomModalComponent } from '../../../../../../shared/components/custom
 import { maxImageSize } from '../../../../../../shared/constants/settings';
 import * as nsfwjs from 'nsfwjs';
 import { MainStateService } from '../../shared/services/main-state.service';
+import { NotificationsService } from '../../../header/components/notifications-window/services/notifications.service';
 
 @Component({
   selector: 'app-profile',
@@ -88,6 +89,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   private profileRequestService = inject(ProfileRequestsService);
   private renderer = inject(Renderer2);
   mainState = inject(MainStateService);
+  private requestNotificationsService = inject(NotificationsService);
 
   modalService = inject(ModalService);
 
@@ -456,6 +458,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         next: () => {
           this.isFriend = false;
           this.closeModal();
+          this.requestNotificationsService.triggerRefreshFriends();
         },
         error: (error) => {
           console.log(error);
