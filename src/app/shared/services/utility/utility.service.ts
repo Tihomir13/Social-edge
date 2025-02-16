@@ -25,4 +25,8 @@ export class UtilitySessionService {
   setToken(newToken: any) {
     sessionStorage.setItem('token', newToken);
   }
+
+  resetSession(): void {
+    sessionStorage.clear();
+  }
 }

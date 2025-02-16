@@ -8,7 +8,13 @@ export class MainStateService {
   defaultProfileImg = 'assets/images/default-images/profile-image.png';
 
   posts = signal<any[]>([]);
-  friends = signal<{ username: string; isOnline: boolean }[]>([]);
+  friends = signal<
+    {
+      username: string;
+      isOnline: boolean;
+      profileImage: { src: string; contentType: string;}; 
+    }[]
+  >([]);
   currentChatHeads = signal<any[]>([]);
   isChatActive = signal<boolean>(false);
   searchedUsers = signal<any[]>([]);

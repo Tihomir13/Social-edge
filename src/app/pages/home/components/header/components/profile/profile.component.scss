@@ -1,43 +1,90 @@
-@import "../../../../../../../styles.scss";
+@use "../../../../../../../styles.scss" as styles;
 
-.profile-container {
-  background-color: $light-purple;
-  border-radius: 25px;
-  color: rgb(255, 255, 255);
+.profile-options-container {
   position: relative;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-
-  .profile-image {
-    margin-right: 5px;
-    width: 50px;
+  .profile-container {
+    background-color: styles.$light-purple;
     border-radius: 25px;
-    cursor: pointer; // прави снимката кликаема
-    transition: transform 0.3s ease-in-out;
+    color: rgb(255, 255, 255);
+    position: relative;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    z-index: 10;
 
-    &.clickable {
-      &:hover {
-        transform: translateY(-2px);
+    .profile-image {
+      margin-right: 5px;
+      width: 50px;
+      border-radius: 25px;
+      cursor: pointer; // прави снимката кликаема
+      transition: transform 0.3s ease-in-out;
+
+      &.clickable {
+        &:hover {
+          transform: translateY(-2px);
+        }
+      }
+
+      &.rotated {
+        transform: rotate(180deg);
       }
     }
 
-    &.rotated {
-      transform: rotate(180deg);
+    .arrow-img {
+      position: absolute;
+      cursor: pointer;
+      width: 25px;
+      right: 25px;
+      transition: transform 0.2s ease-in-out;
+
+      &:hover {
+        transform: translateY(-2px);
+      }
+
+      &.rotated {
+        transform: rotate(180deg);
+      }
     }
   }
 
-  .arrow-img {
+  .profile-menu {
     position: absolute;
-    cursor: pointer;
-    width: 25px;
-    right: 25px;
-    transition: transform 0.3s ease-in-out;
+    top: 25px;
+    max-width: 250px;
+    max-height: 0px;
+    height: 300%;
+    width: 100%;
+    background-color: styles.$post-light-color;
+    border-radius: 0px 0px styles.$border-radius styles.$border-radius;
+    transition: all 0.3s ease-out;
+    border: 1px solid styles.$primary-purple;
 
-    &:hover {
-      transform: translateY(-2px);
+    .list-unstyled {
+      margin-top: 25px;
+      margin-bottom: 0px;
+      width: 100%;
     }
 
-    &.rotated {
-      transform: rotate(180deg);
+    .option {
+      height: 50px;
+      opacity: 0;
+      width: 100%;
+
+      transition: all 0.3s ease-out;
+      cursor: pointer;
+
+      &:hover {
+        background-color: styles.$light-purple;
+        color: white;
+      }
+    }
+    
+    &.open {
+      max-height: 400px;
+      opacity: 1;
+
+      .option {
+        height: 50px;
+        opacity: 1;
+      }
     }
   }
 }

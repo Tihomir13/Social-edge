@@ -30,7 +30,7 @@ export class HeaderComponent {
   router = inject(Router);
   route = inject(ActivatedRoute);
   requestSearchService = inject(SearchRequestsService);
-  requestNotificationsService = inject(NotificationsService);
+  private requestNotificationsService = inject(NotificationsService);
   requestProfileService = inject(ProfileRequestsService);
   mainState = inject(MainStateService);
   private statusSocketService = inject(MainSocketService);
@@ -41,10 +41,15 @@ export class HeaderComponent {
 
     this.subscriptions.add(
       this.statusSocketService.onNewNotification().subscribe((notification) => {
-        if (notification) {
-          console.log('ss');
-          console.log('New notification received:', notification);
-          this.notifications.unshift(notification);
+        if (!notification) {
+          return;
+        }
+        this.notifications.unshift(notification);
+        
+        if(notification.type==='FRIEND_ACCEPT'){
+          setTimeout(() => {
+            this.requestNotificationsService.triggerRefreshFriends();
+          }, 1000);
         }
       })
     );

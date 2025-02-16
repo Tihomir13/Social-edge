@@ -35,7 +35,13 @@ export class FriendListComponent {
 
   username = this.utilitySession.userInfo.username;
   private statusInterval: any;
-  currentFriends = signal<{ username: string; isOnline: boolean }[]>([]);
+  currentFriends = signal<
+    {
+      username: string;
+      isOnline: boolean;
+      profileImage: { src: string; contentType: string;};
+    }[]
+  >([]);
 
   constructor() {
     effect(() => {
@@ -45,7 +51,7 @@ export class FriendListComponent {
 
     effect(() => {
       const refresh = this.notificationService.refreshFriends();
-      
+
       this.subscription.add(
         this.friendRequest.getAllFriends(this.username).subscribe({
           next: (response) => {
@@ -75,6 +81,8 @@ export class FriendListComponent {
           if (response.userFriends) {
             this.state.setFriends(response.userFriends);
             this.statusSocketService.listenForUserStatus();
+
+            console.log(response.userFriends);
           }
         },
         error: (error) => {
