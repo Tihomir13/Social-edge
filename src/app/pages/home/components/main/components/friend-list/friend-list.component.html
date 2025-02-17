@@ -10,7 +10,11 @@
   <div class="row">
     <div class="friend-list d-flex flex-column">
       @for (friend of currentFriends(); track $index) {
-        <app-friend-list-user-card [username]="friend.username" [isOnline]="friend.isOnline" [profileImage]="friend.profileImage.src" (click)="onUserProfileClick(friend)"/>
+        <app-friend-list-user-card 
+        [username]="friend.username" 
+        [isOnline]="friend.isOnline" 
+        [profileImage]="friend.profileImage ? friend.profileImage.src : mainState.defaultProfileImg" 
+        (click)="onUserProfileClick(friend)"/>
       }
     </div>
   </div>

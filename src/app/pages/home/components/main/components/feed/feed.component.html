@@ -4,7 +4,7 @@
   @for (post of this.state.posts(); track $index) {
   <app-post
     [username]="post.author.username"
-    [authorProfileImg]="post.author.profileImage.src"
+    [authorProfileImg]="post.author.profileImage"
     [images]="post.images"
     [likes]="post.likes"
     [title]="post.title"

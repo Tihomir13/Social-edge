@@ -44,7 +44,7 @@ export class PostComponent implements OnInit, OnDestroy {
 
   postId = input<string>('');
   username = input<string>('');
-  authorProfileImg = input();
+  authorProfileImg = input<any>();
   title = input<string>('');
   text = input<string>('');
   tags = input<string[]>([]);

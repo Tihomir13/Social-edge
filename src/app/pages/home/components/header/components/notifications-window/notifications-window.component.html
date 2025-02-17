@@ -6,7 +6,7 @@
     >
       <img
         class="profile-image"
-        [src]="notification.profileImage.src"
+        [src]="notification.profileImage? notification.profileImage.src : mainState.defaultProfileImg"
         alt="profile image"
         width="45"
         height="45"

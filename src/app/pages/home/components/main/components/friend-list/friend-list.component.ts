@@ -27,7 +27,7 @@ export class FriendListComponent {
   open = output<any>();
   subscription = new Subscription();
 
-  state = inject(MainStateService);
+  mainState = inject(MainStateService);
   private statusSocketService = inject(MainSocketService);
   private utilitySession = inject(UtilitySessionService);
   private friendRequest = inject(FriendListRequestsService);
@@ -45,7 +45,7 @@ export class FriendListComponent {
 
   constructor() {
     effect(() => {
-      const newValue = this.state.friends();
+      const newValue = this.mainState.friends();
       this.currentFriends.set(newValue);
     });
 
@@ -56,7 +56,7 @@ export class FriendListComponent {
         this.friendRequest.getAllFriends(this.username).subscribe({
           next: (response) => {
             if (response.userFriends) {
-              this.state.setFriends(response.userFriends);
+              this.mainState.setFriends(response.userFriends);
             }
           },
           error: (error) => {
@@ -79,7 +79,7 @@ export class FriendListComponent {
       this.friendRequest.getAllFriends(this.username).subscribe({
         next: (response) => {
           if (response.userFriends) {
-            this.state.setFriends(response.userFriends);
+            this.mainState.setFriends(response.userFriends);
             this.statusSocketService.listenForUserStatus();
 
             console.log(response.userFriends);

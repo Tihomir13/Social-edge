@@ -2,7 +2,7 @@
   <div class="header d-flex align-items-center justify-content-between">
     <div class="d-flex gap-10px">
       <div class="profile-icon-container">
-        <img width="45" height="45" class="icon" [src]="authorProfileImg()" alt="" />
+        <img width="45" height="45" class="icon" [src]="authorProfileImg() ? authorProfileImg().src : mainState.defaultProfileImg" alt="" />
       </div>
 
       <span class="username-container"> {{ username() }} </span>
@@ -133,7 +133,7 @@
       @for (comment of comments(); track $index) {
       <app-comment
         [username]="comment.author.username"
-        [authorProfileImage]="comment.author.profileImage.src"
+        [authorProfileImage]="comment.author.profileImage"
         [text]="comment.text"
         [likes]="comment.likes.length"
         [date]="comment.createdAt"

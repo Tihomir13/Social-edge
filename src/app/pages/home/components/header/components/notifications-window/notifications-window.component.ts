@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 
 import { TimeAgoPipe } from '../../../../../../shared/pipes/time-ago.pipe';
+import { MainStateService } from '../../../main/shared/services/main-state.service';
 
 @Component({
   selector: 'app-notifications-window',
@@ -21,6 +22,7 @@ export class NotificationsWindowComponent {
   friendReqNotificationChoice = output<any>();
 
   private elementRef = inject(ElementRef);
+  mainState = inject(MainStateService);
 
   @HostListener('document:click', ['$event.target'])
   public onClick(targetElement: HTMLElement): void {
