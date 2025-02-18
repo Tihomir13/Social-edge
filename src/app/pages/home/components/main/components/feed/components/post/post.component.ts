@@ -18,6 +18,7 @@ import { GenerateCommentForm } from './helper/comment.form';
 import { MainStateService } from '../../../../shared/services/main-state.service';
 import { CommentComponent } from './components/comment/comment.component';
 import { AutoResizeTextareaDirective } from '../../../../../../../../shared/directives/auto-resize-textarea.directive';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-post',
@@ -65,6 +66,7 @@ export class PostComponent implements OnInit, OnDestroy {
   commentFormGroup!: FormGroup;
 
   private postRequests = inject(PostsRequestsService);
+  router = inject(Router);
   mainState = inject(MainStateService);
   utilityService = inject(UtilitySessionService);
   formBuilder = inject(FormBuilder);
@@ -88,9 +90,6 @@ export class PostComponent implements OnInit, OnDestroy {
     if (this.currentImageIndex > 0) {
       this.currentImageIndex--;
     }
-
-    console.log('Current Index:', this.currentImageIndex);
-    console.log('Images:', this.images());
   }
 
   toggleReadMore(): void {
@@ -99,6 +98,10 @@ export class PostComponent implements OnInit, OnDestroy {
 
   toggleComments(): void {
     this.isCommentsClicked = !this.isCommentsClicked;
+  }
+
+  navigateToAuthorProfile(): void {
+    this.router.navigate(['profile', this.username()]);
   }
 
   toggleLike() {
