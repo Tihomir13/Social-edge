@@ -6,13 +6,14 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
+
+import { Subscription } from 'rxjs';
 
 import { RegisterFormService } from './services/register-form.service';
 import { RegisterRequestsService } from './services/register-requests.service';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { RouterModule } from '@angular/router';
 import { GoogleBtnComponent } from '../../shared/components/google-btn/google-btn.component';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -21,7 +22,6 @@ import { Subscription } from 'rxjs';
     ShortenMonthPipe,
     ReactiveFormsModule,
     FormsModule,
-    HttpClientModule,
     RouterModule,
     GoogleBtnComponent,
   ],
@@ -179,8 +179,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     } else {
       this.isDateValid = true;
     }
-    console.log(this.isSameAsToday(this.registerFormGroup.value.birthday));
-
+    
     if (this.registerFormGroup.valid) {
       this.subscriptions.add(
         this.reqService.registerUser(this.registerFormGroup.value).subscribe({
