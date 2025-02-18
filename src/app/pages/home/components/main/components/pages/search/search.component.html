@@ -12,7 +12,7 @@
       [currUserProfileName]="this.utility.userInfo.username"
       (clickProfile)="onClickProfile($event)"
       [isFriend]="user.isFriend"
-      [isRequested]="user.isRequested"
+      [isRequested]="user.isRequestedBySender"
       (addFriend)="onAddFriend($event)"
       (removeRequest)="onRemoveFriendRequest($event)"
     />

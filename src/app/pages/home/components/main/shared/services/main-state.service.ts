@@ -18,6 +18,7 @@ export class MainStateService {
   currentChatHeads = signal<any[]>([]);
   isChatActive = signal<boolean>(false);
   searchedUsers = signal<any[]>([]);
+  notifications = signal<any[]>([]);
   userProfileImg = signal<any>(this.defaultProfileImg);
 
   setPosts(posts: any): void {

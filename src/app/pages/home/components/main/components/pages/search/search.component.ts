@@ -61,7 +61,7 @@ export class SearchComponent {
   private updateUserRequestStatus(username: string, status: boolean) {
     this.mainState.searchedUsers.update((users) =>
       users.map((user) =>
-        user.username === username ? { ...user, isRequested: status } : user
+        user.username === username ? { ...user, isRequestedBySender: status } : user
       )
     );
   }

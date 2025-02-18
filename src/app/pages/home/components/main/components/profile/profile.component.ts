@@ -44,6 +44,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   isSelectedPhotos = false;
   isFriend!: boolean;
   isRequested!: boolean;
+  isRequestedByRecipient!: boolean;
 
   isModalProfilePhotoOpened = false;
   isModalBannerPhotoOpened = false;
@@ -117,7 +118,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
           this.username = response.userData.username;
           this.state.setIsProfileOwner(response.userData.isProfileOwner);
           this.isFriend = response.userData.isFriend;
-          this.isRequested = response.userData.isRequested;
+          this.isRequested = response.userData.isRequestedBySender;
+          this.isRequestedByRecipient = response.userData.isRequestedByRecipient;
+
+          console.log(response);
+          
 
           this.isUserHasProfileImage(response.userData.profileImage);
           this.isUserHasBannerImage(response.userData.bannerImage);
@@ -465,6 +470,23 @@ export class ProfileComponent implements OnInit, OnDestroy {
         },
       })
     );
+  }
+
+  acceptFriendRequest():void {
+    const notifications = this.mainState.notifications();
+    console.log(notifications);
+    
+
+    const notification = notifications.find(notification => notification.sender === this.username)
+
+    this.subscriptions.add(this.profileRequestService.acceptFriendRequestById(notification._id).subscribe({
+      next: (response) => {
+        this.profileRequestService.getInitialUserData(this.username!);
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    }))
   }
 
   ngOnDestroy(): void {
