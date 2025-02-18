@@ -10,10 +10,11 @@ import {
 import { SearchBarComponent } from '../../shared/search-bar/search-bar.component';
 import { FriendListUserCardComponent } from '../../shared/friend-list-user-card/friend-list-user-card.component';
 import { MainStateService } from '../../shared/services/main-state.service';
-import { StatusSocketService } from '../../../../../../shared/services/websocket/status-socket.service';
+import { MainSocketService } from '../../../../../../shared/services/websocket/main-socket.service';
 import { UtilitySessionService } from '../../../../../../shared/services/utility/utility.service';
 import { Subscription } from 'rxjs';
 import { FriendListRequestsService } from './services/friend-list-requests.service';
+import { NotificationsService } from '../../../header/components/notifications-window/services/notifications.service';
 
 @Component({
   selector: 'app-friend-list',
@@ -26,19 +27,43 @@ export class FriendListComponent {
   open = output<any>();
   subscription = new Subscription();
 
-  state = inject(MainStateService);
-  private statusSocketService = inject(StatusSocketService);
+  mainState = inject(MainStateService);
+  private statusSocketService = inject(MainSocketService);
   private utilitySession = inject(UtilitySessionService);
   private friendRequest = inject(FriendListRequestsService);
+  private notificationService = inject(NotificationsService);
 
   username = this.utilitySession.userInfo.username;
   private statusInterval: any;
-  currentFriends = signal<{ username: string; isOnline: boolean }[]>([]);
+  currentFriends = signal<
+    {
+      username: string;
+      isOnline: boolean;
+      profileImage: { src: string; contentType: string;};
+    }[]
+  >([]);
 
   constructor() {
     effect(() => {
-      const newValue = this.state.friends(); // Взима текущата стойност на signalB
-      this.currentFriends.set(newValue); // Задава я на signalA
+      const newValue = this.mainState.friends();
+      this.currentFriends.set(newValue);
+    });
+
+    effect(() => {
+      const refresh = this.notificationService.refreshFriends();
+
+      this.subscription.add(
+        this.friendRequest.getAllFriends(this.username).subscribe({
+          next: (response) => {
+            if (response.userFriends) {
+              this.mainState.setFriends(response.userFriends);
+            }
+          },
+          error: (error) => {
+            console.log(error);
+          },
+        })
+      );
     });
   }
 
@@ -54,8 +79,10 @@ export class FriendListComponent {
       this.friendRequest.getAllFriends(this.username).subscribe({
         next: (response) => {
           if (response.userFriends) {
-            this.state.setFriends(response.userFriends);
+            this.mainState.setFriends(response.userFriends);
             this.statusSocketService.listenForUserStatus();
+
+            console.log(response.userFriends);
           }
         },
         error: (error) => {

@@ -1,23 +1,45 @@
-<p>{{ username() }}</p>
-<p>{{ likes() }}</p>
+<div class="comment-container d-flex gap-3 mt-3">
+  <div class="d-flex flex-column align-items-center gap-2">
+    <img
+      class="profile-image"
+      [src]="authorProfileImage() ? authorProfileImage().src : mainState.defaultProfileImg"
+      alt="author profile image"
+      width="45"
+      height="45"
+    />
 
-<div class="comment-container d-flex gap-3">
-  <div class="d-flex flex-column">
-    <!-- <img src="" alt=""> -->
-    <div class="image"></div>
-
-    <div>like</div>
+    <img
+      class="like-icon"
+      src="./assets/icons/sparkle.png"
+      alt="like icon"
+      width="23px"
+      height="23px"
+    />
   </div>
 
-  <div>
-    <div>
-      {{ text() }}
-    </div>
+  <div class="d-flex flex-column">
+    <span>
+      {{ username() }}
+    </span>
 
-    <div class="d-flex gap-2">
-      <span>10h ago</span>
-      <span> {{ likes().length }}likes</span>
-      <span>Reply</span>
+    <p
+      class="text mb-1"
+      [class.collapsed]="isCollapsed"
+      [class.expanded]="!isCollapsed"
+    >
+    {{ isCollapsed && text()!.length > 75 ? (text() | slice : 0 : 75) + "..." : text() }}
+    </p>
+
+    @if (text()!.length > 100) {
+    <span (click)="toggleReadMore()" class="read-more">
+      {{ isCollapsed ? "more" : "less" }}
+    </span>
+    }
+
+    <div class="d-flex gap-3">
+      <span> {{ date() | timeAgo }} </span>
+      <span> {{ likes() }} likes </span>
+      <span> Reply </span>
     </div>
   </div>
 </div>

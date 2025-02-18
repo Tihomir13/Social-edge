@@ -1,25 +1,36 @@
-<div
-  class="profile-container d-flex align-items-center"
->
-  <img
-    class="profile-image"
-    [src]="mainState.userProfileImg() ? mainState.userProfileImg() : mainState.defaultProfileImg"
-    width="50"
-    height="50"
+<div class="profile-options-container">
+  <div class="profile-container d-flex align-items-center">
+    <img
+      class="profile-image"
+      [src]="
+        mainState.userProfileImg()
+          ? mainState.userProfileImg()
+          : mainState.defaultProfileImg
+      "
+      width="50"
+      height="50"
+      alt="profile image"
+      (click)="navToProfilePage()"
+    />
 
-    alt="profile image"
-    (click)="navToProfilePage()"
-  />
+    <div class="d-none d-md-flex flex-column">
+      <p class="username mb-0">{{ username }}</p>
+    </div>
 
-  <div class="d-none d-md-flex flex-column">
-    <p class="username mb-0">{{ username }}</p>
+    <img
+      #arrowImg
+      class="d-none d-md-block arrow-img"
+      src="./assets/icons/arrow-up.svg"
+      alt="arrow up"
+      [class.rotated]="isArrowRotated"
+      (click)="toggleArrow()"
+    />
   </div>
 
-  <img
-    class="d-none d-md-block arrow-img"
-    src="./assets/icons/arrow-up.svg"
-    alt="arrow up"
-    [class.rotated]="isArrowRotated"
-    (click)="toggleArrow()"
-  />
+  <div #profileMenu class="profile-menu d-flex align-items-center justify-content-center">
+    <ul class="list-unstyled d-flex flex-column justify-content-center align-items-center">
+      <li class="option d-flex justify-content-center align-items-center" (click)="options()">Options</li>
+      <li class="option d-flex justify-content-center align-items-center" (click)="logout()">Logout</li>
+    </ul>
+  </div>
 </div>

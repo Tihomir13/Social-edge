@@ -6,8 +6,9 @@ import {
   input,
   output,
 } from '@angular/core';
+
 import { TimeAgoPipe } from '../../../../../../shared/pipes/time-ago.pipe';
-import { UtilitySessionService } from '../../../../../../shared/services/utility/utility.service';
+import { MainStateService } from '../../../main/shared/services/main-state.service';
 
 @Component({
   selector: 'app-notifications-window',
@@ -21,14 +22,11 @@ export class NotificationsWindowComponent {
   friendReqNotificationChoice = output<any>();
 
   private elementRef = inject(ElementRef);
+  mainState = inject(MainStateService);
 
   @HostListener('document:click', ['$event.target'])
   public onClick(targetElement: HTMLElement): void {
     const clickedInside = this.elementRef.nativeElement.contains(targetElement);
-    // console.log(
-    //   clickedInside,
-    //   targetElement.closest('.notifications-container')
-    // );
 
     if (!clickedInside) {
       this.closeNotifications();
@@ -50,7 +48,7 @@ export class NotificationsWindowComponent {
     this.friendReqNotificationChoice.emit(notification);
   }
 
-  removeFriendReq(notificationId: string): void {
+  removeNotification(notificationId: string): void {
     const notification = {
       id: notificationId,
       chose: 'remove',
