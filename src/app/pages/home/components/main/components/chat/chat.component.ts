@@ -1,17 +1,19 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { MainStateService } from '../../shared/services/main-state.service';
+import { InputFieldComponent } from "./components/input-field/input-field.component";
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [],
+  imports: [InputFieldComponent],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss',
 })
 export class ChatComponent {
-  state = inject(MainStateService);
+  mainState = inject(MainStateService);
+  currChatUser = input<any>();
 
   closeChat():void {
-    this.state.setChat(false);
+    this.mainState.setChat(false);
   }
 }

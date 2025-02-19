@@ -8,7 +8,7 @@ import { MainStateService } from './shared/services/main-state.service';
 import { ChatComponent } from './components/chat/chat.component';
 import { PostsStateService } from './components/feed/components/post/services/posts-state.service';
 import { PostsRequestsService } from './components/feed/components/post/services/posts-requests.service';
-import { NavigationComponent } from "./components/navigation/navigation.component";
+import { NavigationComponent } from './components/navigation/navigation.component';
 
 @Component({
   selector: 'app-main',
@@ -19,8 +19,8 @@ import { NavigationComponent } from "./components/navigation/navigation.componen
     ChatHeadsComponent,
     ChatComponent,
     RouterOutlet,
-    NavigationComponent
-],
+    NavigationComponent,
+  ],
   providers: [PostsStateService, PostsRequestsService],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss',
@@ -30,6 +30,7 @@ export class MainComponent implements OnInit {
 
   state = inject(MainStateService);
   postsState = inject(PostsStateService);
+  currProfileUserChat: any;
 
   ngOnInit(): void {
     this.state.currentChatHeads = this.state.currentChatHeads;
@@ -48,6 +49,10 @@ export class MainComponent implements OnInit {
   }
 
   onUserProfileClick(user: any): void {
+    this.currProfileUserChat = user;
+    console.log(user);
+    
+
     this.state.setChat(true);
   }
 }

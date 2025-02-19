@@ -90,7 +90,7 @@
         <div class="d-flex gap-10px">
           <img
             class="interaction-icon"
-            [src]="isLikedByCurrUser$() ? 'assets/icons/sparkle-colored.png': 'assets/icons/sparkle.png'"
+            [src]="isLiked ? 'assets/icons/sparkle-colored.png': 'assets/icons/sparkle.png'"
             alt=""
             (click)="toggleLike()"
           />

@@ -1,0 +1,12 @@
+.form-control {
+  border-radius: 80px;
+  width: 285px;
+  height: 40px;
+  resize: none;
+  overflow-y: hidden;
+
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+}

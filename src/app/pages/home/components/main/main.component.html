@@ -23,7 +23,7 @@
         />
 
         @if (this.state.isChatActive()) {
-        <app-chat class="chat" />
+        <app-chat class="chat" [currChatUser]="currProfileUserChat"/>
         }
       </div>
     </div>

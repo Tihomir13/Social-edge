@@ -1,12 +1,6 @@
-import {
-  Component,
-  inject,
-  input,
-  OnDestroy,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { Component, inject, input, OnDestroy, OnInit } from '@angular/core';
 import { SlicePipe } from '@angular/common';
+import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { Subscription, timer } from 'rxjs';
@@ -18,7 +12,6 @@ import { GenerateCommentForm } from './helper/comment.form';
 import { MainStateService } from '../../../../shared/services/main-state.service';
 import { CommentComponent } from './components/comment/comment.component';
 import { AutoResizeTextareaDirective } from '../../../../../../../../shared/directives/auto-resize-textarea.directive';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-post',
@@ -109,6 +102,8 @@ export class PostComponent implements OnInit, OnDestroy {
     this.isLiked = !this.isLiked;
     this.totalLikes! += this.isLiked ? 1 : -1;
 
+    const currPostId = this.postId();
+
     // Ако има активен таймер за този пост – анулираме го
     if (this.likeTimer) {
       this.likeTimer.unsubscribe();
@@ -116,15 +111,15 @@ export class PostComponent implements OnInit, OnDestroy {
 
     // Стартираме нов таймер
     this.likeTimer = timer(5000).subscribe(() => {
-      this.postLikeDislike();
+      this.postLikeDislike(currPostId);
       this.likeTimer = null; // След изпращане на заявка нулираме таймера
     });
   }
 
-  postLikeDislike(): Promise<void> {
+  postLikeDislike(postId: string): Promise<void> {
     return new Promise((_, reject) => {
       this.subscriptions.add(
-        this.postRequests.likePost(this.postId()).subscribe({
+        this.postRequests.likePost(postId).subscribe({
           next: () => {},
           error: (error) => {
             console.log(error);
