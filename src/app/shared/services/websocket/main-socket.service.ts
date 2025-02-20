@@ -50,6 +50,20 @@ export class MainSocketService {
     });
   }
 
+  sendMessage(receiver: string, text: string) {
+    this.socket.emit('send-message', { receiver, text });
+  }
+
+  onNewMessage(): Observable<{ sender: string; receiver: string; text: string }> {
+    return new Observable((observer) => {
+      this.socket.on('new-message', (message: { sender: string; receiver: string; text: string }) => {
+        observer.next(message);
+      });
+  
+      return () => this.socket.off('new-message');
+    });
+  }
+
   getOnlineUsers(): Signal<{ [key: string]: boolean }> {
     return this.onlineUsers;
   }

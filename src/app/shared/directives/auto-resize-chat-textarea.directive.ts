@@ -7,59 +7,45 @@ import {
 } from '@angular/core';
 
 @Directive({
-  selector: '[appAutoResizeTextarea]',
+  selector: '[appAutoResizeChatTextarea]',
 })
-export class AutoResizeTextareaDirective {
+export class AutoResizeChatTextareaDirective {
   element = inject(ElementRef);
   renderer = inject(Renderer2);
 
-  private maxHeight: number = 0;
-  private removeClickListener: (() => void) | null = null;
+  private readonly minHeight = 40; // Начална височина
+  private maxHeight = 0; // Максимална височина (определя се динамично)
 
   constructor() {
     setTimeout(() => {
       const textarea = this.element.nativeElement as HTMLTextAreaElement;
-      const lineHeight = parseInt(getComputedStyle(textarea).lineHeight, 10) || 20;
-      this.maxHeight = lineHeight * 4 + 32; // 4 реда + padding
+      textarea.setAttribute('rows', '1'); // Задава началния брой редове на 1
+      const lineHeight =
+        parseInt(getComputedStyle(textarea).lineHeight, 10) || 20;
+      this.maxHeight = this.minHeight + lineHeight * 3; // Ограничаваме до 4 реда
+      this.renderer.setStyle(textarea, 'height', `${this.minHeight}px`);
+      this.renderer.setStyle(textarea, 'overflow', 'hidden'); // Скрива скролбара докато няма нужда
     });
   }
 
   @HostListener('input') onInput(): void {
     this.resize();
-
-    const textarea = this.element.nativeElement;
-    if (textarea.value.trim() && !this.removeClickListener) {
-      this.removeClickListener = this.renderer.listen('document', 'click', (event: Event) => {
-        if (!textarea.contains(event.target) && !textarea.value.trim()) {
-          this.renderer.setStyle(textarea, 'height', 'auto');
-          this.removeOutsideClickListener();
-        }
-      });
-    } else if (!textarea.value.trim()) {
-      this.removeOutsideClickListener();
-    }
   }
 
   private resize(): void {
     const textarea = this.element.nativeElement as HTMLTextAreaElement;
-    this.renderer.setStyle(textarea, 'height', '45px');
+    this.renderer.setStyle(textarea, 'height', `${this.minHeight}px`); // Ресетира височината
+    const scrollHeight = textarea.scrollHeight;
 
-    // Проверяваме височината
-    const newHeight = textarea.scrollHeight + 32;
-    if (newHeight <= this.maxHeight) {
+    if (scrollHeight > this.minHeight) {
+      const newHeight = Math.min(scrollHeight, this.maxHeight);
       this.renderer.setStyle(textarea, 'height', `${newHeight}px`);
-      this.renderer.setStyle(textarea, 'overflow-y', 'hidden');
-    } else {
-      this.renderer.setStyle(textarea, 'height', `${this.maxHeight}px`);
-      this.renderer.setStyle(textarea, 'overflow-y', 'auto');
     }
-  }
 
-  private removeOutsideClickListener(): void {
-    if (this.removeClickListener) {
-      this.removeClickListener();
-      this.removeClickListener = null;
-      this.renderer.setStyle(this.element.nativeElement, 'height', '45px');
-    }
+    this.renderer.setStyle(
+      textarea,
+      'overflow-y',
+      textarea.scrollHeight >= this.maxHeight ? 'auto' : 'hidden'
+    );
   }
 }

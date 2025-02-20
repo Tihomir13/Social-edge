@@ -1,11 +1,21 @@
-<div class="d-flex gap-2">
+<div class="d-flex gap-2 align-items-end">
   <textarea 
     #textarea 
     class="form-control" 
     type="text"
-    appAutoResizeTextarea> 
-
+    appAutoResizeChatTextarea
+    rows="1">
   </textarea>
 
-  <img src="assets/icons/star.svg" alt="star icon" />
+  @if (!isTyping) {
+    <img class="icon" src="assets/icons/star.svg" 
+    alt="star icon" 
+    />
+  }
+  
+  @if (isTyping) {
+    <img class="icon" src="assets/icons/sent.svg" 
+    alt="star icon" 
+    (click)="sendMessage()"/>
+  }
 </div>

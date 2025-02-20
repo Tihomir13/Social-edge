@@ -1,6 +1,11 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, inject, input, OnInit } from '@angular/core';
+
 import { MainStateService } from '../../shared/services/main-state.service';
-import { InputFieldComponent } from "./components/input-field/input-field.component";
+import { InputFieldComponent } from './components/input-field/input-field.component';
+import { MainSocketService } from '../../../../../../shared/services/websocket/main-socket.service';
+import { messageModel } from './interfaces';
+import { Subscription } from 'rxjs';
+import { MessagesRequestService } from './services/messages-request.service';
 
 @Component({
   selector: 'app-chat',
@@ -9,11 +14,43 @@ import { InputFieldComponent } from "./components/input-field/input-field.compon
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss',
 })
-export class ChatComponent {
+export class ChatComponent implements OnInit {
   mainState = inject(MainStateService);
   currChatUser = input<any>();
+  mainSocketService = inject(MainSocketService);
+  msgRequestService = inject(MessagesRequestService);
 
-  closeChat():void {
+  subscriptions = new Subscription();
+
+  messages: messageModel[] = [];
+
+  ngOnInit(): void {
+    this.mainSocketService.onNewMessage().subscribe((message) => {
+      console.log('Получено съобщение:', message);
+      this.messages.push(message);
+    });
+
+    this.subscriptions.add(
+      this.msgRequestService.getMessages(this.currChatUser()).subscribe({
+        next: (response) => {
+          console.log(response);
+        },
+        error: (error) => {
+          console.log(error);
+        },
+      })
+    );
+  }
+
+  closeChat(): void {
     this.mainState.setChat(false);
+  }
+
+  sendMessage(message: string | void): void {
+    this.mainSocketService.sendMessage(this.currChatUser().username, message!);
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 }

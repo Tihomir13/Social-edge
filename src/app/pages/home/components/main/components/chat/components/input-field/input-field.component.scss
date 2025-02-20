@@ -1,12 +1,24 @@
 .form-control {
-  border-radius: 80px;
+  border-radius: 11px;
   width: 285px;
   height: 40px;
   resize: none;
   overflow-y: hidden;
+  scrollbar-width: thin;
 
   &:focus {
     outline: none;
     box-shadow: none;
+  }
+}
+
+.icon {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  transition: 0.3s ease;
+
+  &:hover {
+   transform: scale(1.15);
   }
 }
