@@ -1,4 +1,5 @@
 import { Component, inject, input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { MainStateService } from '../../shared/services/main-state.service';
 import { InputFieldComponent } from './components/input-field/input-field.component';
@@ -15,10 +16,12 @@ import { MessagesRequestService } from './services/messages-request.service';
   styleUrl: './chat.component.scss',
 })
 export class ChatComponent implements OnInit {
-  mainState = inject(MainStateService);
   currChatUser = input<any>();
+
+  mainState = inject(MainStateService);
   mainSocketService = inject(MainSocketService);
   msgRequestService = inject(MessagesRequestService);
+  router = inject(Router);
 
   subscriptions = new Subscription();
 
@@ -40,6 +43,10 @@ export class ChatComponent implements OnInit {
         },
       })
     );
+  }
+
+  navigateToProfile(): void {
+    this.router.navigate(['profile', this.currChatUser().username]);
   }
 
   closeChat(): void {

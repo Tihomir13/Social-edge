@@ -15,7 +15,13 @@
     }
 
     .profile-content-container {
+      cursor: pointer;
       gap: 11px;
+      transition: 0.2s ease;
+
+      &:hover {
+        opacity: 0.5;
+      }
 
       .profile-image {
         border-radius: 50%;
