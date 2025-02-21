@@ -30,7 +30,11 @@
             </div>
             
             <div class="main">
-                
+                @for (message of messages; track $index) {
+                    @if(message.sender!=currChatUser()) {
+                        <span class='message d-block mb-4'>{{message.text}}</span>
+                    }
+                }
             </div>
             
             <div class="footer">

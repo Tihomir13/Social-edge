@@ -18,6 +18,6 @@ export class MessagesRequestService {
   };
 
   getMessages(body: any): Observable<any> {
-    return this.http.post(`${api}/messages/get`, body, this.headers);
+    return this.http.post(`${api}/messages/get`, body, {headers: this.utility.headers});
   }
 }

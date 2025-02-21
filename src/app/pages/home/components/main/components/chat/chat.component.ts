@@ -37,6 +37,9 @@ export class ChatComponent implements OnInit {
       this.msgRequestService.getMessages(this.currChatUser()).subscribe({
         next: (response) => {
           console.log(response);
+          this.messages = response.messages;
+          console.log(this.messages);
+          
         },
         error: (error) => {
           console.log(error);

@@ -29,6 +29,22 @@
     }
   }
 
+  .main {
+    max-height: 345px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column-reverse;
+    padding: 10px;
+    border: 1px solid #ccc;
+
+    .message {
+      padding: 10px 0px;
+      max-width: 250px;
+      word-wrap: break-word;
+    }
+  }
+  
+
   .footer {
     position: absolute;
     bottom: 10px;
