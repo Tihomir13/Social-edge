@@ -1,11 +1,11 @@
 <div class="post-container">
   <div class="header d-flex align-items-center justify-content-between">
     <div class="d-flex gap-10px">
-      <div class="profile-icon-container">
+      <div class="profile-icon-container" (click)="navigateToAuthorProfile()">
         <img width="45" height="45" class="icon" [src]="authorProfileImg() ? authorProfileImg().src : mainState.defaultProfileImg" alt="" />
       </div>
 
-      <span class="username-container"> {{ username() }} </span>
+      <span class="username-container" (click)="navigateToAuthorProfile()"> {{ username() }} </span>
     </div>
 
     <div class="options-container">

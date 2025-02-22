@@ -1,12 +1,6 @@
-import {
-  Component,
-  inject,
-  input,
-  OnDestroy,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { Component, inject, input, OnDestroy, OnInit } from '@angular/core';
 import { SlicePipe } from '@angular/common';
+import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { Subscription, timer } from 'rxjs';
@@ -65,6 +59,7 @@ export class PostComponent implements OnInit, OnDestroy {
   commentFormGroup!: FormGroup;
 
   private postRequests = inject(PostsRequestsService);
+  router = inject(Router);
   mainState = inject(MainStateService);
   utilityService = inject(UtilitySessionService);
   formBuilder = inject(FormBuilder);
@@ -88,9 +83,6 @@ export class PostComponent implements OnInit, OnDestroy {
     if (this.currentImageIndex > 0) {
       this.currentImageIndex--;
     }
-
-    console.log('Current Index:', this.currentImageIndex);
-    console.log('Images:', this.images());
   }
 
   toggleReadMore(): void {
@@ -101,10 +93,16 @@ export class PostComponent implements OnInit, OnDestroy {
     this.isCommentsClicked = !this.isCommentsClicked;
   }
 
+  navigateToAuthorProfile(): void {
+    this.router.navigate(['profile', this.username()]);
+  }
+
   toggleLike() {
     // Променяме UI веднага
     this.isLiked = !this.isLiked;
     this.totalLikes! += this.isLiked ? 1 : -1;
+
+    const currPostId = this.postId();
 
     // Ако има активен таймер за този пост – анулираме го
     if (this.likeTimer) {
@@ -113,15 +111,15 @@ export class PostComponent implements OnInit, OnDestroy {
 
     // Стартираме нов таймер
     this.likeTimer = timer(5000).subscribe(() => {
-      this.postLikeDislike();
+      this.postLikeDislike(currPostId);
       this.likeTimer = null; // След изпращане на заявка нулираме таймера
     });
   }
 
-  postLikeDislike(): Promise<void> {
+  postLikeDislike(postId: string): Promise<void> {
     return new Promise((_, reject) => {
       this.subscriptions.add(
-        this.postRequests.likePost(this.postId()).subscribe({
+        this.postRequests.likePost(postId).subscribe({
           next: () => {},
           error: (error) => {
             console.log(error);

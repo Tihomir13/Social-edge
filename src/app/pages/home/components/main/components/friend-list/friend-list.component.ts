@@ -2,13 +2,12 @@ import {
   Component,
   effect,
   inject,
-  input,
   output,
   signal,
 } from '@angular/core';
 
-import { SearchBarComponent } from '../../shared/search-bar/search-bar.component';
-import { FriendListUserCardComponent } from '../../shared/friend-list-user-card/friend-list-user-card.component';
+import { SearchBarComponent } from '../../shared/components/search-bar/search-bar.component';
+import { FriendListUserCardComponent } from '../../shared/components/friend-list-user-card/friend-list-user-card.component';
 import { MainStateService } from '../../shared/services/main-state.service';
 import { MainSocketService } from '../../../../../../shared/services/websocket/main-socket.service';
 import { UtilitySessionService } from '../../../../../../shared/services/utility/utility.service';

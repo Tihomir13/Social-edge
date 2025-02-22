@@ -1,18 +1,60 @@
 <div class="container p-0">
     <div class="row">
         <div class="chat-container d-flex flex-column">
-            <div class="header d-flex justify-content-end gap-1">
-                <img class="minimize-icon" src="assets/icons/minimize.svg" alt="minimize icon" />
-                <img class="close-icon" src="assets/icons/close25px.svg" alt="close icon" (click)="closeChat()"/>
+            <div class="header d-flex justify-content-between gap-1">
+                <div class="profile-content-container d-flex align-items-center" (click)="navigateToProfile()">
+                    <img 
+                    class="profile-image" 
+                    [src]="currChatUser().profileImage ? currChatUser().profileImage.src :mainState.defaultProfileImg" 
+                    width="45" height="45" 
+                    alt="profile image">
+
+                    @if (currChatUser().isOnline) {
+                        <span class="status-icon bg-success"></span>
+                    }
+                    @else {
+                    <span class="status-icon bg-dark"></span>
+                    }
+
+                    <span>
+                        {{currChatUser().username}}
+                    </span>
+                </div>
+
+                <div>
+                    <img 
+                        class="minimize-icon" 
+                        src="assets/icons/minimize.svg" 
+                        width="28" height="28" 
+                        alt="minimize icon" 
+                        (click)="onMinimizeChat()"/>
+                    <img 
+                        class="close-icon" 
+                        src="assets/icons/close25px.svg" 
+                        width="28" height="28" 
+                        alt="close icon" 
+                        (click)="onCloseChat()"/>
+                </div>
             </div>
             
-            <div class="main">
-                
+            <div #chat class="main" (scroll)="onScroll($event)">
+                @for (message of messages; track $index) {
+                    @if(message.sender!=currChatUser().username) {
+                        <span class='message-container-sender mb-2'>
+                            <span>{{message.text}}</span>
+                        </span>
+                    }
+
+                    @if(message.sender === currChatUser().username) {
+                        <span class='message-container-receiver mb-2'>
+                            <span>{{message.text}}</span>
+                        </span>
+                    }
+                }
             </div>
             
-            <div class="footer d-flex gap-2">
-                <input class="form-control" type="text">
-                <img src="assets/icons/star.svg" alt="star icon" />
+            <div class="footer">
+                <app-input-field (onNewMessage)="sendMessage($event)"/>
             </div>
         </div>
     </div>

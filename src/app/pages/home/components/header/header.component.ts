@@ -24,7 +24,6 @@ export class HeaderComponent {
 
   isScrolled = false;
   isNotificationsShowed = false;
-  notifications: any = [];
   subscriptions = new Subscription();
 
   router = inject(Router);
@@ -44,7 +43,7 @@ export class HeaderComponent {
         if (!notification) {
           return;
         }
-        this.notifications.unshift(notification);
+        this.mainState.notifications.update(notifications => [notification, ...notifications]);
         
         if(notification.type==='FRIEND_ACCEPT'){
           setTimeout(() => {
@@ -101,7 +100,7 @@ export class HeaderComponent {
     this.subscriptions.add(
       this.requestNotificationsService.getNotifications().subscribe({
         next: (response) => {
-          this.notifications = response.allNotifications;
+          this.mainState.notifications.set(response.allNotifications);
         },
         error: (error) => {
           console.log(error);
@@ -159,8 +158,8 @@ export class HeaderComponent {
   }
 
   removeNotificationById(id: string): void {
-    this.notifications = this.notifications.filter(
-      (notification: any) => notification._id !== id
+    this.mainState.notifications.update(notifications => 
+      notifications.filter(notification => notification._id !== id)
     );
   }
 

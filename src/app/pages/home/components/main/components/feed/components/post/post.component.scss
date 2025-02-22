@@ -12,6 +12,8 @@
     margin-bottom: 10px;
 
     .profile-icon-container {
+      cursor: pointer;
+
       .icon {
         width: 45px;
         aspect-ratio: 1/1;
@@ -22,6 +24,7 @@
     .username-container {
       display: flex;
       align-items: center;
+      cursor: pointer;
     }
 
     .options-container {

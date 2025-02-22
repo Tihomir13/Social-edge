@@ -7,7 +7,7 @@ import { PostModel } from '../../components/feed/components/post/model/post.mode
 export class MainStateService {
   defaultProfileImg = 'assets/images/default-images/profile-image.png';
 
-  posts = signal<any[]>([]);
+  posts = signal<PostModel[]>([]);
   friends = signal<
     {
       username: string;
@@ -18,6 +18,7 @@ export class MainStateService {
   currentChatHeads = signal<any[]>([]);
   isChatActive = signal<boolean>(false);
   searchedUsers = signal<any[]>([]);
+  notifications = signal<any[]>([]);
   userProfileImg = signal<any>(this.defaultProfileImg);
 
   setPosts(posts: any): void {

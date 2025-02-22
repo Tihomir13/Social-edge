@@ -1,0 +1,20 @@
+<div class="d-flex gap-2 align-items-end">
+  <textarea 
+    #textarea 
+    class="form-control" 
+    appAutoResizeChatTextarea
+    rows="1">
+  </textarea>
+
+  @if (!isTyping) {
+    <img class="icon" src="assets/icons/sparkle-colored.png" 
+    alt="star icon" 
+    />
+  }
+  
+  @if (isTyping) {
+    <img class="icon" src="assets/icons/sent.svg" 
+    alt="star icon" 
+    (click)="sendMessage()"/>
+  }
+</div>
