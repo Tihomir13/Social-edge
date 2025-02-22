@@ -22,6 +22,7 @@ export class InputFieldComponent {
   @ViewChild('textarea') textArea!: ElementRef;
 
   private unlisten: (() => void) | null = null;
+  private unlistenKeydown: (() => void) | null = null;
 
   renderer = inject(Renderer2);
 
@@ -35,6 +36,20 @@ export class InputFieldComponent {
         (event) => {
           const value = (event.target as HTMLTextAreaElement).value.trim();
           this.isTyping = value.length > 0;
+
+          console.log(event);
+          
+        }
+      );
+
+      this.unlistenKeydown = this.renderer.listen(
+        this.textArea.nativeElement,
+        'keydown',
+        (event: KeyboardEvent) => {
+          if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault(); // Предотвратява добавянето на нов ред
+            this.sendMessage();
+          }
         }
       );
     }
@@ -50,6 +65,7 @@ export class InputFieldComponent {
     }
 
     this.renderer.setProperty(this.textArea.nativeElement, 'value', '');
+    this.renderer.setAttribute(this.textArea.nativeElement, 'height', '40px');
     this.isTyping = false;
 
     this.onNewMessage.emit(message);
@@ -59,6 +75,11 @@ export class InputFieldComponent {
     if (this.unlisten) {
       this.unlisten();
       this.unlisten = null;
+    }
+
+    if (this.unlistenKeydown) {
+      this.unlistenKeydown();
+      this.unlistenKeydown = null;
     }
   }
 }
