@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 import { FriendListComponent } from './components/friend-list/friend-list.component';
@@ -15,7 +15,7 @@ import { NavigationComponent } from './components/navigation/navigation.componen
   standalone: true,
   imports: [
     FriendListComponent,
-    SuggestedProfilesComponent,
+    // SuggestedProfilesComponent,
     ChatHeadsComponent,
     ChatComponent,
     RouterOutlet,
@@ -31,6 +31,20 @@ export class MainComponent implements OnInit {
   state = inject(MainStateService);
   postsState = inject(PostsStateService);
   currProfileUserChat: any;
+
+  constructor() {
+    effect(() => {
+      const newFriends = this.state.friends();
+      
+      if (!this.currProfileUserChat || !newFriends) {
+        return;
+      }
+
+      this.currProfileUserChat = newFriends.find(
+        (friend) => this.currProfileUserChat.username === friend.username
+      );
+    });
+  }
 
   ngOnInit(): void {
     this.state.currentChatHeads = this.state.currentChatHeads;
@@ -51,7 +65,6 @@ export class MainComponent implements OnInit {
   onUserProfileClick(user: any): void {
     this.currProfileUserChat = user;
     console.log(user);
-    
 
     this.state.setChat(true);
   }

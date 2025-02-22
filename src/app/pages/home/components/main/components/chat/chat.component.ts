@@ -1,4 +1,12 @@
-import { Component, inject, input, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  inject,
+  input,
+  OnInit,
+  Renderer2,
+  ViewChild,
+} from '@angular/core';
 import { Router } from '@angular/router';
 
 import { MainStateService } from '../../shared/services/main-state.service';
@@ -17,10 +25,12 @@ import { MessagesRequestService } from './services/messages-request.service';
 })
 export class ChatComponent implements OnInit {
   currChatUser = input<any>();
+  @ViewChild('chat') chat!: ElementRef;
 
   mainState = inject(MainStateService);
   mainSocketService = inject(MainSocketService);
   msgRequestService = inject(MessagesRequestService);
+  render = inject(Renderer2);
   router = inject(Router);
 
   subscriptions = new Subscription();
@@ -30,26 +40,22 @@ export class ChatComponent implements OnInit {
   ngOnInit(): void {
     this.mainSocketService.onNewMessage().subscribe((message) => {
       console.log('Получено съобщение:', message);
-      this.messages.push(message);
+      this.messages.unshift(message);
     });
 
-    this.subscriptions.add(
-      this.msgRequestService.getMessages(this.currChatUser()).subscribe({
-        next: (response) => {
-          console.log(response);
-          this.messages = response.messages;
-          console.log(this.messages);
-          
-        },
-        error: (error) => {
-          console.log(error);
-        },
-      })
-    );
+    this.getMessages();
   }
 
   navigateToProfile(): void {
     this.router.navigate(['profile', this.currChatUser().username]);
+  }
+
+  onScroll(event: any): void {
+    const container = this.chat.nativeElement;
+
+    if (container.scrollTop === 0) {
+      this.getMessages();
+    }
   }
 
   closeChat(): void {
@@ -57,7 +63,23 @@ export class ChatComponent implements OnInit {
   }
 
   sendMessage(message: string | void): void {
+    console.log(this.currChatUser());
+
     this.mainSocketService.sendMessage(this.currChatUser().username, message!);
+  }
+
+  getMessages(): void {
+    this.subscriptions.add(
+      this.msgRequestService.getMessages(this.currChatUser()).subscribe({
+        next: (response) => {
+          this.messages = response.messages;
+          console.log(this.messages);
+        },
+        error: (error) => {
+          console.log(error);
+        },
+      })
+    );
   }
 
   ngOnDestroy() {

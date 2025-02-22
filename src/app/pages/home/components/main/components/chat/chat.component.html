@@ -9,6 +9,13 @@
                     width="45" height="45" 
                     alt="profile image">
 
+                    @if (currChatUser().isOnline) {
+                        <span class="status-icon bg-success"></span>
+                    }
+                    @else {
+                    <span class="status-icon bg-dark"></span>
+                    }
+
                     <span>
                         {{currChatUser().username}}
                     </span>
@@ -29,10 +36,18 @@
                 </div>
             </div>
             
-            <div class="main">
+            <div #chat class="main" (scroll)="onScroll($event)">
                 @for (message of messages; track $index) {
-                    @if(message.sender!=currChatUser()) {
-                        <span class='message d-block mb-4'>{{message.text}}</span>
+                    @if(message.sender!=currChatUser().username) {
+                        <span class='message-container-sender mb-2'>
+                            <span>{{message.text}}</span>
+                        </span>
+                    }
+
+                    @if(message.sender === currChatUser().username) {
+                        <span class='message-container-receiver mb-2'>
+                            <span>{{message.text}}</span>
+                        </span>
                     }
                 }
             </div>

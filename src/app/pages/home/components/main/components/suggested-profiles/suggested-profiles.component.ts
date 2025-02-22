@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { FriendListUserCardComponent } from '../../shared/friend-list-user-card/friend-list-user-card.component';
+import { FriendListUserCardComponent } from '../../shared/components/friend-list-user-card/friend-list-user-card.component';
 
 @Component({
   selector: 'app-suggested-profiles',

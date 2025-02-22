@@ -6,7 +6,6 @@ import io from 'socket.io-client';
 import { api } from '../../constants/api';
 import { MainStateService } from '../../../pages/home/components/main/shared/services/main-state.service';
 
-
 @Injectable({
   providedIn: 'root',
 })
@@ -25,6 +24,8 @@ export class MainSocketService {
     this.socket.on(
       'user-status-update',
       (data: { username: string; isOnline: boolean }) => {
+        console.log(data);
+
         this.state.friends.update((friends) =>
           friends.map((friend) => {
             if (friend.username === data.username) {
@@ -54,12 +55,19 @@ export class MainSocketService {
     this.socket.emit('send-message', { receiver, text });
   }
 
-  onNewMessage(): Observable<{ sender: string; receiver: string; text: string }> {
+  onNewMessage(): Observable<{
+    sender: string;
+    receiver: string;
+    text: string;
+  }> {
     return new Observable((observer) => {
-      this.socket.on('new-message', (message: { sender: string; receiver: string; text: string }) => {
-        observer.next(message);
-      });
-  
+      this.socket.on(
+        'new-message',
+        (message: { sender: string; receiver: string; text: string }) => {
+          observer.next(message);
+        }
+      );
+
       return () => this.socket.off('new-message');
     });
   }

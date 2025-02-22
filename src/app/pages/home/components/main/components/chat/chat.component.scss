@@ -23,6 +23,15 @@
         opacity: 0.5;
       }
 
+      .status-icon {
+        padding: 6px;
+        position: absolute;
+        left: 30px;
+        top: 43px;
+        border-radius: 50%;
+        border: 2px solid $primary-background;
+      }
+
       .profile-image {
         border-radius: 50%;
       }
@@ -31,22 +40,32 @@
 
   .main {
     max-height: 345px;
+    height: auto;
     overflow-y: auto;
     display: flex;
     flex-direction: column-reverse;
     padding: 10px;
-    border: 1px solid #ccc;
+    scrollbar-width: none;
 
-    .message {
-      padding: 10px 0px;
-      max-width: 250px;
+    .message-container-sender,
+    .message-container-receiver {
+      display: inline-block;
+      max-width: 80%;
+      border: 1px solid $primary-purple;
+      border-radius: 11px;
+      padding: 10px;
       word-wrap: break-word;
+      color: white;
+      background-color: $light-purple;
+      align-self: flex-end;
+    }
+
+    .message-container-receiver {
+      align-self: flex-start;
     }
   }
-  
 
   .footer {
-    position: absolute;
     bottom: 10px;
   }
 }
