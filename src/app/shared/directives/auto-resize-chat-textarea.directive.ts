@@ -34,12 +34,16 @@ export class AutoResizeChatTextareaDirective {
 
   private resize(): void {
     const textarea = this.element.nativeElement as HTMLTextAreaElement;
-    this.renderer.setStyle(textarea, 'height', `${this.minHeight}px`); // Ресетира височината
+    
+    this.renderer.setStyle(textarea, 'height', `${this.minHeight}px`);
+    this.renderer.setStyle(textarea, 'border-radius', `20px`);
+
     const scrollHeight = textarea.scrollHeight;
 
     if (scrollHeight > this.minHeight) {
       const newHeight = Math.min(scrollHeight, this.maxHeight);
       this.renderer.setStyle(textarea, 'height', `${newHeight}px`);
+      this.renderer.setStyle(textarea, 'border-radius', `11px`);
     }
 
     this.renderer.setStyle(

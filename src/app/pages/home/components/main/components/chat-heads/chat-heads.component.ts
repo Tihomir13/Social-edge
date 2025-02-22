@@ -1,4 +1,5 @@
-import { Component, input, OnInit, output } from '@angular/core';
+import { Component, inject, input, OnInit, output } from '@angular/core';
+import { MainStateService } from '../../shared/services/main-state.service';
 
 @Component({
   selector: 'app-chat-heads',
@@ -8,15 +9,15 @@ import { Component, input, OnInit, output } from '@angular/core';
   styleUrl: './chat-heads.component.scss',
 })
 export class ChatHeadsComponent {
-  currentChatHeads = input<string[]>();
-  close = output<number>();
-  open = output<number>();
+  mainState = inject(MainStateService);
+  close = output<string>();
+  open = output<string>();
 
-  onProfileClick(chatHeadIndex:number): void {
-    this.open.emit(chatHeadIndex);
+  onProfileClick(username: string): void {
+    this.open.emit(username);
   }
 
-  onClose(chatHeadIndex: number): void {
-    this.close.emit(chatHeadIndex);
+  onClose(username: string): void {
+    this.close.emit(username);
   }
 }

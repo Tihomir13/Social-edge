@@ -27,6 +27,8 @@ export class InputFieldComponent {
 
   ngAfterViewInit(): void {
     if (this.textArea) {
+      this.renderer.setProperty(this.textArea.nativeElement, 'value', '');
+
       this.unlisten = this.renderer.listen(
         this.textArea.nativeElement,
         'input',

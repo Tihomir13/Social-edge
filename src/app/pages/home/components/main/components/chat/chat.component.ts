@@ -4,6 +4,7 @@ import {
   inject,
   input,
   OnInit,
+  output,
   Renderer2,
   ViewChild,
 } from '@angular/core';
@@ -25,6 +26,7 @@ import { MessagesRequestService } from './services/messages-request.service';
 })
 export class ChatComponent implements OnInit {
   currChatUser = input<any>();
+  minimizeChat = output();
   @ViewChild('chat') chat!: ElementRef;
 
   mainState = inject(MainStateService);
@@ -42,7 +44,9 @@ export class ChatComponent implements OnInit {
       console.log('Получено съобщение:', message);
       this.messages.unshift(message);
     });
+  }
 
+  ngOnChanges(): void {
     this.getMessages();
   }
 
@@ -58,7 +62,12 @@ export class ChatComponent implements OnInit {
     }
   }
 
-  closeChat(): void {
+  onMinimizeChat(): void {
+    this.minimizeChat.emit(this.currChatUser());
+    this.mainState.setChat(false);
+  }
+
+  onCloseChat(): void {
     this.mainState.setChat(false);
   }
 

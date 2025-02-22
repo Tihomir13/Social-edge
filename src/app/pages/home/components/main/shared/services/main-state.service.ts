@@ -7,7 +7,7 @@ import { PostModel } from '../../components/feed/components/post/model/post.mode
 export class MainStateService {
   defaultProfileImg = 'assets/images/default-images/profile-image.png';
 
-  posts = signal<any[]>([]);
+  posts = signal<PostModel[]>([]);
   friends = signal<
     {
       username: string;

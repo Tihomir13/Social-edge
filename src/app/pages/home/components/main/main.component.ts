@@ -35,7 +35,7 @@ export class MainComponent implements OnInit {
   constructor() {
     effect(() => {
       const newFriends = this.state.friends();
-      
+
       if (!this.currProfileUserChat || !newFriends) {
         return;
       }
@@ -50,16 +50,26 @@ export class MainComponent implements OnInit {
     this.state.currentChatHeads = this.state.currentChatHeads;
   }
 
-  onCloseChatHead(chatHeadIndex: number): void {
-    this.state.currentChatHeads.set(
-      this.state
-        .currentChatHeads()
-        .filter((_, index) => index !== chatHeadIndex)
+  onMinimizeChat(user: any): void {
+    if(this.state.currentChatHeads().includes(user)) {
+      return;
+    }
+
+    this.state.currentChatHeads.update((chatHeads) => [...chatHeads, user]);
+  }
+
+  onCloseChatHead(username: string): void {
+    this.state.currentChatHeads.update((chatHeads) =>
+      chatHeads.filter((chatHead) => chatHead.username != username)
     );
   }
 
-  onProfileClick(chatHeadIndex: number): void {
-    this.state.setChat(false);
+  onProfileClick(username: string): void {
+    this.currProfileUserChat = this.state
+    .currentChatHeads()
+    .find((chatHead) => chatHead.username === username);
+
+    this.state.setChat(true);
   }
 
   onUserProfileClick(user: any): void {

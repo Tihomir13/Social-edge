@@ -2,18 +2,17 @@
   <div class="row">
     <div class="content">
       <div class="profile-icons-container d-flex flex-column-reverse gap-3">
-        @for (item of currentChatHeads(); track $index) {
+        @for (chatHead of mainState.currentChatHeads(); track $index) {
 
         <div class="profile-icon-container">
           <img
             class="profile-icon"
-            src="assets/images/image.png"
+            [src]="chatHead.profileImage ? chatHead.profileImage.src: mainState.defaultProfileImg"
             alt="profile-icon"
-            (click)="onProfileClick($index)"
+            (click)="onProfileClick(chatHead.username)"
           />
 
-          <span class="close-icon" (click)="onClose($index)">
-            {{ $index }}
+          <span class="close-icon" (click)="onClose(chatHead.username)">
             <img src="assets/icons/close.svg" alt="close-icon" />
           </span>
         </div>
