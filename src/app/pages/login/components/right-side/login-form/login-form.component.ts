@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 import { LoginRequestsService } from '../../../services/login-requests.service';
 import { LoginFormService } from '../../../services/login-form.service';
@@ -8,7 +8,7 @@ import { LoginFormService } from '../../../services/login-form.service';
 @Component({
   selector: 'app-login-form',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterModule],
   providers: [LoginFormService, LoginRequestsService],
   templateUrl: './login-form.component.html',
   styleUrl: './login-form.component.scss',
