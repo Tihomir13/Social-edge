@@ -7,11 +7,19 @@ import { UtilitySessionService } from '../../../shared/services/utility/utility.
 import { api } from '../../../shared/constants/api';
 
 @Injectable()
-export class ForgottenPasswordRequestsService {
+export class ResetPasswordRequestsService {
   http = inject(HttpClient);
   utility = inject(UtilitySessionService);
 
-  searchForAccount(credentials: string): Observable<any> {
-    return this.http.post(`${api}/forgot-password`, { credentials });
+  resetPassword(
+    passwords: {
+      newPassword: string;
+      confirmPassword: string;
+    },
+    token: string
+  ): Observable<any> {
+    return this.http.post(`${api}/reset-password?token=${token}`, {
+      passwords,
+    });
   }
 }

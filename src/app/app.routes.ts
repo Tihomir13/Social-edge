@@ -12,6 +12,7 @@ import { UserPhotosComponent } from './pages/home/components/main/components/pro
 import { SearchComponent } from './pages/home/components/main/components/pages/search/search.component';
 import { CustomModalComponent } from './shared/components/custom-modal/custom-modal.component';
 import { ForgottenPasswordComponent } from './pages/forgotten-password/forgotten-password.component';
+import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 
 export const routes: Routes = [
   {
@@ -30,6 +31,10 @@ export const routes: Routes = [
   {
     path:'forgotten-password',
     component: ForgottenPasswordComponent
+  },
+  {
+    path:'reset-password',
+    component: ResetPasswordComponent
   },
   {
     path: '',

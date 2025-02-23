@@ -9,7 +9,7 @@ import {
 
 import { RegisterFormService } from './services/register-form.service';
 import { RegisterRequestsService } from './services/register-requests.service';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { GoogleBtnComponent } from '../../shared/components/google-btn/google-btn.component';
 import { Subscription } from 'rxjs';
@@ -21,7 +21,6 @@ import { Subscription } from 'rxjs';
     ShortenMonthPipe,
     ReactiveFormsModule,
     FormsModule,
-    HttpClientModule,
     RouterModule,
     GoogleBtnComponent,
   ],

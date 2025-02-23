@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Injectable()
-export class ForgottenPasswordFormServiceService {
+export class ForgottenPasswordFormService {
   fb = inject(FormBuilder);
 
   generateForgottenPasswordForm(): FormGroup {
