@@ -182,7 +182,7 @@ export class NewPostComponent implements OnDestroy {
           const nsfwResult = predictions.find(
             (p) => p.className === 'Porn' || p.className === 'Hentai'
           );
-          resolve(!(nsfwResult && nsfwResult.probability > 0.3));
+          resolve(!(nsfwResult && nsfwResult.probability > 0.1));
         };
       };
       reader.readAsDataURL(file);
@@ -301,32 +301,32 @@ export class NewPostComponent implements OnDestroy {
   }
 
   onSubmit(): void {
-    if (this.newPostFormService.newPostFormGroup()?.valid) {
-      const formData = this.newPostFormService.newPostFormGroup()?.value;
-
-      console.log(formData);
-
-      this.subscriptions.add(
-        this.newPostRequests.savePost(formData).subscribe({
-          next: (response) => {
-            console.log('Post saved successfully', response);
-            this.clearFormArrays();
-            this.newPostFormService.newPostFormGroup()?.reset();
-            this.newPostState.isCreatingNewPost = false;
-            this.newPostState.resetUI();
-            console.log(this.newPostFormService.newPostFormGroup()?.value);
-            this.resetPost();
-
-            this.creatingNewPost.emit();
-          },
-          error: (error) => {
-            console.error('Error saving post', error);
-          },
-        })
-      );
-    } else {
-      console.error('Form is invalid');
+    if (!this.newPostFormService.newPostFormGroup()?.valid) {
+      return;
     }
+
+    const formData = this.newPostFormService.newPostFormGroup()?.value;
+
+    this.newPostFormService.newPostFormGroup().reset();
+
+    this.subscriptions.add(
+      this.newPostRequests.savePost(formData).subscribe({
+        next: (response) => {
+          console.log('Post saved successfully', response);
+          this.clearFormArrays();
+          this.newPostFormService.newPostFormGroup()?.reset();
+          this.newPostState.isCreatingNewPost = false;
+          this.newPostState.resetUI();
+          console.log(this.newPostFormService.newPostFormGroup()?.value);
+          this.resetPost();
+
+          this.creatingNewPost.emit();
+        },
+        error: (error) => {
+          console.error('Error saving post', error);
+        },
+      })
+    );
   }
 
   onChoseOptionProfile(modalOption: string): void {
@@ -339,20 +339,20 @@ export class NewPostComponent implements OnDestroy {
 
   resetPost() {
     const tagsArray = this.newPostFormService
-        .newPostFormGroup()
-        .get('tags') as FormArray;
-      tagsArray.clear();
+      .newPostFormGroup()
+      .get('tags') as FormArray;
+    tagsArray.clear();
 
-      const imagesArray = this.newPostFormService
-        .newPostFormGroup()
-        ?.get('images') as FormArray;
-      imagesArray.clear();
-      this.newPostState.imagePreviews = [];
-      this.newPostState.currentStatus = '';
+    const imagesArray = this.newPostFormService
+      .newPostFormGroup()
+      ?.get('images') as FormArray;
+    imagesArray.clear();
+    this.newPostState.imagePreviews = [];
+    this.newPostState.currentStatus = '';
 
-      this.newPostFormService.newPostFormGroup().reset();
-      this.newPostState.toggleNewPost(false);
-      this.newPostState.removeGlobalClickListener();
+    this.newPostFormService.newPostFormGroup().reset();
+    this.newPostState.toggleNewPost(false);
+    this.newPostState.removeGlobalClickListener();
   }
 
   ngOnDestroy(): void {
