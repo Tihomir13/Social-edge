@@ -29,12 +29,8 @@ export class ProfileRequestsService {
     return this.http.get(`${api}/profiles/${username}/info`, this.headers);
   }
 
-  addUserInfo(username: string | null, body: any): Observable<any> {
-    return this.http.post(
-      `${api}/profiles/${username}/info`,
-      body,
-      this.headers
-    );
+  addUserInfo(body: any): Observable<any> {
+    return this.http.post(`${api}/profiles/info`, body, this.headers);
   }
 
   addNewProfilePhoto(

@@ -45,7 +45,6 @@ export class UserInformationComponent implements OnInit, OnDestroy {
   }
 
   getUserInfo(): void {
-    console.log('aa');
     this.username = this.route.parent?.snapshot.paramMap.get('username')!;
 
     if (!this.username) {
@@ -67,10 +66,8 @@ export class UserInformationComponent implements OnInit, OnDestroy {
   }
 
   onNewInfo(value: any): void {
-    console.log(value);
-
     this.subscriptions.add(
-      this.requests.addUserInfo(this.username, value).subscribe({
+      this.requests.addUserInfo(value).subscribe({
         next: (response) => {
           console.log(response);
           this.getUserInfo();
