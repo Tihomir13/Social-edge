@@ -13,7 +13,8 @@ $square-width: 110px;
     border-radius: $border-radius $border-radius 0px 0px;
     padding: 10px;
 
-    .profile-icon {
+    .profile-image {
+      object-fit: cover;
       cursor: pointer;
       border-radius: 50%;
       aspect-ratio: 1/1;

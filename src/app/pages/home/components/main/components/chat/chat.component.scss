@@ -33,6 +33,7 @@
       }
 
       .profile-image {
+        object-fit: cover;
         border-radius: 50%;
       }
     }
@@ -51,7 +52,6 @@
 
   .main {
     height: 345px;
-    height: auto;
     overflow-y: auto;
     display: flex;
     flex-direction: column-reverse;

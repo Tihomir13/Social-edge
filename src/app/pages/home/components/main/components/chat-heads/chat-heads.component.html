@@ -4,9 +4,9 @@
       <div class="profile-icons-container d-flex flex-column-reverse gap-3">
         @for (chatHead of mainState.currentChatHeads(); track $index) {
 
-        <div class="profile-icon-container">
+        <div class="profile-image-container">
           <img
-            class="profile-icon"
+            class="profile-image"
             [src]="chatHead.profileImage ? chatHead.profileImage.src: mainState.defaultProfileImg"
             alt="profile-icon"
             (click)="onProfileClick(chatHead.username)"
