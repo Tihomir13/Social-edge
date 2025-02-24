@@ -14,7 +14,8 @@
     .profile-icon-container {
       cursor: pointer;
 
-      .icon {
+      .profile-image {
+        object-fit: cover;
         width: 45px;
         aspect-ratio: 1/1;
         border-radius: 50%;
@@ -215,7 +216,8 @@
     .add-comment-container {
       margin-top: 20px;
       .profile-icon-container {
-        .icon {
+        .profile-image {
+          object-fit: cover;
           width: 45px;
           aspect-ratio: 1/1;
           border-radius: 50%;

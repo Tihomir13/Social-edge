@@ -2,7 +2,7 @@
   <div class="header d-flex align-items-center justify-content-between">
     <div class="d-flex gap-10px">
       <div class="profile-icon-container" (click)="navigateToAuthorProfile()">
-        <img width="45" height="45" class="icon" [src]="authorProfileImg() ? authorProfileImg().src : mainState.defaultProfileImg" alt="" />
+        <img width="45" height="45" class="profile-image" [src]="authorProfileImg() ? authorProfileImg().src : mainState.defaultProfileImg" alt="" />
       </div>
 
       <span class="username-container" (click)="navigateToAuthorProfile()"> {{ username() }} </span>
@@ -148,7 +148,7 @@
 
       <div class="add-comment-container d-flex gap-10px">
         <div class="profile-icon-container">
-          <img width="45" height="45" class="icon" [src]="currUserImg()" alt="profile image" />
+          <img width="45" height="45" class="profile-image" [src]="currUserImg()" alt="profile image" />
         </div>
 
         <form
