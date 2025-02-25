@@ -44,6 +44,8 @@ export class NewPostComponent implements OnDestroy {
     return this.newPostFormService.newPostFormGroup()?.get('tags') as FormArray;
   }
 
+  isSubmitting: boolean = false;
+
   get imagesFiles(): FormArray {
     return this.newPostFormService
       .newPostFormGroup()
@@ -301,30 +303,30 @@ export class NewPostComponent implements OnDestroy {
   }
 
   onSubmit(): void {
-    if (!this.newPostFormService.newPostFormGroup()?.valid) {
+    if (!this.newPostFormService.newPostFormGroup()?.valid || this.isSubmitting) {
       return;
     }
-
+  
+    this.isSubmitting = true;
+  
     const formData = this.newPostFormService.newPostFormGroup()?.value;
-
-    this.newPostFormService.newPostFormGroup().reset();
-
+  
     this.subscriptions.add(
       this.newPostRequests.savePost(formData).subscribe({
         next: (response) => {
-          console.log('Post saved successfully', response);
           this.clearFormArrays();
           this.newPostFormService.newPostFormGroup()?.reset();
           this.newPostState.isCreatingNewPost = false;
           this.newPostState.resetUI();
-          console.log(this.newPostFormService.newPostFormGroup()?.value);
           this.resetPost();
-
           this.creatingNewPost.emit();
         },
         error: (error) => {
           console.error('Error saving post', error);
         },
+        complete: () => {
+          this.isSubmitting = false;
+        }
       })
     );
   }
