@@ -202,7 +202,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
             if (data.status === 409 && data.error.message.includes('Email')) {
               this.isEmailExists = true;
             } else {
-              this.isEmailExists = true;
+              this.isEmailExists = false;
             }
 
             if (data.status === 422) {
