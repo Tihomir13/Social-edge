@@ -152,22 +152,26 @@
         </div>
 
         <form
-          class="my-comment d-flex"
+          class="my-comment-form w-100"
           [formGroup]="commentFormGroup"
           (ngSubmit)="onComment()"
         >
-          <textarea
-            class="form-control"
-            #comment
-            type="text"
-            placeholder="Add a comment..."
-            formControlName="comment"
-            appAutoResizeTextarea
-          >
-          </textarea>
-
+          <div class="my-comment d-flex">
+            <textarea
+              class="form-control"
+              #comment
+              type="text"
+              placeholder="Add a comment..."
+              formControlName="comment"
+              appAutoResizeTextarea
+              [minHeight]="45"
+              [maxHeight]="200"
+              >
+            </textarea>
+          </div>
+        
           @if(comment.value.trim() !== '') {
-            <div class="d-flex flex-column">
+            <div class="d-flex justify-content-end">
               <button class="post-comment-btn" type="submit">Post</button>
 
               <button class="cancel-comment-btn" type="button" (click)="onCancelComment()">Cancel</button>

@@ -1,5 +1,6 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { ShortenMonthPipe } from '../../shared/pipes/shorten-month.pipe';
+import { HttpClient } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
 import {
   AbstractControl,
   FormGroup,
@@ -7,12 +8,12 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 
+import { Subscription } from 'rxjs';
+
 import { RegisterFormService } from './services/register-form.service';
 import { RegisterRequestsService } from './services/register-requests.service';
-import { HttpClient } from '@angular/common/http';
-import { RouterModule } from '@angular/router';
+import { ShortenMonthPipe } from '../../shared/pipes/shorten-month.pipe';
 import { GoogleBtnComponent } from '../../shared/components/google-btn/google-btn.component';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-register',

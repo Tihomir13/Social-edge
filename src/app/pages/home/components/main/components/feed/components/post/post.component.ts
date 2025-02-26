@@ -1,4 +1,13 @@
-import { Component, inject, input, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  inject,
+  input,
+  OnDestroy,
+  OnInit,
+  Renderer2,
+  ViewChild,
+} from '@angular/core';
 import { SlicePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -52,13 +61,14 @@ export class PostComponent implements OnInit, OnDestroy {
   isLiked: boolean | undefined;
   totalLikes: number | undefined;
 
+  @ViewChild('comment') comment!: ElementRef<HTMLTextAreaElement>;
   currentImageIndex = 0;
-
-  comment: string = '';
 
   commentFormGroup!: FormGroup;
 
   private postRequests = inject(PostsRequestsService);
+  private render = inject(Renderer2);
+  private el = inject(ElementRef);
   router = inject(Router);
   mainState = inject(MainStateService);
   utilityService = inject(UtilitySessionService);
@@ -148,9 +158,15 @@ export class PostComponent implements OnInit, OnDestroy {
     }
   }
 
+  showMoreComments(): void {
+    
+  }
+
   onCancelComment(): void {
     this.commentFormGroup.reset();
+    this.render.setStyle(this.comment.nativeElement, 'height', '45px');
   }
+  
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();

@@ -224,28 +224,28 @@
         }
       }
 
-      .my-comment {
-        position: relative;
-        justify-content: center;
-        align-items: center;
+      .my-comment-form {
+        .my-comment {
+          position: relative;
+          justify-content: center;
+          align-items: center;
 
-        width: 100%;
-
-        .form-control {
           width: 100%;
-          border-radius: 25px;
-          height: 45px;
-          resize: none;
-          overflow-y: hidden;
 
-          &:focus {
-            outline: none;
-            box-shadow: none;
+          .form-control {
+            width: 100%;
+            border-radius: 11px;
+            height: 45px;
+            resize: none;
+
+            &:focus {
+              outline: none;
+              box-shadow: none;
+            }
           }
         }
 
         .post-comment-btn {
-          position: absolute;
           bottom: 8px;
           right: 22px;
           border: none;
@@ -262,7 +262,6 @@
         }
 
         .cancel-comment-btn {
-          position: absolute;
           bottom: 8px;
           right: 70px;
           border: none;
