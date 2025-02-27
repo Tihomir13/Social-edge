@@ -37,8 +37,8 @@
                 </div>
             </div>
             
-            <div #chat class="main" (scroll)="onScroll($event)">
-                @for (message of messages; track $index) {
+            <div #chat class="main" (scroll)="onScroll()">
+                @for (message of messages(); track $index) {
                     @if(message.sender!=currChatUser().username) {
                         <span class='message-container-sender mb-2'>
                             <span>{{message.text}}</span>

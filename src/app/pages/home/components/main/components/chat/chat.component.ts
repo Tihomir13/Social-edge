@@ -6,6 +6,7 @@ import {
   OnInit,
   output,
   Renderer2,
+  signal,
   ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
@@ -27,6 +28,9 @@ import { MessagesRequestService } from './services/messages-request.service';
 export class ChatComponent implements OnInit {
   currChatUser = input<any>();
   minimizeChat = output();
+
+  nextCursor: string | null = null;
+
   @ViewChild('chat') chat!: ElementRef;
 
   mainState = inject(MainStateService);
@@ -37,12 +41,12 @@ export class ChatComponent implements OnInit {
 
   subscriptions = new Subscription();
 
-  messages: messageModel[] = [];
+  messages = signal<any>([])
 
   ngOnInit(): void {
     this.mainSocketService.onNewMessage().subscribe((message) => {
       console.log('Получено съобщение:', message);
-      this.messages.unshift(message);
+      this.messages.update(messages => messages.unshift(message));
     });
   }
 
@@ -54,11 +58,39 @@ export class ChatComponent implements OnInit {
     this.router.navigate(['profile', this.currChatUser().username]);
   }
 
-  onScroll(event: any): void {
+  onScroll(): void {
     const container = this.chat.nativeElement;
 
-    if (container.scrollTop === 0) {
-      this.getMessages();
+    const isAtTop =
+      container.scrollHeight ===
+      container.scrollTop * -1 + container.clientHeight;
+    console.log(
+      container.scrollHeight,
+      container.scrollTop,
+      container.clientHeight
+    );
+    console.log('At top:', isAtTop);
+
+    if (isAtTop && this.nextCursor) {
+      const previousHeight = container.scrollHeight; // Запазваме височината преди fetch
+
+      this.msgRequestService
+        .getMessages(this.currChatUser(), this.nextCursor, 20)
+        .subscribe({
+          next: (response) => {
+            this.messages.update(messages => [...response.messages, ...messages] )
+            this.nextCursor = response.nextCursor;
+
+            setTimeout(() => {
+              container.scrollTop = container.scrollHeight - previousHeight; // Запазваме позицията
+            }, 0);
+          },
+          error: (error) => {
+            console.error('Error fetching messages:', error);
+          },
+        });
+
+      console.log(this.messages);
     }
   }
 
@@ -79,15 +111,18 @@ export class ChatComponent implements OnInit {
 
   getMessages(): void {
     this.subscriptions.add(
-      this.msgRequestService.getMessages(this.currChatUser()).subscribe({
-        next: (response) => {
-          this.messages = response.messages;
-          console.log(this.messages);
-        },
-        error: (error) => {
-          console.log(error);
-        },
-      })
+      this.msgRequestService
+        .getMessages(this.currChatUser(), this.nextCursor, 20)
+        .subscribe({
+          next: (response) => {
+            this.messages.update(messages => messages = response.messages)
+            this.nextCursor = response.nextCursor;
+            console.log(response);
+          },
+          error: (error) => {
+            console.log(error);
+          },
+        })
     );
   }
 

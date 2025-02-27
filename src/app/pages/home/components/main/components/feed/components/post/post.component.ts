@@ -42,9 +42,7 @@ export class PostComponent implements OnInit, OnDestroy {
   isCollapsed = true;
 
   likeTimer: Subscription | null = null;
-  // currLikes = signal<number>(0);
-  // localLikes: string[] = [];
-
+  
   postId = input<string>('');
   username = input<string>('');
   authorProfileImg = input<any>();

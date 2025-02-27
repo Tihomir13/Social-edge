@@ -35,4 +35,15 @@ export class PostsRequestsService {
 
     return this.http.patch(`${api}/posts/comment`, body, this.headers);
   }
+
+  showMoreComments(
+    postId: string,
+    page: number,
+    limit: number = 10
+  ): Observable<any> {
+    return this.http.get(`${api}/comments`, {
+      params: { postId, page: page.toString(), limit: limit.toString() },
+      headers: this.utility.headers,
+    });
+  }
 }

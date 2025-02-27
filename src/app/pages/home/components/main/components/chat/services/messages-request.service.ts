@@ -17,7 +17,18 @@ export class MessagesRequestService {
     headers: this.utility.headers,
   };
 
-  getMessages(body: any): Observable<any> {
-    return this.http.post(`${api}/messages/get`, body, {headers: this.utility.headers});
+  getMessages(currChatUser: any, cursor: any, limit: number): Observable<any> {
+    const body = {
+      username: currChatUser.username,
+      cursor,
+      limit
+    };
+
+    console.log(body);
+    
+
+    return this.http.post(`${api}/messages/get`, body, {
+      headers: this.utility.headers,
+    });
   }
 }
