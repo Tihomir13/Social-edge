@@ -64,12 +64,12 @@ export class ChatComponent implements OnInit {
     const isAtTop =
       container.scrollHeight ===
       container.scrollTop * -1 + container.clientHeight;
-    console.log(
-      container.scrollHeight,
-      container.scrollTop,
-      container.clientHeight
-    );
-    console.log('At top:', isAtTop);
+    // console.log(
+    //   container.scrollHeight,
+    //   container.scrollTop,
+    //   container.clientHeight
+    // );
+    // console.log('At top:', isAtTop);
 
     if (isAtTop && this.nextCursor) {
       const previousHeight = container.scrollHeight; // Запазваме височината преди fetch
@@ -78,7 +78,7 @@ export class ChatComponent implements OnInit {
         .getMessages(this.currChatUser(), this.nextCursor, 20)
         .subscribe({
           next: (response) => {
-            this.messages.update(messages => [...response.messages, ...messages] )
+            this.messages.update(messages => [...messages, ...response.messages] )
             this.nextCursor = response.nextCursor;
 
             setTimeout(() => {
@@ -90,7 +90,7 @@ export class ChatComponent implements OnInit {
           },
         });
 
-      console.log(this.messages);
+      console.log(this.messages());
     }
   }
 
