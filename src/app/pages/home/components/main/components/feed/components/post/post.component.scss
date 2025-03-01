@@ -1,5 +1,9 @@
 @import "../../../../../../../../../styles.scss";
 
+.border-radius {
+  border-radius: $border-radius !important;
+}
+
 .post-container {
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   border-radius: $border-radius;
@@ -234,7 +238,7 @@
 
           .form-control {
             width: 100%;
-            border-radius: 11px;
+            border-radius: 25px;
             height: 45px;
             resize: none;
 

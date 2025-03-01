@@ -6,7 +6,7 @@
                     <img 
                     class="profile-image" 
                     [src]="currChatUser().profileImage ? currChatUser().profileImage.src :mainState.defaultProfileImg" 
-                    width="45" height="45" 
+                    width="40" height="40" 
                     alt="profile image">
 
                     @if (currChatUser().isOnline) {
@@ -25,13 +25,13 @@
                     <img 
                         class="minimize-icon" 
                         src="assets/icons/minimize.svg" 
-                        width="28" height="28" 
+                        width="30" height="30" 
                         alt="minimize icon" 
                         (click)="onMinimizeChat()"/>
                     <img 
                         class="close-icon" 
                         src="assets/icons/close25px.svg" 
-                        width="28" height="28" 
+                        width="30" height="30" 
                         alt="close icon" 
                         (click)="onCloseChat()"/>
                 </div>
@@ -39,22 +39,34 @@
             
             <div #chat class="main" (scroll)="onScroll()">
                 @for (message of messages(); track $index) {
-                    @if(message.sender!=currChatUser().username) {
-                        <span class='message-container-sender mb-2'>
-                            <span>{{message.text}}</span>
-                        </span>
+                    @if(message.sender !== currChatUser().username) {
+                        @if(message.text === 'sparkle&:') {
+                            <span class='message-sender mb-2 sparkle-container'>
+                                <img width="40px" height="40px" src="assets/icons/sparkle-colored.png" alt="sparkle icon">
+                            </span>
+                        }@else{
+                            <span class='message-container message-sender mb-2'>
+                                <span class="message">{{message.text}}</span>
+                            </span>
+                        }
                     }
 
                     @if(message.sender === currChatUser().username) {
-                        <span class='message-container-receiver mb-2'>
-                            <span>{{message.text}}</span>
-                        </span>
+                        @if(message.text === 'sparkle&:') {
+                            <span class='message-receiver mb-2 sparkle-container'>
+                                    <img width="40px" height="40px" src="assets/icons/sparkle-colored.png" alt="sparkle icon">
+                            </span>
+                        }@else{
+                            <span class='message-container message-receiver mb-2'>
+                                <span class="message">{{message.text}}</span>
+                            </span>
+                        }
                     }
                 }
             </div>
             
             <div class="footer">
-                <app-input-field (onNewMessage)="sendMessage($event)"/>
+                <app-input-field (onNewMessage)="sendMessage($event)" (sendSparkle)="sendMessage('sparkle&:')"/>
             </div>
         </div>
     </div>

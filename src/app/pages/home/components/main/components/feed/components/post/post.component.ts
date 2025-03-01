@@ -8,7 +8,7 @@ import {
   Renderer2,
   ViewChild,
 } from '@angular/core';
-import { SlicePipe } from '@angular/common';
+import { NgClass, SlicePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
@@ -30,6 +30,7 @@ import { AutoResizeTextareaDirective } from '../../../../../../../../shared/dire
     ReactiveFormsModule,
     CommentComponent,
     AutoResizeTextareaDirective,
+    NgClass
   ],
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss',

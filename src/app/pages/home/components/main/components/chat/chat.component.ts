@@ -46,7 +46,7 @@ export class ChatComponent implements OnInit {
   ngOnInit(): void {
     this.mainSocketService.onNewMessage().subscribe((message) => {
       console.log('Получено съобщение:', message);
-      this.messages.update(messages => messages.unshift(message));
+      this.messages.update(messages => [message, ...messages]);
     });
   }
 
@@ -62,8 +62,8 @@ export class ChatComponent implements OnInit {
     const container = this.chat.nativeElement;
 
     const isAtTop =
-      container.scrollHeight ===
-      container.scrollTop * -1 + container.clientHeight;
+    container.scrollHeight ===
+    Math.round(container.scrollTop * -1) + container.clientHeight;
     // console.log(
     //   container.scrollHeight,
     //   container.scrollTop,
@@ -80,10 +80,7 @@ export class ChatComponent implements OnInit {
           next: (response) => {
             this.messages.update(messages => [...messages, ...response.messages] )
             this.nextCursor = response.nextCursor;
-
-            setTimeout(() => {
-              container.scrollTop = container.scrollHeight - previousHeight; // Запазваме позицията
-            }, 0);
+            
           },
           error: (error) => {
             console.error('Error fetching messages:', error);
