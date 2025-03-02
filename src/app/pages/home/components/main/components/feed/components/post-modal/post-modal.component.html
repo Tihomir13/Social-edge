@@ -1,47 +1,52 @@
-<dialog>
-    @if(images().length > 0) {
-        <div class="images-container">
+<div class="container-fluid px-0">
+  <div class="row">
+    <div class="post-modal-container px-0 d-flex">
+      @if(images().length > 0) {
+      <div class="images-container">
+        @for (image of images(); track $index) {
+        <div
+          class="image-wrapper"
+          [class.active]="currentImageIndex === $index"
+          [class.prev]="currentImageIndex > $index"
+          [class.next]="currentImageIndex < $index"
+        >
+          <img class="image" [src]="image.src" [alt]="'Image ' + $index" />
+        </div>
+        } @if(currentImageIndex > 0) {
+        <div class="arrow-container left-arrow-container" (click)="prevImage()">
+          <img
+            class="arrow"
+            src="assets/icons/arrow-up.svg"
+            alt="Previous"
+            style="transform: rotate(-90deg)"
+          />
+        </div>
+        } @if(currentImageIndex + 1 < images().length) {
+        <div
+          class="arrow-container right-arrow-container"
+          (click)="nextImage()"
+        >
+          <img
+            class="arrow"
+            src="assets/icons/arrow-up.svg"
+            alt="Next"
+            style="transform: rotate(90deg)"
+          />
+        </div>
+        } @if(images().length > 1) {
+        <div class="dots-container">
           @for (image of images(); track $index) {
-          <div
-            class="image-wrapper"
+          <span
+            class="dot"
             [class.active]="currentImageIndex === $index"
-            [class.prev]="currentImageIndex > $index"
-            [class.next]="currentImageIndex < $index"
-          >
-            <img class="image" [src]="image.src" [alt]="'Image ' + $index" />
-          </div>
-          } @if(currentImageIndex > 0) {
-          <div class="arrow-container left-arrow-container" (click)="prevImage()">
-            <img
-              class="arrow"
-              src="assets/icons/arrow-up.svg"
-              alt="Previous"
-              style="transform: rotate(-90deg)"
-            />
-          </div>
-          } @if(currentImageIndex + 1 < images().length) {
-          <div class="arrow-container right-arrow-container" (click)="nextImage()">
-            <img
-              class="arrow"
-              src="assets/icons/arrow-up.svg"
-              alt="Next"
-              style="transform: rotate(90deg)"
-            />
-          </div>
-          } @if(images().length > 1) {
-          <div class="dots-container">
-            @for (image of images(); track $index) {
-            <span
-              class="dot"
-              [class.active]="currentImageIndex === $index"
-              (click)="currentImageIndex = $index"
-            ></span>
-            }
-          </div>
+            (click)="currentImageIndex = $index"
+          ></span>
           }
         </div>
-    }
-  <div class="right-side">
-    
+        }
+      </div>
+      }
+      <div class="right-side"></div>
+    </div>
   </div>
-</dialog>
+</div>

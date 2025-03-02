@@ -5,6 +5,7 @@ import {
   input,
   OnDestroy,
   OnInit,
+  output,
   Renderer2,
   ViewChild,
 } from '@angular/core';
@@ -14,13 +15,14 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { Subscription, timer } from 'rxjs';
 
-import { CommentsModel, imagePostModel } from './model/post.model';
+import { imagePostModel } from './model/post.model';
 import { PostsRequestsService } from './services/posts-requests.service';
 import { UtilitySessionService } from '../../../../../../../../shared/services/utility/utility.service';
 import { GenerateCommentForm } from './helper/comment.form';
 import { MainStateService } from '../../../../shared/services/main-state.service';
 import { CommentComponent } from './components/comment/comment.component';
 import { AutoResizeTextareaDirective } from '../../../../../../../../shared/directives/auto-resize-textarea.directive';
+import { PostModalComponent } from '../post-modal/post-modal.component';
 
 @Component({
   selector: 'app-post',
@@ -30,7 +32,7 @@ import { AutoResizeTextareaDirective } from '../../../../../../../../shared/dire
     ReactiveFormsModule,
     CommentComponent,
     AutoResizeTextareaDirective,
-    NgClass
+    NgClass,
   ],
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss',
@@ -43,7 +45,7 @@ export class PostComponent implements OnInit, OnDestroy {
   isCollapsed = true;
 
   likeTimer: Subscription | null = null;
-  
+
   postId = input<string>('');
   username = input<string>('');
   authorProfileImg = input<any>();
@@ -157,15 +159,18 @@ export class PostComponent implements OnInit, OnDestroy {
     }
   }
 
+  openPostModal(): void {
+    this.mainState.setOpenedPost(this.postId());
+  }
+
   showMoreComments(): void {
-    
+    this.openPostModal();
   }
 
   onCancelComment(): void {
     this.commentFormGroup.reset();
     this.render.setStyle(this.comment.nativeElement, 'height', '45px');
   }
-  
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();

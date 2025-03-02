@@ -72,8 +72,6 @@ export class ChatComponent implements OnInit {
     // console.log('At top:', isAtTop);
 
     if (isAtTop && this.nextCursor) {
-      const previousHeight = container.scrollHeight; // Запазваме височината преди fetch
-
       this.msgRequestService
         .getMessages(this.currChatUser(), this.nextCursor, 20)
         .subscribe({

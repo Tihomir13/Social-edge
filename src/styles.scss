@@ -87,6 +87,17 @@ $border-radius: 11px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     z-index: 1001; /* Модалът да е над overlay-а */
   }
+
+  .post-modal-container {
+    max-height: 1100px;
+    height: 100%;
+    aspect-ratio: 15/9 !important;
+    z-index: 1001;
+    // background-color: rgb(180, 180, 180);
+    // border: 1px solid black;
+
+    // border-radius: $border-radius;
+  }
 }
 
 @keyframes fadeIn {

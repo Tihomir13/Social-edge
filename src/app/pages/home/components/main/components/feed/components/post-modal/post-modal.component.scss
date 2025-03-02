@@ -1,0 +1,117 @@
+@use "../../../../../../../../../styles.scss" as styles;
+
+.post-modal-container {
+  background-color: rgb(180, 180, 180);
+
+  border-radius: styles.$border-radius;
+
+  .images-container {
+    border-radius: styles.$border-radius;
+    position: relative;
+    width: 50%;
+    height: 100%;
+    background-color: white;
+    overflow: hidden;
+
+    .image-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: all 0.25s ease-in-out;
+      pointer-events: none;
+
+      &.active {
+        opacity: 1;
+        transform: translateX(0);
+        pointer-events: auto;
+        z-index: 2;
+      }
+
+      &.prev {
+        opacity: 0;
+        transform: translateX(-100%);
+        z-index: 1;
+      }
+
+      &.next {
+        opacity: 0;
+        transform: translateX(100%);
+        z-index: 1;
+      }
+
+      .image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: styles.$border-radius;
+      }
+    }
+
+    .arrow-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background-color: rgba(0, 0, 0, 0.6);
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 3;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.8);
+      }
+
+      .arrow {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    .left-arrow-container {
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .right-arrow-container {
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .dots-container {
+      position: absolute;
+      bottom: 10px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      z-index: 3;
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        background-color: rgba(0, 0, 0, 0.3);
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &.active {
+          background-color: rgba(0, 0, 0, 0.4);
+          transform: scale(1.2);
+        }
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.6);
+        }
+      }
+    }
+  }
+}

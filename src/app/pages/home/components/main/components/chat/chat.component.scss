@@ -1,4 +1,4 @@
-@import "../../../../../../../styles.scss";
+@use "../../../../../../../styles.scss" as *;
 
 .chat-container {
   height: 450px;
@@ -64,7 +64,7 @@
       padding: 10px;
       word-wrap: break-word;
       color: white;
-      background-color: $light-purple;
+      background-color: rgb(162, 74, 255);
     }
 
     .message-receiver {

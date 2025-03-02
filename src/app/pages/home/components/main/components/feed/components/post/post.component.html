@@ -141,7 +141,7 @@
       }
 
       @if (totalCommentsCount() > 2) {
-        <div class="view-more-btn mt-3 d-flex justify-content-center align-items-center">
+        <div class="view-more-btn mt-3 d-flex justify-content-center align-items-center" (click)="showMoreComments()">
           <span class="view-more-btn d-flex justify-content-center align-items-center fw-semibold">View more</span>
         </div>
       }
@@ -183,3 +183,4 @@
     </div>
   </div>
 </div>
+

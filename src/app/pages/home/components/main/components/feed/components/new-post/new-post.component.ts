@@ -184,7 +184,7 @@ export class NewPostComponent implements OnDestroy {
           const nsfwResult = predictions.find(
             (p) => p.className === 'Porn' || p.className === 'Hentai'
           );
-          resolve(!(nsfwResult && nsfwResult.probability > 0.1));
+          resolve(!(nsfwResult && nsfwResult.probability > 0.5));
         };
       };
       reader.readAsDataURL(file);
