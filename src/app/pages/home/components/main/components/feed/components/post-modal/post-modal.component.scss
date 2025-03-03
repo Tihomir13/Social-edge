@@ -1,14 +1,177 @@
 @use "../../../../../../../../../styles.scss" as styles;
 
 .post-modal-container {
-  background-color: rgb(180, 180, 180);
+  background-color: styles.$post-light-color;
 
   border-radius: styles.$border-radius;
+
+  .right-side {
+    width: 40%;
+    margin: 5px 10px;
+
+    .header {
+      margin-bottom: 10px;
+
+      .profile-icon-container {
+        cursor: pointer;
+
+        .profile-image {
+          object-fit: cover;
+          border-radius: 50%;
+        }
+      }
+
+      .username-container {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+      }
+
+      .options-container {
+        .icon {
+          cursor: pointer;
+        }
+      }
+    }
+
+    .title-container,
+    .text-container {
+      word-break: break-word;
+    }
+
+    .text-container {
+      .text {
+        overflow: hidden;
+
+        &.collapsed {
+          max-height: none;
+        }
+      }
+
+      .read-more {
+        color: styles.$primary-purple;
+        cursor: pointer;
+        user-select: none;
+
+        &:hover {
+          color: styles.$light-purple;
+        }
+      }
+    }
+
+    // Previous tags styles remain the same
+    .tags-container {
+      flex-wrap: wrap;
+      margin: 10px 0px;
+
+      .tag {
+        position: relative;
+        margin: 5px;
+        height: 45px;
+        padding: 5px 15px;
+        color: rgb(255, 255, 255);
+        background-color: rgb(250, 180, 250);
+        border-radius: styles.$border-radius;
+        display: inline-flex;
+        align-items: center;
+      }
+    }
+
+    .footer {
+      .interactions-container {
+        margin-top: 10px;
+  
+        .interaction-icon {
+          cursor: pointer;
+        }
+      }
+  
+      .view-more-btn {
+        height: 30px;
+        border-radius: 11px;
+        color: styles.$primary-purple;
+        background-color: rgb(238, 238, 238);
+        cursor: pointer;
+  
+        &:hover {
+          .view-more-btn {
+            opacity: 0.6;
+          }
+        }
+      }
+  
+      .add-comment-container {
+        margin-top: 20px;
+        .profile-icon-container {
+          .profile-image {
+            object-fit: cover;
+            width: 45px;
+            aspect-ratio: 1/1;
+            border-radius: 50%;
+          }
+        }
+  
+        .my-comment-form {
+          .my-comment {
+            position: relative;
+            justify-content: center;
+            align-items: center;
+  
+            width: 100%;
+  
+            .form-control {
+              width: 100%;
+              border-radius: 25px;
+              height: 45px;
+              resize: none;
+  
+              &:focus {
+                outline: none;
+                box-shadow: none;
+              }
+            }
+          }
+  
+          .post-comment-btn {
+            bottom: 8px;
+            right: 22px;
+            border: none;
+            background-color: transparent;
+  
+            color: styles.$primary-purple;
+            cursor: pointer;
+            font-weight: bold;
+            display: inline-block;
+  
+            &:hover {
+              opacity: 0.8;
+            }
+          }
+  
+          .cancel-comment-btn {
+            bottom: 8px;
+            right: 70px;
+            border: none;
+            background-color: transparent;
+  
+            color: red;
+            cursor: pointer;
+            font-weight: bold;
+            display: inline-block;
+  
+            &:hover {
+              opacity: 0.5;
+            }
+          }
+        }
+      }
+    }
+  }
 
   .images-container {
     border-radius: styles.$border-radius;
     position: relative;
-    width: 50%;
+    width: 60%;
     height: 100%;
     background-color: white;
     overflow: hidden;

@@ -8,13 +8,27 @@ import {
   Renderer2,
   ViewChild,
 } from '@angular/core';
-import { imagePostModel } from '../post/model/post.model';
-import { FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+
+import { Router } from '@angular/router';
+import { NgClass, SlicePipe } from '@angular/common';
+
 import { MainStateService } from '../../../../shared/services/main-state.service';
+import { CommentComponent } from '../post/components/comment/comment.component';
+import { GenerateCommentForm } from '../post/helper/comment.form';
+import { AutoResizeTextareaDirective } from '../../../../../../../../shared/directives/auto-resize-textarea.directive';
+import { PostsRequestsService } from '../post/services/posts-requests.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-post-modal',
-  imports: [],
+  imports: [
+    SlicePipe,
+    CommentComponent,
+    ReactiveFormsModule,
+    AutoResizeTextareaDirective,
+    NgClass,
+  ],
   templateUrl: './post-modal.component.html',
   styleUrl: './post-modal.component.scss',
 })
@@ -36,17 +50,21 @@ export class PostModalComponent {
   isLiked: boolean | undefined;
   totalLikes: number | undefined;
 
+  isCollapsed = true;
+  subscriptions = new Subscription();
+
   closeModal = output();
 
   private unlisten!: () => void;
 
   private renderer = inject(Renderer2);
   mainState = inject(MainStateService);
+  router = inject(Router);
+  fb = inject(FormBuilder);
+  private postRequests = inject(PostsRequestsService);
 
   @ViewChild('comment') comment!: ElementRef<HTMLTextAreaElement>;
   currentImageIndex = 0;
-
-  ngOnInit(): void {}
 
   commentFormGroup!: FormGroup;
 
@@ -57,6 +75,19 @@ export class PostModalComponent {
     if (!target.closest('.post-modal-container')) {
       this.mainState.setOpenedPost(null);
     }
+  }
+
+  ngOnInit(): void {
+    this.isLiked = this.isLikedByCurrUser$();
+    this.totalLikes = this.totalLikes$();
+
+    this.commentFormGroup = new GenerateCommentForm(
+      this.fb
+    ).generateCommentPost();
+  }
+
+  toggleReadMore(): void {
+    this.isCollapsed = !this.isCollapsed;
   }
 
   nextImage(): void {
@@ -74,9 +105,40 @@ export class PostModalComponent {
     }
   }
 
+  navigateToAuthorProfile(): void {
+    this.router.navigate(['profile', this.username()]);
+  }
+
+  showMoreComments(): void {}
+
+  onComment(): void {
+    const comment = this.commentFormGroup.value.comment.trim();
+
+    if (this.commentFormGroup.valid) {
+      this.subscriptions.add(
+        this.postRequests.commentPost(comment, this.postId()).subscribe({
+          next: (response) => {
+            this.commentFormGroup.reset();
+            console.log(response);
+          },
+          error: (error) => {
+            console.log(error);
+          },
+        })
+      );
+    }
+  }
+
+  onCancelComment(): void {
+    this.commentFormGroup.reset();
+    this.renderer.setStyle(this.comment.nativeElement, 'height', '45px');
+  }
+
   ngOnDestroy(): void {
     if (this.unlisten) {
       this.unlisten();
     }
+
+    this.subscriptions.unsubscribe();
   }
 }

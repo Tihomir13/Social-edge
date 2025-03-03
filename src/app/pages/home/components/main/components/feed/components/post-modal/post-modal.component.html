@@ -46,7 +46,192 @@
         }
       </div>
       }
-      <div class="right-side"></div>
+      <div class="right-side">
+        <div class="header d-flex align-items-center justify-content-between">
+          <div class="d-flex gap-10px">
+            <div
+              class="profile-icon-container"
+              (click)="navigateToAuthorProfile()"
+            >
+              <img
+                width="55"
+                height="55"
+                class="profile-image"
+                [src]="
+                  authorProfileImg()
+                    ? authorProfileImg().src
+                    : mainState.defaultProfileImg
+                "
+                alt=""
+              />
+            </div>
+
+            <span
+              class="username-container"
+              (click)="navigateToAuthorProfile()"
+            >
+              {{ username() }}
+            </span>
+          </div>
+
+          <div class="options-container">
+            <img class="icon" src="assets/icons/more.svg" alt="" />
+          </div>
+        </div>
+
+        @if(title()) {
+        <div class="title-container">
+          <h5 class="title">
+            {{ title() }}
+          </h5>
+        </div>
+        } @if(text()) {
+        <div class="text-container">
+          <p
+            class="text"
+            [class.collapsed]="isCollapsed"
+            [class.expanded]="!isCollapsed"
+          >
+            {{
+              isCollapsed && text().length > 75
+                ? (text() | slice : 0 : 75) + "..."
+                : text()
+            }}
+          </p>
+
+          @if (text().length > 100) {
+          <span (click)="toggleReadMore()" class="read-more">
+            {{ isCollapsed ? "more" : "less" }}
+          </span>
+          }
+        </div>
+        } @if(tags().length > 0) {
+        <div class="tags-container">
+          @for (tag of tags(); track $index) {
+          <span class="tag"> {{ tag }}</span>
+          }
+        </div>
+        }
+
+        <div class="footer">
+          <div
+            class="interactions-container d-flex justify-content-between mb-1"
+          >
+            <div class="row">
+              <div class="d-flex gap-10px">
+                <img
+                  class="interaction-icon"
+                  [src]="
+                    isLiked
+                      ? 'assets/icons/sparkle-colored.png'
+                      : 'assets/icons/sparkle.png'
+                  "
+                  alt=""
+                />
+                <img
+                  class="interaction-icon"
+                  src="assets/icons/comment-black.svg"
+                  alt=""
+                />
+                <img
+                  class="interaction-icon"
+                  src="assets/icons/share-arrow.svg"
+                  alt=""
+                />
+              </div>
+            </div>
+
+            <div>
+              <img
+                class="interaction-icon"
+                src="assets/icons/bookmark-outlined.svg"
+                alt=""
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="d-flex gap-10px">
+              <span class="fw-bold">{{ totalLikes }} likes</span>
+            </div>
+
+            <div>{{ totalCommentsCount() }} comments</div>
+          </div>
+
+          <!-- @if(isCommentsClicked) {
+              <div class="comments-container"></div>
+              } -->
+
+          <div class="comments-container">
+            @for (comment of comments(); track $index) {
+            <app-comment
+              [username]="comment.author.username"
+              [authorProfileImage]="comment.author.profileImage"
+              [text]="comment.text"
+              [likes]="comment.likes.length"
+              [date]="comment.createdAt"
+            ></app-comment>
+            } @if (totalCommentsCount() > 2) {
+            <div
+              class="view-more-btn mt-3 d-flex justify-content-center align-items-center"
+              (click)="showMoreComments()"
+            >
+              <span
+                class="view-more-btn d-flex justify-content-center align-items-center fw-semibold"
+                >View more</span
+              >
+            </div>
+            }
+
+            <div class="add-comment-container d-flex gap-10px">
+              <div class="profile-icon-container">
+                <img
+                  width="45"
+                  height="45"
+                  class="profile-image"
+                  [src]="currUserImg()"
+                  alt="profile image"
+                />
+              </div>
+
+              <form
+                class="my-comment-form w-100"
+                [formGroup]="commentFormGroup"
+                (ngSubmit)="onComment()"
+              >
+                <div class="my-comment d-flex">
+                  <textarea
+                    class="form-control"
+                    [ngClass]="{ 'border-radius': comment.clientHeight > 57 }"
+                    #comment
+                    type="text"
+                    placeholder="Add a comment..."
+                    formControlName="comment"
+                    appAutoResizeTextarea
+                    [minHeight]="45"
+                    [maxHeight]="200"
+                  >
+                  </textarea>
+                </div>
+
+                @if(comment.value.trim() !== '') {
+                <div class="d-flex justify-content-end">
+                  <button class="post-comment-btn" type="submit">Post</button>
+
+                  <button
+                    class="cancel-comment-btn"
+                    type="button"
+                    (click)="onCancelComment()"
+                  >
+                    Cancel
+                  </button>
+                </div>
+                }
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

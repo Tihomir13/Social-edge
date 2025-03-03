@@ -76,7 +76,7 @@ $border-radius: 11px;
   justify-content: center;
   align-items: center;
   z-index: 1000; /* Увери се, че е над останалото съдържание */
-  animation: fadeIn 0.1s ease-out;
+  animation: fadeIn 0.2s ease-out;
 
   .modal-container {
     background: #fff; /* Бял фон за модала */
@@ -91,7 +91,7 @@ $border-radius: 11px;
   .post-modal-container {
     max-height: 1100px;
     height: 100%;
-    aspect-ratio: 15/9 !important;
+    aspect-ratio: 5/4 !important;
     z-index: 1001;
     // background-color: rgb(180, 180, 180);
     // border: 1px solid black;
@@ -100,11 +100,24 @@ $border-radius: 11px;
   }
 }
 
+.fade-out {
+  animation: fadeOut 0.2s ease-out;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
   }
 }
