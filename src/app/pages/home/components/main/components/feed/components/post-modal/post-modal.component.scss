@@ -6,6 +6,7 @@
   border-radius: styles.$border-radius;
 
   .right-side {
+    height: 100%;
     width: 40%;
     margin: 5px 10px;
 
@@ -101,6 +102,11 @@
       }
   
       .add-comment-container {
+        position: absolute;
+        max-width: 529.1px;
+        width: 100%;
+        bottom: 35px;
+
         margin-top: 20px;
         .profile-icon-container {
           .profile-image {
