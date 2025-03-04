@@ -68,16 +68,15 @@ export class PostModalComponent {
 
   commentFormGroup!: FormGroup;
 
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent): void {
-    const target = event.target as HTMLElement;
-
-    if (!target.closest('.post-modal-container')) {
-      this.mainState.setOpenedPost(null);
-    }
-  }
-
   ngOnInit(): void {
+    this.unlisten = this.renderer.listen('document', 'click', (event: Event) => {
+      const target = event.target as HTMLElement;
+
+      if (!target.closest('.post-modal-container') && this.postId()) {
+        this.mainState.closePost();
+      }
+    });
+
     this.isLiked = this.isLikedByCurrUser$();
     this.totalLikes = this.totalLikes$();
 
@@ -109,7 +108,7 @@ export class PostModalComponent {
     this.router.navigate(['profile', this.username()]);
   }
 
-  showMoreComments(): void {}
+  showMoreComments(): void { }
 
   onComment(): void {
     const comment = this.commentFormGroup.value.comment.trim();

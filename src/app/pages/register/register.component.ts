@@ -169,7 +169,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.isUsernameExists = false;
     this.isEmailExists = false;
     this.isUserYounger = false;
-    this.isDateValid = true;
+    this.isDateValid = false;
   }
 
   onSubmit(): void {
@@ -179,7 +179,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
     } else {
       this.isDateValid = true;
     }
-    console.log(this.isSameAsToday(this.registerFormGroup.value.birthday));
 
     if (this.registerFormGroup.valid) {
       this.subscriptions.add(

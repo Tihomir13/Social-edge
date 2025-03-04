@@ -37,7 +37,13 @@
                 </div>
             </div>
             
+            @if(isLoadingMessages) {
+                <div class='d-flex justify-content-center align-items-center'>
+                    <app-loading-spinner [classes]="'text-primary'"/>
+                </div>
+            }
             <div #chat class="main" (scroll)="onScroll()">
+
                 @for (message of messages(); track $index) {
                     @if(message.sender !== currChatUser().username) {
                         @if(message.text === 'sparkle&:') {

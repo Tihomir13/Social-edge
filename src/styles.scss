@@ -59,6 +59,10 @@ $border-radius: 11px;
   gap: 22px;
 }
 
+.border-radius {
+  border-radius: $border-radius !important;
+}
+
 %or-text {
   margin-top: 20px;
   margin-bottom: 30px;
@@ -89,7 +93,7 @@ $border-radius: 11px;
   }
 
   .post-modal-container {
-    max-height: 1100px;
+    max-height: 900px;
     height: 100%;
     aspect-ratio: 5/4 !important;
     z-index: 1001;

@@ -20,7 +20,7 @@ export class MainStateService {
   notifications = signal<any[]>([]);
   userProfileImg = signal<any>(this.defaultProfileImg);
 
-  openedPost = signal<any>(undefined);
+  openedPost = signal<any>(null);
 
   setPosts(posts: any): void {
     this.posts.set(posts);
@@ -47,7 +47,13 @@ export class MainStateService {
   }
 
   setOpenedPost(postId: any): void {
-    this.openedPost.set(this.posts().find((post) => post._id === postId));
+    if (postId) {
+      this.openedPost.set(this.posts().find((post) => post._id === postId));
+    }
     console.log(this.openedPost());
+  }
+
+  closePost(): void {
+    this.openedPost.set(null);
   }
 }

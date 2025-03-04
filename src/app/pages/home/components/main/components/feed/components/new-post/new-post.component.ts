@@ -24,6 +24,7 @@ import { NewPostRequestsService } from './services/new-post-requests.service';
 import { NewPostFormServiceService } from '../../../../../../shared/services/new-post-form-service.service';
 import { MainStateService } from '../../../../shared/services/main-state.service';
 import { CustomModalComponent } from '../../../../../../../../shared/components/custom-modal/custom-modal.component';
+import { LoadingSpinnerComponent } from '../../../../../../../../shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-new-post',
@@ -34,6 +35,7 @@ import { CustomModalComponent } from '../../../../../../../../shared/components/
     NgClass,
     NgStyle,
     CustomModalComponent,
+    LoadingSpinnerComponent
   ],
   providers: [UtilityService, NewPostRequestsService],
   templateUrl: './new-post.component.html',
@@ -45,6 +47,7 @@ export class NewPostComponent implements OnDestroy {
   }
 
   isSubmitting: boolean = false;
+  isImageLoading: boolean = false;
 
   get imagesFiles(): FormArray {
     return this.newPostFormService
@@ -131,7 +134,10 @@ export class NewPostComponent implements OnDestroy {
         continue;
       }
 
+      this.isImageLoading = true;
       const nsfwCheck = await this.checkNsfw(file);
+      this.isImageLoading = false;
+      
       if (!nsfwCheck) {
         this.newPostState.errorMsgPhoto =
           'NSFW content detected. Please, upload appropriate images.';

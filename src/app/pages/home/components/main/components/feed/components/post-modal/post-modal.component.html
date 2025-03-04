@@ -158,10 +158,6 @@
             <div>{{ totalCommentsCount() }} comments</div>
           </div>
 
-          <!-- @if(isCommentsClicked) {
-              <div class="comments-container"></div>
-              } -->
-
           <div class="comments-container">
             @for (comment of comments(); track $index) {
             <app-comment
@@ -183,52 +179,52 @@
             </div>
             }
 
-            <div class="add-comment-container d-flex gap-10px">
-              <div class="profile-icon-container">
-                <img
-                  width="45"
-                  height="45"
-                  class="profile-image"
-                  [src]="currUserImg()"
-                  alt="profile image"
-                />
+          </div>
+          <div class="add-comment-container d-flex gap-10px">
+            <div class="profile-icon-container">
+              <img
+                width="45"
+                height="45"
+                class="profile-image"
+                [src]="currUserImg()"
+                alt="profile image"
+              />
+            </div>
+
+            <form
+              class="my-comment-form w-100"
+              [formGroup]="commentFormGroup"
+              (ngSubmit)="onComment()"
+            >
+              <div class="my-comment d-flex">
+                <textarea
+                  class="form-control"
+                  [ngClass]="{ 'border-radius': comment.clientHeight > 57 }"
+                  #comment
+                  type="text"
+                  placeholder="Add a comment..."
+                  formControlName="comment"
+                  appAutoResizeTextarea
+                  [minHeight]="45"
+                  [maxHeight]="200"
+                >
+                </textarea>
               </div>
 
-              <form
-                class="my-comment-form w-100"
-                [formGroup]="commentFormGroup"
-                (ngSubmit)="onComment()"
-              >
-                <div class="my-comment d-flex">
-                  <textarea
-                    class="form-control"
-                    [ngClass]="{ 'border-radius': comment.clientHeight > 57 }"
-                    #comment
-                    type="text"
-                    placeholder="Add a comment..."
-                    formControlName="comment"
-                    appAutoResizeTextarea
-                    [minHeight]="45"
-                    [maxHeight]="200"
-                  >
-                  </textarea>
-                </div>
+              @if(comment.value.trim() !== '') {
+              <div class="d-flex justify-content-end">
+                <button class="post-comment-btn" type="submit">Post</button>
 
-                @if(comment.value.trim() !== '') {
-                <div class="d-flex justify-content-end">
-                  <button class="post-comment-btn" type="submit">Post</button>
-
-                  <button
-                    class="cancel-comment-btn"
-                    type="button"
-                    (click)="onCancelComment()"
-                  >
-                    Cancel
-                  </button>
-                </div>
-                }
-              </form>
-            </div>
+                <button
+                  class="cancel-comment-btn"
+                  type="button"
+                  (click)="onCancelComment()"
+                >
+                  Cancel
+                </button>
+              </div>
+              }
+            </form>
           </div>
         </div>
       </div>

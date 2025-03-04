@@ -42,8 +42,13 @@ export class LoginFormComponent implements OnInit {
         },
         error: (error) => {
           console.error('Login failed', error);
-          this.isErrorMsgShowed = true;
           this.errorMsg = error.error.message;
+
+          if (!this.errorMsg) {
+            return;
+          }
+
+          this.isErrorMsgShowed = true;
         },
       });
     }
