@@ -18,7 +18,7 @@ import { CommentComponent } from '../post/components/comment/comment.component';
 import { GenerateCommentForm } from '../post/helper/comment.form';
 import { AutoResizeTextareaDirective } from '../../../../../../../../shared/directives/auto-resize-textarea.directive';
 import { PostsRequestsService } from '../post/services/posts-requests.service';
-import { Subscription } from 'rxjs';
+import { Subscription, timer } from 'rxjs';
 
 @Component({
   selector: 'app-post-modal',
@@ -50,6 +50,7 @@ export class PostModalComponent {
   isLiked: boolean | undefined;
   totalLikes: number | undefined;
 
+  likeTimer: Subscription | null = null;
   isCollapsed = true;
   subscriptions = new Subscription();
 
@@ -83,6 +84,39 @@ export class PostModalComponent {
     this.commentFormGroup = new GenerateCommentForm(
       this.fb
     ).generateCommentPost();
+  }
+
+  toggleLike(): void {
+    // Променяме UI веднага
+    this.isLiked = !this.isLiked;
+    this.totalLikes! += this.isLiked ? 1 : -1;
+
+    const currPostId = this.postId();
+
+    // Ако има активен таймер за този пост – анулираме го
+    if (this.likeTimer) {
+      this.likeTimer.unsubscribe();
+    }
+
+    // Стартираме нов таймер
+    this.likeTimer = timer(5000).subscribe(() => {
+      this.postLikeDislike(currPostId);
+      this.likeTimer = null; // След изпращане на заявка нулираме таймера
+    });
+  }
+
+  postLikeDislike(postId: string): Promise<void> {
+    return new Promise((_, reject) => {
+      this.subscriptions.add(
+        this.postRequests.likePost(postId).subscribe({
+          next: () => { },
+          error: (error) => {
+            console.log(error);
+            reject(error);
+          },
+        })
+      );
+    });
   }
 
   toggleReadMore(): void {

@@ -78,93 +78,90 @@
       }
     }
 
-    .footer {
-      .interactions-container {
-        margin-top: 10px;
-  
-        .interaction-icon {
-          cursor: pointer;
-        }
-      }
-  
-      .view-more-btn {
-        height: 30px;
-        border-radius: 11px;
-        color: styles.$primary-purple;
-        background-color: rgb(238, 238, 238);
-        cursor: pointer;
-  
-        &:hover {
-          .view-more-btn {
-            opacity: 0.6;
-          }
-        }
-      }
-  
-      .add-comment-container {
-        bottom: 35px;
+    .interactions-container {
+      margin-top: 10px;
 
-        margin-top: 20px;
-        .profile-icon-container {
-          .profile-image {
-            object-fit: cover;
-            width: 45px;
-            aspect-ratio: 1/1;
-            border-radius: 50%;
+      .interaction-icon {
+        cursor: pointer;
+      }
+    }
+
+    .view-more-btn {
+      height: 30px;
+      border-radius: 11px;
+      color: styles.$primary-purple;
+      background-color: rgb(238, 238, 238);
+      cursor: pointer;
+
+      &:hover {
+        .view-more-btn {
+          opacity: 0.6;
+        }
+      }
+    }
+
+    .add-comment-container {
+      bottom: 35px;
+      
+      .profile-icon-container {
+        .profile-image {
+          object-fit: cover;
+          width: 45px;
+          aspect-ratio: 1/1;
+          border-radius: 50%;
+        }
+      }
+
+      .my-comment-form {
+        .my-comment {
+          position: relative;
+          justify-content: center;
+          align-items: center;
+
+          width: 100%;
+
+          .form-control {
+            width: 100%;
+            border-radius: 25px;
+            height: 45px;
+            resize: none;
+
+            &:focus {
+              outline: none;
+              box-shadow: none;
+            }
           }
         }
-  
-        .my-comment-form {
-          .my-comment {
-            position: relative;
-            justify-content: center;
-            align-items: center;
-  
-            width: 100%;
-  
-            .form-control {
-              width: 100%;
-              border-radius: 25px;
-              height: 45px;
-              resize: none;
-  
-              &:focus {
-                outline: none;
-                box-shadow: none;
-              }
-            }
+
+        .post-comment-btn {
+          bottom: 8px;
+          right: 22px;
+          border: none;
+          background-color: transparent;
+
+          color: styles.$primary-purple;
+          cursor: pointer;
+          font-weight: bold;
+          display: inline-block;
+
+          &:hover {
+            opacity: 0.8;
           }
-  
-          .post-comment-btn {
-            bottom: 8px;
-            right: 22px;
-            border: none;
-            background-color: transparent;
-  
-            color: styles.$primary-purple;
-            cursor: pointer;
-            font-weight: bold;
-            display: inline-block;
-  
-            &:hover {
-              opacity: 0.8;
-            }
-          }
-  
-          .cancel-comment-btn {
-            bottom: 8px;
-            right: 70px;
-            border: none;
-            background-color: transparent;
-  
-            color: red;
-            cursor: pointer;
-            font-weight: bold;
-            display: inline-block;
-  
-            &:hover {
-              opacity: 0.5;
-            }
+        }
+
+        .cancel-comment-btn {
+          bottom: 8px;
+          right: 70px;
+          border: none;
+          background-color: transparent;
+
+          color: red;
+          cursor: pointer;
+          font-weight: bold;
+          display: inline-block;
+
+          &:hover {
+            opacity: 0.5;
           }
         }
       }
