@@ -46,4 +46,10 @@ export class PostsRequestsService {
       headers: this.utility.headers,
     });
   }
+
+  deletePost(postId: string): Observable<any> {
+    return this.http.delete(`${api}/posts/delete${postId}`, {
+      headers: this.utility.headers,
+    })
+  }
 }

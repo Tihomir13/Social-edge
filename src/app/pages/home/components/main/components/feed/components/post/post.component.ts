@@ -23,6 +23,7 @@ import { MainStateService } from '../../../../shared/services/main-state.service
 import { CommentComponent } from './components/comment/comment.component';
 import { AutoResizeTextareaDirective } from '../../../../../../../../shared/directives/auto-resize-textarea.directive';
 import { PostModalComponent } from '../post-modal/post-modal.component';
+import { OptionsMenuComponent } from './components/options-menu/options-menu.component';
 
 @Component({
   selector: 'app-post',
@@ -33,6 +34,7 @@ import { PostModalComponent } from '../post-modal/post-modal.component';
     CommentComponent,
     AutoResizeTextareaDirective,
     NgClass,
+    OptionsMenuComponent
   ],
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss',
@@ -43,6 +45,7 @@ export class PostComponent implements OnInit, OnDestroy {
 
   isCommentsClicked: boolean = true;
   isCollapsed = true;
+  isOptionsClicked = false;
 
   likeTimer: Subscription | null = null;
 
@@ -61,6 +64,8 @@ export class PostComponent implements OnInit, OnDestroy {
   isLikedByCurrUser$ = input<boolean>();
   isLiked: boolean | undefined;
   totalLikes: number | undefined;
+
+  private unlistenOptionsMenu!: () => void;
 
   @ViewChild('comment') comment!: ElementRef<HTMLTextAreaElement>;
   currentImageIndex = 0;
@@ -131,7 +136,7 @@ export class PostComponent implements OnInit, OnDestroy {
     return new Promise((_, reject) => {
       this.subscriptions.add(
         this.postRequests.likePost(postId).subscribe({
-          next: () => {},
+          next: () => { },
           error: (error) => {
             console.log(error);
             reject(error);
@@ -172,7 +177,44 @@ export class PostComponent implements OnInit, OnDestroy {
     this.render.setStyle(this.comment.nativeElement, 'height', '45px');
   }
 
+  addListenerToOptionsMenu(): void {
+    this.unlistenOptionsMenu = this.render.listen('document', 'click', (event: Event) => {
+      const target = event.target as HTMLElement;
+
+      if (!target.closest('.options-container')) {
+        this.isOptionsClicked = false;
+        this.unlistenOptionsMenu();
+      }
+    });
+  }
+
+  toggleOptionsMenu(): void {
+    if (this.unlistenOptionsMenu) {
+      this.unlistenOptionsMenu();
+    }
+
+    this.addListenerToOptionsMenu();
+    this.isOptionsClicked = !this.isOptionsClicked;
+  }
+
+  deletePost(postId: string): void {
+    this.subscriptions.add(this.postRequests.deletePost(postId).subscribe({
+      next: (response) => {
+        console.log(response);
+
+        this.mainState.deletePost(this.postId());
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    }))
+  }
+
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+
+    if (this.unlistenOptionsMenu) {
+      this.unlistenOptionsMenu();
+    }
   }
 }

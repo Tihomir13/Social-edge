@@ -9,8 +9,13 @@
     </div>
 
     <div class="options-container">
-      <img class="icon" src="assets/icons/more.svg" alt="" />
+      <img class="options-icon" src="assets/icons/more.svg" alt="" (click)="toggleOptionsMenu(); "/>
+
+      @if(isOptionsClicked) {
+        <app-options-menu class='post-options-menu' (deletePost)="deletePost(postId())"/>
+      }
     </div>
+    
   </div>
 
   @if(title()) {

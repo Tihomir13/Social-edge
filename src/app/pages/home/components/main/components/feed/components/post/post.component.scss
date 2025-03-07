@@ -29,10 +29,20 @@
     }
 
     .options-container {
-      .icon {
+      position: relative;
+
+      .options-icon {
         cursor: pointer;
       }
+
+      .post-options-menu {
+        z-index: 10;
+        position: absolute;
+        right: 0px;
+        top: 45px;
+      }
     }
+
   }
 
   // Previous title and text styles remain the same
@@ -215,6 +225,7 @@
 
     .add-comment-container {
       margin-top: 20px;
+
       .profile-icon-container {
         .profile-image {
           object-fit: cover;

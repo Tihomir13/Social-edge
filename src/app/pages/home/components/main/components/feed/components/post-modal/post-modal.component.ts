@@ -75,6 +75,7 @@ export class PostModalComponent {
 
       if (!target.closest('.post-modal-container') && this.postId()) {
         this.mainState.closePost();
+        this.unlisten();
       }
     });
 
@@ -128,8 +129,6 @@ export class PostModalComponent {
       this.currentImageIndex++;
     }
 
-    console.log(this.images()[this.currentImageIndex]);
-    console.log(this.currentImageIndex);
   }
 
   prevImage(): void {

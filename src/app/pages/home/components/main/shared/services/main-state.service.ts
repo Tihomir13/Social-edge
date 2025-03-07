@@ -56,4 +56,12 @@ export class MainStateService {
   closePost(): void {
     this.openedPost.set(null);
   }
+
+  deletePost(postId: string): void {
+    if (!postId) {
+      return;
+    }
+
+    this.posts.update(posts => posts.filter(post => post.id != postId))
+  }
 }
