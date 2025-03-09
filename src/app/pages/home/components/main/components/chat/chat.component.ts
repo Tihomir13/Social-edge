@@ -6,6 +6,7 @@ import {
   OnInit,
   output,
   Renderer2,
+  signal,
   ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
@@ -16,17 +17,23 @@ import { MainSocketService } from '../../../../../../shared/services/websocket/m
 import { messageModel } from './interfaces';
 import { Subscription } from 'rxjs';
 import { MessagesRequestService } from './services/messages-request.service';
+import { LoadingSpinnerComponent } from '../../../../../../shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [InputFieldComponent],
+  imports: [InputFieldComponent, LoadingSpinnerComponent],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss',
 })
 export class ChatComponent implements OnInit {
   currChatUser = input<any>();
   minimizeChat = output();
+
+  isLoadingMessages: boolean = false;
+
+  nextCursor: string | null = null;
+
   @ViewChild('chat') chat!: ElementRef;
 
   mainState = inject(MainStateService);
@@ -37,12 +44,12 @@ export class ChatComponent implements OnInit {
 
   subscriptions = new Subscription();
 
-  messages: messageModel[] = [];
+  messages = signal<any>([])
 
   ngOnInit(): void {
     this.mainSocketService.onNewMessage().subscribe((message) => {
       console.log('Получено съобщение:', message);
-      this.messages.unshift(message);
+      this.messages.update(messages => [message, ...messages]);
     });
   }
 
@@ -54,11 +61,32 @@ export class ChatComponent implements OnInit {
     this.router.navigate(['profile', this.currChatUser().username]);
   }
 
-  onScroll(event: any): void {
+  onScroll(): void {
     const container = this.chat.nativeElement;
 
-    if (container.scrollTop === 0) {
-      this.getMessages();
+    const isAtTop =
+      container.scrollHeight ===
+      Math.round(container.scrollTop * -1) + container.clientHeight;
+
+    if (isAtTop && this.nextCursor) {
+      this.isLoadingMessages = true;
+      this.msgRequestService
+        .getMessages(this.currChatUser(), this.nextCursor, 20)
+        .subscribe({
+          next: (response) => {
+            this.messages.update(messages => [...messages, ...response.messages])
+            this.nextCursor = response.nextCursor;
+
+          },
+          error: (error) => {
+            console.error('Error fetching messages:', error);
+          },
+          complete: () => {
+            this.isLoadingMessages = false;
+          }
+        });
+
+      console.log(this.messages());
     }
   }
 
@@ -79,15 +107,18 @@ export class ChatComponent implements OnInit {
 
   getMessages(): void {
     this.subscriptions.add(
-      this.msgRequestService.getMessages(this.currChatUser()).subscribe({
-        next: (response) => {
-          this.messages = response.messages;
-          console.log(this.messages);
-        },
-        error: (error) => {
-          console.log(error);
-        },
-      })
+      this.msgRequestService
+        .getMessages(this.currChatUser(), this.nextCursor, 20)
+        .subscribe({
+          next: (response) => {
+            this.messages.update(messages => messages = response.messages)
+            this.nextCursor = response.nextCursor;
+            console.log(response);
+          },
+          error: (error) => {
+            console.log(error);
+          },
+        })
     );
   }
 

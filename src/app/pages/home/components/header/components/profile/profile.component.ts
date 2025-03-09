@@ -1,4 +1,5 @@
 import {
+  ApplicationRef,
   Component,
   ElementRef,
   HostListener,
@@ -101,8 +102,9 @@ export class ProfileComponent implements OnInit {
   }
 
   logout(): void {
-    this.router.navigate(['/login']);
     this.utilitySession.resetSession();
+    window.location.reload();
+    // this.router.navigate(['/login']);
   }
 
   options(): void {

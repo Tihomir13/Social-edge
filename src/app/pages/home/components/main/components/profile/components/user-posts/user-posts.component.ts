@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 import { Subscription } from 'rxjs';
 
@@ -11,7 +11,7 @@ import { MainStateService } from '../../../../shared/services/main-state.service
 @Component({
   selector: 'app-user-posts',
   standalone: true,
-  imports: [PostComponent, HttpClientModule],
+  imports: [PostComponent],
   providers: [HttpClient, ProfileRequestsService],
   templateUrl: './user-posts.component.html',
   styleUrl: './user-posts.component.scss',

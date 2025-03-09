@@ -3,6 +3,7 @@ import {
   ElementRef,
   HostListener,
   inject,
+  Input,
   Renderer2,
 } from '@angular/core';
 
@@ -10,42 +11,41 @@ import {
   selector: '[appAutoResizeTextarea]',
 })
 export class AutoResizeTextareaDirective {
-  element = inject(ElementRef);
-  renderer = inject(Renderer2);
-  private removeClickListener: (() => void) | null = null; // Запазваме референция към listener-а
+  private element = inject(ElementRef);
+  private renderer = inject(Renderer2);
+
+  @Input() minHeight: number = 40; // Минимална височина (по подразбиране 40px)
+  @Input() maxHeight: number = 120; // Максимална височина (по подразбиране 120px)
+
+  constructor() {
+    setTimeout(() => {
+      this.applyStyles();
+    });
+  }
 
   @HostListener('input') onInput(): void {
     this.resize();
-
-    const textarea = this.element.nativeElement;
-    if (textarea.value.trim() && !this.removeClickListener) {
-      console.log('listner');
-      // Добавяме event listener за клик само ако има текст
-      this.removeClickListener = this.renderer.listen('document', 'click', (event: Event) => {
-        if (!textarea.contains(event.target) && !textarea.value.trim()) {
-          this.renderer.setStyle(textarea, 'height', 'auto');
-          this.removeOutsideClickListener(); // Спираме да слушаме
-        }
-      });
-    } else if (!textarea.value.trim()) {
-      this.removeOutsideClickListener(); // Ако е празно, спираме да слушаме
-    }
   }
 
   private resize(): void {
-    const textarea = this.element.nativeElement;
-    this.renderer.setStyle(textarea, 'height', '45px');
-    this.renderer.setStyle(textarea, 'height', `${textarea.scrollHeight + 56}px`);
+    const textarea = this.element.nativeElement as HTMLTextAreaElement;
+    
+    this.renderer.setStyle(textarea, 'height', `${this.minHeight}px`);
+
+    const scrollHeight = textarea.scrollHeight;
+    const newHeight = Math.min(Math.max(scrollHeight, this.minHeight), this.maxHeight);
+
+    this.renderer.setStyle(textarea, 'height', `${newHeight}px`);
+    this.renderer.setStyle(
+      textarea,
+      'overflow-y',
+      newHeight >= this.maxHeight ? 'auto' : 'hidden'
+    );
   }
 
-  private removeOutsideClickListener(): void {
-    
-    if (this.removeClickListener) {
-      const textarea = this.element.nativeElement;
-      console.log('stop listner');
-      this.removeClickListener(); // Премахваме listener-а
-      this.removeClickListener = null;
-      this.renderer.setStyle(textarea, 'height', '45px');
-    }
+  private applyStyles(): void {
+    const textarea = this.element.nativeElement as HTMLTextAreaElement;
+    this.renderer.setStyle(textarea, 'height', `${this.minHeight}px`);
+    this.renderer.setStyle(textarea, 'overflow', 'hidden');
   }
 }

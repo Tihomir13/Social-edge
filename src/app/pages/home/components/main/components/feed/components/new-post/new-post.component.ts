@@ -24,6 +24,7 @@ import { NewPostRequestsService } from './services/new-post-requests.service';
 import { NewPostFormServiceService } from '../../../../../../shared/services/new-post-form-service.service';
 import { MainStateService } from '../../../../shared/services/main-state.service';
 import { CustomModalComponent } from '../../../../../../../../shared/components/custom-modal/custom-modal.component';
+import { LoadingSpinnerComponent } from '../../../../../../../../shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-new-post',
@@ -34,6 +35,7 @@ import { CustomModalComponent } from '../../../../../../../../shared/components/
     NgClass,
     NgStyle,
     CustomModalComponent,
+    LoadingSpinnerComponent
   ],
   providers: [UtilityService, NewPostRequestsService],
   templateUrl: './new-post.component.html',
@@ -43,6 +45,9 @@ export class NewPostComponent implements OnDestroy {
   get tags(): FormArray {
     return this.newPostFormService.newPostFormGroup()?.get('tags') as FormArray;
   }
+
+  isSubmitting: boolean = false;
+  isImageLoading: boolean = false;
 
   get imagesFiles(): FormArray {
     return this.newPostFormService
@@ -129,7 +134,10 @@ export class NewPostComponent implements OnDestroy {
         continue;
       }
 
+      this.isImageLoading = true;
       const nsfwCheck = await this.checkNsfw(file);
+      this.isImageLoading = false;
+      
       if (!nsfwCheck) {
         this.newPostState.errorMsgPhoto =
           'NSFW content detected. Please, upload appropriate images.';
@@ -182,7 +190,7 @@ export class NewPostComponent implements OnDestroy {
           const nsfwResult = predictions.find(
             (p) => p.className === 'Porn' || p.className === 'Hentai'
           );
-          resolve(!(nsfwResult && nsfwResult.probability > 0.1));
+          resolve(!(nsfwResult && nsfwResult.probability > 0.5));
         };
       };
       reader.readAsDataURL(file);
@@ -301,30 +309,30 @@ export class NewPostComponent implements OnDestroy {
   }
 
   onSubmit(): void {
-    if (!this.newPostFormService.newPostFormGroup()?.valid) {
+    if (!this.newPostFormService.newPostFormGroup()?.valid || this.isSubmitting) {
       return;
     }
-
+  
+    this.isSubmitting = true;
+  
     const formData = this.newPostFormService.newPostFormGroup()?.value;
-
-    this.newPostFormService.newPostFormGroup().reset();
-
+  
     this.subscriptions.add(
       this.newPostRequests.savePost(formData).subscribe({
         next: (response) => {
-          console.log('Post saved successfully', response);
           this.clearFormArrays();
           this.newPostFormService.newPostFormGroup()?.reset();
           this.newPostState.isCreatingNewPost = false;
           this.newPostState.resetUI();
-          console.log(this.newPostFormService.newPostFormGroup()?.value);
           this.resetPost();
-
           this.creatingNewPost.emit();
         },
         error: (error) => {
           console.error('Error saving post', error);
         },
+        complete: () => {
+          this.isSubmitting = false;
+        }
       })
     );
   }

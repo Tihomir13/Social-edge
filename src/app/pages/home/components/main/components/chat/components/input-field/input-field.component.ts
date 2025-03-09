@@ -18,6 +18,7 @@ import { AutoResizeChatTextareaDirective } from '../../../../../../../../shared/
 export class InputFieldComponent {
   isTyping = false;
   onNewMessage = output();
+  sendSparkle = output();
 
   @ViewChild('textarea') textArea!: ElementRef;
 
@@ -53,6 +54,10 @@ export class InputFieldComponent {
         }
       );
     }
+  }
+
+  sendLike(): void {
+    this.sendSparkle.emit();
   }
 
   sendMessage(): void {

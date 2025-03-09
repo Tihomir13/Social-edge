@@ -9,7 +9,11 @@
     </div>
 
     <div class="options-container">
-      <img class="icon" src="assets/icons/more.svg" alt="" />
+      <img class="options-icon" src="assets/icons/more.svg" alt="" (click)="toggleOptionsMenu(); "/>
+
+      @if(isOptionsClicked) {
+        <app-options-menu class='post-options-menu' (deletePost)="deletePost(postId())" [isAuthor]="this.utilityService.userInfo.username === username()"/>
+      }
     </div>
   </div>
 
@@ -141,7 +145,7 @@
       }
 
       @if (totalCommentsCount() > 2) {
-        <div class="view-more-btn mt-3 d-flex justify-content-center align-items-center">
+        <div class="view-more-btn mt-3 d-flex justify-content-center align-items-center" (click)="showMoreComments()">
           <span class="view-more-btn d-flex justify-content-center align-items-center fw-semibold">View more</span>
         </div>
       }
@@ -152,22 +156,27 @@
         </div>
 
         <form
-          class="my-comment d-flex"
+          class="my-comment-form w-100"
           [formGroup]="commentFormGroup"
           (ngSubmit)="onComment()"
         >
-          <textarea
-            class="form-control"
-            #comment
-            type="text"
-            placeholder="Add a comment..."
-            formControlName="comment"
-            appAutoResizeTextarea
-          >
-          </textarea>
-
+          <div class="my-comment d-flex">
+            <textarea
+              class="form-control"
+              [ngClass]="{ 'border-radius': comment.clientHeight > 57 }"
+              #comment
+              type="text"
+              placeholder="Add a comment..."
+              formControlName="comment"
+              appAutoResizeTextarea
+              [minHeight]="45"
+              [maxHeight]="200"
+              >
+            </textarea>
+          </div>
+        
           @if(comment.value.trim() !== '') {
-            <div class="d-flex flex-column">
+            <div class="d-flex justify-content-end">
               <button class="post-comment-btn" type="submit">Post</button>
 
               <button class="cancel-comment-btn" type="button" (click)="onCancelComment()">Cancel</button>
@@ -178,3 +187,4 @@
     </div>
   </div>
 </div>
+

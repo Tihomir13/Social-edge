@@ -1,53 +1,42 @@
 import {
   Component,
   ElementRef,
+  HostListener,
   inject,
   input,
-  OnDestroy,
-  OnInit,
   output,
   Renderer2,
   ViewChild,
 } from '@angular/core';
-import { NgClass, SlicePipe } from '@angular/common';
-import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
-import { Subscription, timer } from 'rxjs';
+import { Router } from '@angular/router';
+import { NgClass, SlicePipe } from '@angular/common';
 
-import { imagePostModel } from './model/post.model';
-import { PostsRequestsService } from './services/posts-requests.service';
-import { UtilitySessionService } from '../../../../../../../../shared/services/utility/utility.service';
-import { GenerateCommentForm } from './helper/comment.form';
 import { MainStateService } from '../../../../shared/services/main-state.service';
-import { CommentComponent } from './components/comment/comment.component';
+import { CommentComponent } from '../post/components/comment/comment.component';
+import { GenerateCommentForm } from '../post/helper/comment.form';
 import { AutoResizeTextareaDirective } from '../../../../../../../../shared/directives/auto-resize-textarea.directive';
-import { OptionsMenuComponent } from './components/options-menu/options-menu.component';
+import { PostsRequestsService } from '../post/services/posts-requests.service';
+import { Subscription, timer } from 'rxjs';
+import { OptionsMenuComponent } from '../post/components/options-menu/options-menu.component';
+import { UtilityService } from '../../../../../../../../shared/services/utility/array-utility.service';
+import { UtilitySessionService } from '../../../../../../../../shared/services/utility/utility.service';
 
 @Component({
-  selector: 'app-post',
-  standalone: true,
+  selector: 'app-post-modal',
   imports: [
     SlicePipe,
-    ReactiveFormsModule,
     CommentComponent,
+    ReactiveFormsModule,
     AutoResizeTextareaDirective,
     NgClass,
     OptionsMenuComponent
   ],
-  templateUrl: './post.component.html',
-  styleUrl: './post.component.scss',
-  providers: [],
+  templateUrl: './post-modal.component.html',
+  styleUrl: './post-modal.component.scss',
 })
-export class PostComponent implements OnInit, OnDestroy {
-  subscriptions = new Subscription();
-
-  isCommentsClicked: boolean = true;
-  isCollapsed = true;
-  isOptionsClicked = false;
-
-  likeTimer: Subscription | null = null;
-
+export class PostModalComponent {
   postId = input<string>('');
   username = input<string>('');
   authorProfileImg = input<any>();
@@ -55,64 +44,58 @@ export class PostComponent implements OnInit, OnDestroy {
   text = input<string>('');
   tags = input<string[]>([]);
   likes = input<string[]>([]);
-  images = input<imagePostModel[]>([]);
+  images = input<any[]>([]);
   comments = input<any[]>([]);
   totalCommentsCount = input<number>(0);
   currUserImg = input();
   totalLikes$ = input<number>();
   isLikedByCurrUser$ = input<boolean>();
+  createdAt = input();
   isLiked: boolean | undefined;
   totalLikes: number | undefined;
 
+  isOptionsClicked = false;
+
+  likeTimer: Subscription | null = null;
+  isCollapsed = true;
+  subscriptions = new Subscription();
+
+  closeModal = output();
+
   private unlistenOptionsMenu!: () => void;
+  private unlisten!: () => void;
+
+  private renderer = inject(Renderer2);
+  mainState = inject(MainStateService);
+  utilityService = inject(UtilitySessionService);
+  router = inject(Router);
+  fb = inject(FormBuilder);
+  private postRequests = inject(PostsRequestsService);
 
   @ViewChild('comment') comment!: ElementRef<HTMLTextAreaElement>;
   currentImageIndex = 0;
 
   commentFormGroup!: FormGroup;
 
-  private postRequests = inject(PostsRequestsService);
-  private render = inject(Renderer2);
-  private el = inject(ElementRef);
-  router = inject(Router);
-  mainState = inject(MainStateService);
-  utilityService = inject(UtilitySessionService);
-  formBuilder = inject(FormBuilder);
-
   ngOnInit(): void {
+    this.unlisten = this.renderer.listen('document', 'click', (event: Event) => {
+      const target = event.target as HTMLElement;
+
+      if (!target.closest('.post-modal-container') && this.postId()) {
+        this.mainState.closePost();
+        this.unlisten();
+      }
+    });
+
     this.isLiked = this.isLikedByCurrUser$();
     this.totalLikes = this.totalLikes$();
 
     this.commentFormGroup = new GenerateCommentForm(
-      this.formBuilder
+      this.fb
     ).generateCommentPost();
   }
 
-  nextImage(): void {
-    if (this.currentImageIndex < this.images().length - 1) {
-      this.currentImageIndex++;
-    }
-  }
-
-  prevImage(): void {
-    if (this.currentImageIndex > 0) {
-      this.currentImageIndex--;
-    }
-  }
-
-  toggleReadMore(): void {
-    this.isCollapsed = !this.isCollapsed;
-  }
-
-  toggleComments(): void {
-    this.isCommentsClicked = !this.isCommentsClicked;
-  }
-
-  navigateToAuthorProfile(): void {
-    this.router.navigate(['profile', this.username()]);
-  }
-
-  toggleLike() {
+  toggleLike(): void {
     // Променяме UI веднага
     this.isLiked = !this.isLiked;
     this.totalLikes! += this.isLiked ? 1 : -1;
@@ -145,6 +128,29 @@ export class PostComponent implements OnInit, OnDestroy {
     });
   }
 
+  toggleReadMore(): void {
+    this.isCollapsed = !this.isCollapsed;
+  }
+
+  nextImage(): void {
+    if (this.currentImageIndex < this.images().length - 1) {
+      this.currentImageIndex++;
+    }
+
+  }
+
+  prevImage(): void {
+    if (this.currentImageIndex > 0) {
+      this.currentImageIndex--;
+    }
+  }
+
+  navigateToAuthorProfile(): void {
+    this.router.navigate(['profile', this.username()]);
+  }
+
+  showMoreComments(): void { }
+
   onComment(): void {
     const comment = this.commentFormGroup.value.comment.trim();
 
@@ -163,21 +169,13 @@ export class PostComponent implements OnInit, OnDestroy {
     }
   }
 
-  openPostModal(): void {
-    this.mainState.setOpenedPost(this.postId());
-  }
-
-  showMoreComments(): void {
-    this.openPostModal();
-  }
-
   onCancelComment(): void {
     this.commentFormGroup.reset();
-    this.render.setStyle(this.comment.nativeElement, 'height', '45px');
+    this.renderer.setStyle(this.comment.nativeElement, 'height', '45px');
   }
 
   addListenerToOptionsMenu(): void {
-    this.unlistenOptionsMenu = this.render.listen('document', 'click', (event: Event) => {
+    this.unlistenOptionsMenu = this.renderer.listen('document', 'click', (event: Event) => {
       const target = event.target as HTMLElement;
 
       if (!target.closest('.options-container')) {
@@ -210,10 +208,10 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
-
-    if (this.unlistenOptionsMenu) {
-      this.unlistenOptionsMenu();
+    if (this.unlisten) {
+      this.unlisten();
     }
+
+    this.subscriptions.unsubscribe();
   }
 }

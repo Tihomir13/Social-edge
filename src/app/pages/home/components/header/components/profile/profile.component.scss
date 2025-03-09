@@ -2,6 +2,7 @@
 
 .profile-options-container {
   position: relative;
+
   .profile-container {
     background-color: styles.$light-purple;
     border-radius: 25px;
@@ -11,10 +12,10 @@
     z-index: 10;
 
     .profile-image {
+      border: 1px solid white;
       object-fit: cover;
       margin-right: 5px;
-      width: 50px;
-      border-radius: 25px;
+      border-radius: 50%;
       cursor: pointer; // прави снимката кликаема
       transition: transform 0.3s ease-in-out;
 
@@ -57,6 +58,7 @@
     border-radius: 0px 0px styles.$border-radius styles.$border-radius;
     transition: all 0.3s ease-out;
     border: 1px solid styles.$primary-purple;
+    pointer-events: none;
 
     .list-unstyled {
       margin-top: 25px;
@@ -77,10 +79,11 @@
         color: white;
       }
     }
-    
+
     &.open {
       max-height: 400px;
       opacity: 1;
+      pointer-events: all;
 
       .option {
         height: 50px;
@@ -91,9 +94,25 @@
 }
 
 @media screen and (max-width: 768px) {
-  .profile-container {
-    .profile-image {
-      margin-right: 0px;
+  .profile-options-container {
+    display: flex;
+    align-items: center !important;
+    justify-content: center !important;
+
+    .profile-container {
+      height: 30px;
+      width: 30px;
+
+      .profile-image {
+        margin-right: 0px !important;
+        width: 30px !important;
+        height: 30px !important;
+        aspect-ratio: 1/1 !important;
+      }
+    }
+
+    .profile-menu {
+      display: none !important;
     }
   }
 }

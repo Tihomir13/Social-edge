@@ -19,3 +19,26 @@
   />
   }
 </div>
+
+@if (state.openedPost()) {
+<div class="modal-overlay">
+  <div class="post-modal-container">
+    <app-post-modal
+      [username]="state.openedPost().author.username"
+      [authorProfileImg]="state.openedPost().author.profileImage"
+      [images]="state.openedPost().images"
+      [likes]="state.openedPost().likes"
+      [title]="state.openedPost().title"
+      [text]="state.openedPost().text"
+      [tags]="state.openedPost().tags"
+      [postId]="state.openedPost()._id"
+      [comments]="state.openedPost().comments"
+      [currUserImg]="state.userProfileImg()"
+      [totalCommentsCount]="state.openedPost().commentsCount"
+      [totalLikes$]="state.openedPost().totalLikes"
+      [isLikedByCurrUser$]="state.openedPost().isLiked"
+      [createdAt]="state.openedPost().createdAt"
+    />
+  </div>
+</div>
+}

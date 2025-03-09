@@ -1,0 +1,6 @@
+<ul #postMenu class="post-menu list-unstyled d-flex flex-column justify-content-center align-items-center">
+    <li class="option first-option px-5 d-flex justify-content-center align-items-center">Options</li>
+    @if(isAuthor()) {
+        <li class="option delete-option px-5 d-flex justify-content-center align-items-center" (click)="onDeletePost()">Delete</li>
+    }
+</ul>

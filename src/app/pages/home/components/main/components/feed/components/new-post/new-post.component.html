@@ -97,7 +97,7 @@
         (click)="onRemoveTag($index)"
         >{{ tag }}
 
-        <span class="delete-icon fs-3">✖</span>
+        <span class="delete-icon fs-1">✖</span>
       </span>
       }
     </div>
@@ -126,7 +126,12 @@
       />
 
       <label for="file-input" class="custom-file-label">
-        <img src="assets/icons/plus.svg" alt="Add Photo" class="plus-icon" />
+        @if(isImageLoading){
+          <app-loading-spinner />
+        }
+        @else {
+          <img src="assets/icons/plus.svg" alt="Add Photo" class="plus-icon" />
+        }
       </label>
     </div>
 

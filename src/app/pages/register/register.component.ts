@@ -1,5 +1,6 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { ShortenMonthPipe } from '../../shared/pipes/shorten-month.pipe';
+import { HttpClient } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
 import {
   AbstractControl,
   FormGroup,
@@ -169,7 +170,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.isUsernameExists = false;
     this.isEmailExists = false;
     this.isUserYounger = false;
-    this.isDateValid = true;
+    this.isDateValid = false;
   }
 
   onSubmit(): void {
@@ -202,7 +203,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
             if (data.status === 409 && data.error.message.includes('Email')) {
               this.isEmailExists = true;
             } else {
-              this.isEmailExists = true;
+              this.isEmailExists = false;
             }
 
             if (data.status === 422) {

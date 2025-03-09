@@ -1,5 +1,4 @@
 import { Injectable, signal } from '@angular/core';
-import { PostModel } from '../../components/feed/components/post/model/post.model';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +11,7 @@ export class MainStateService {
     {
       username: string;
       isOnline: boolean;
-      profileImage: { src: string; contentType: string;}; 
+      profileImage: { src: string; contentType: string };
     }[]
   >([]);
   currentChatHeads = signal<any[]>([]);
@@ -20,6 +19,8 @@ export class MainStateService {
   searchedUsers = signal<any[]>([]);
   notifications = signal<any[]>([]);
   userProfileImg = signal<any>(this.defaultProfileImg);
+
+  openedPost = signal<any>(null);
 
   setPosts(posts: any): void {
     this.posts.set(posts);
@@ -43,5 +44,24 @@ export class MainStateService {
 
   setProfileImage(image: any): void {
     this.userProfileImg.set(image);
+  }
+
+  setOpenedPost(postId: any): void {
+    if (postId) {
+      this.openedPost.set(this.posts().find((post) => post._id === postId));
+    }
+    console.log(this.openedPost());
+  }
+
+  closePost(): void {
+    this.openedPost.set(null);
+  }
+
+  deletePost(postId: string): void {
+    if (!postId) {
+      return;
+    }
+
+    this.posts.update(posts => posts.filter(post => post.id != postId))
   }
 }
