@@ -7,14 +7,13 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { RouterModule } from '@angular/router';
 
 import { Subscription } from 'rxjs';
 
 import { RegisterFormService } from './services/register-form.service';
 import { RegisterRequestsService } from './services/register-requests.service';
 import { GoogleBtnComponent } from '../../shared/components/google-btn/google-btn.component';
+import { ShortenMonthPipe } from '../../shared/pipes/shorten-month.pipe';
 
 @Component({
   selector: 'app-register',
