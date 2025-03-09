@@ -22,7 +22,6 @@ import { GenerateCommentForm } from './helper/comment.form';
 import { MainStateService } from '../../../../shared/services/main-state.service';
 import { CommentComponent } from './components/comment/comment.component';
 import { AutoResizeTextareaDirective } from '../../../../../../../../shared/directives/auto-resize-textarea.directive';
-import { PostModalComponent } from '../post-modal/post-modal.component';
 import { OptionsMenuComponent } from './components/options-menu/options-menu.component';
 
 @Component({

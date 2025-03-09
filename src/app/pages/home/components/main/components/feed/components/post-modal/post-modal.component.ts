@@ -19,6 +19,9 @@ import { GenerateCommentForm } from '../post/helper/comment.form';
 import { AutoResizeTextareaDirective } from '../../../../../../../../shared/directives/auto-resize-textarea.directive';
 import { PostsRequestsService } from '../post/services/posts-requests.service';
 import { Subscription, timer } from 'rxjs';
+import { OptionsMenuComponent } from '../post/components/options-menu/options-menu.component';
+import { UtilityService } from '../../../../../../../../shared/services/utility/array-utility.service';
+import { UtilitySessionService } from '../../../../../../../../shared/services/utility/utility.service';
 
 @Component({
   selector: 'app-post-modal',
@@ -28,6 +31,7 @@ import { Subscription, timer } from 'rxjs';
     ReactiveFormsModule,
     AutoResizeTextareaDirective,
     NgClass,
+    OptionsMenuComponent
   ],
   templateUrl: './post-modal.component.html',
   styleUrl: './post-modal.component.scss',
@@ -50,16 +54,20 @@ export class PostModalComponent {
   isLiked: boolean | undefined;
   totalLikes: number | undefined;
 
+  isOptionsClicked = false;
+
   likeTimer: Subscription | null = null;
   isCollapsed = true;
   subscriptions = new Subscription();
 
   closeModal = output();
 
+  private unlistenOptionsMenu!: () => void;
   private unlisten!: () => void;
 
   private renderer = inject(Renderer2);
   mainState = inject(MainStateService);
+  utilityService = inject(UtilitySessionService);
   router = inject(Router);
   fb = inject(FormBuilder);
   private postRequests = inject(PostsRequestsService);
@@ -164,6 +172,39 @@ export class PostModalComponent {
   onCancelComment(): void {
     this.commentFormGroup.reset();
     this.renderer.setStyle(this.comment.nativeElement, 'height', '45px');
+  }
+
+  addListenerToOptionsMenu(): void {
+    this.unlistenOptionsMenu = this.renderer.listen('document', 'click', (event: Event) => {
+      const target = event.target as HTMLElement;
+
+      if (!target.closest('.options-container')) {
+        this.isOptionsClicked = false;
+        this.unlistenOptionsMenu();
+      }
+    });
+  }
+
+  toggleOptionsMenu(): void {
+    if (this.unlistenOptionsMenu) {
+      this.unlistenOptionsMenu();
+    }
+
+    this.addListenerToOptionsMenu();
+    this.isOptionsClicked = !this.isOptionsClicked;
+  }
+
+  deletePost(postId: string): void {
+    this.subscriptions.add(this.postRequests.deletePost(postId).subscribe({
+      next: (response) => {
+        console.log(response);
+
+        this.mainState.deletePost(this.postId());
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    }))
   }
 
   ngOnDestroy(): void {

@@ -43,7 +43,11 @@
           </div>
 
           <div class="options-container">
-            <img class="icon" src="assets/icons/more.svg" alt="" />
+            <img class="icon" src="assets/icons/more.svg" alt="" (click)="toggleOptionsMenu(); "/>
+
+            @if(isOptionsClicked) {
+              <app-options-menu class='post-options-menu' (deletePost)="deletePost(postId())" [isAuthor]="this.utilityService.userInfo.username === username()"/>
+            }
           </div>
         </div>
 

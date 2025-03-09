@@ -1,4 +1,6 @@
-import { Component, output } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
+
+import { MainStateService } from '../../../../../../shared/services/main-state.service';
 
 @Component({
   selector: 'app-options-menu',
@@ -7,6 +9,9 @@ import { Component, output } from '@angular/core';
   styleUrl: './options-menu.component.scss'
 })
 export class OptionsMenuComponent {
+  isAuthor = input();
+  
+  profileState = inject(MainStateService);
   deletePost = output();
 
   onDeletePost(): void {

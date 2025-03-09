@@ -29,8 +29,17 @@
       }
 
       .options-container {
+        position: relative;
+        
         .icon {
           cursor: pointer;
+        }
+
+        .post-options-menu {
+          z-index: 10;
+          position: absolute;
+          right: 0px;
+          top: 45px;
         }
       }
     }

@@ -23,10 +23,7 @@ export class MessagesRequestService {
       cursor,
       limit
     };
-
-    console.log(body);
     
-
     return this.http.post(`${api}/messages/get`, body, {
       headers: this.utility.headers,
     });
