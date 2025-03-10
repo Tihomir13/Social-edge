@@ -24,6 +24,7 @@ import { CommentComponent } from './components/comment/comment.component';
 import { AutoResizeTextareaDirective } from '../../../../../../../../shared/directives/auto-resize-textarea.directive';
 import { OptionsMenuComponent } from './components/options-menu/options-menu.component';
 import { PostMethodsService } from './services/post-methods.service';
+import { CustomModalComponent } from '../../../../../../../../shared/components/custom-modal/custom-modal.component';
 
 @Component({
   selector: 'app-post',
@@ -34,16 +35,29 @@ import { PostMethodsService } from './services/post-methods.service';
     CommentComponent,
     AutoResizeTextareaDirective,
     NgClass,
-    OptionsMenuComponent
+    OptionsMenuComponent,
+    CustomModalComponent
   ],
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss',
   providers: [],
 })
 export class PostComponent implements OnInit, OnDestroy {
+  modalOptions = [
+    {
+      optionName: 'Delete',
+      optionColor: 'red',
+    },
+    {
+      optionName: 'Cancel',
+      optionColor: 'white',
+    },
+  ];
+
   subscriptions = new Subscription();
 
   isCommentsClicked: boolean = true;
+  isDeletionModalOpened: boolean = false;
   isCollapsed = true;
   isOptionsClicked = false;
 
@@ -188,17 +202,23 @@ export class PostComponent implements OnInit, OnDestroy {
     this.isOptionsClicked = !this.isOptionsClicked;
   }
 
-  deletePost(postId: string): void {
-    this.subscriptions.add(this.postRequests.deletePost(postId).subscribe({
+  deletePost(): void {
+    this.subscriptions.add(this.postRequests.deletePost(this.postId()).subscribe({
       next: (response) => {
-        console.log(response);
-
         this.mainState.deletePost(this.postId());
       },
       error: (error) => {
         console.log(error);
       }
     }))
+  }
+
+  onChoseOptionProfile(modalOption: string): void {
+    if (modalOption === 'Delete') {
+      this.deletePost();
+    }
+
+    this.isDeletionModalOpened = false;
   }
 
   ngOnDestroy(): void {

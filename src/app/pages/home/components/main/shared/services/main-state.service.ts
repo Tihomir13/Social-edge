@@ -66,6 +66,9 @@ export class MainStateService {
       return;
     }
 
-    this.posts.update(posts => posts.filter(post => post.id != postId))
+    console.log(this.posts());
+    
+
+    this.posts.update(posts => posts.filter(post => post._id != postId))
   }
 }

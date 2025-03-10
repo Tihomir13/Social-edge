@@ -22,6 +22,7 @@ import { Subscription, timer } from 'rxjs';
 import { OptionsMenuComponent } from '../post/components/options-menu/options-menu.component';
 import { UtilityService } from '../../../../../../../../shared/services/utility/array-utility.service';
 import { UtilitySessionService } from '../../../../../../../../shared/services/utility/utility.service';
+import { CustomModalComponent } from '../../../../../../../../shared/components/custom-modal/custom-modal.component';
 
 @Component({
   selector: 'app-post-modal',
@@ -31,12 +32,24 @@ import { UtilitySessionService } from '../../../../../../../../shared/services/u
     ReactiveFormsModule,
     AutoResizeTextareaDirective,
     NgClass,
-    OptionsMenuComponent
+    OptionsMenuComponent,
+    CustomModalComponent
   ],
   templateUrl: './post-modal.component.html',
   styleUrl: './post-modal.component.scss',
 })
 export class PostModalComponent {
+  modalOptions = [
+    {
+      optionName: 'Delete',
+      optionColor: 'red',
+    },
+    {
+      optionName: 'Cancel',
+      optionColor: 'white',
+    },
+  ];
+
   postId = input<string>('');
   username = input<string>('');
   authorProfileImg = input<any>();
@@ -55,6 +68,7 @@ export class PostModalComponent {
   totalLikes: number | undefined;
 
   isOptionsClicked = false;
+  isDeletionModalOpened: boolean = false;
 
   likeTimer: Subscription | null = null;
   isCollapsed = true;
@@ -194,8 +208,8 @@ export class PostModalComponent {
     this.isOptionsClicked = !this.isOptionsClicked;
   }
 
-  deletePost(postId: string): void {
-    this.subscriptions.add(this.postRequests.deletePost(postId).subscribe({
+  deletePost(): void {
+    this.subscriptions.add(this.postRequests.deletePost(this.postId()).subscribe({
       next: (response) => {
         console.log(response);
 
@@ -203,8 +217,19 @@ export class PostModalComponent {
       },
       error: (error) => {
         console.log(error);
+      },
+      complete: () => {
+        this.mainState.closePost();
       }
     }))
+  }
+
+  onChoseOptionProfile(modalOption: string): void {
+    if (modalOption === 'Delete') {
+      this.deletePost();
+    }
+
+    this.isDeletionModalOpened = false;
   }
 
   ngOnDestroy(): void {

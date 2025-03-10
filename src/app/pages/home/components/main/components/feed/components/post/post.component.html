@@ -12,7 +12,7 @@
       <img class="options-icon" src="assets/icons/more.svg" alt="" (click)="toggleOptionsMenu(); "/>
 
       @if(isOptionsClicked) {
-        <app-options-menu class='post-options-menu' (deletePost)="deletePost(postId())" [isAuthor]="this.utilityService.userInfo.username === username()"/>
+        <app-options-menu class='post-options-menu' (deletePost)="isDeletionModalOpened = true" [isAuthor]="this.utilityService.userInfo.username === username()"/>
       }
     </div>
   </div>
@@ -102,7 +102,7 @@
             class="interaction-icon"
             src="assets/icons/comment-black.svg"
             alt=""
-            (click)="toggleComments()"
+            (click)="showMoreComments()"
           />
           <img
             class="interaction-icon"
@@ -188,3 +188,14 @@
   </div>
 </div>
 
+@if(isDeletionModalOpened) {
+  <div class="modal-overlay">
+    <div class="modal-container">
+      <app-custom-modal
+        (clickedOption)="onChoseOptionProfile($event)"
+        [title]="'You are about to delete current post'"
+        [options]="modalOptions"
+      ></app-custom-modal>
+    </div>
+  </div>
+  }

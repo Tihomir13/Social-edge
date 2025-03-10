@@ -79,7 +79,7 @@ $border-radius: 11px;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* Увери се, че е над останалото съдържание */
+  z-index: 10000; /* Увери се, че е над останалото съдържание */
   animation: fadeIn 0.2s ease-out;
 
   .modal-container {
