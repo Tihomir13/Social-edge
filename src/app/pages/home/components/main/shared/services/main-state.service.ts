@@ -57,6 +57,10 @@ export class MainStateService {
     this.openedPost.set(null);
   }
 
+  addNewPostToFeed(newPost: any): void {
+    this.posts.update(posts => [newPost, ...posts,]);
+  }
+
   deletePost(postId: string): void {
     if (!postId) {
       return;

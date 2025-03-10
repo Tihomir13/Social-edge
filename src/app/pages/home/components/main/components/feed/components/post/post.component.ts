@@ -13,7 +13,7 @@ import { NgClass, SlicePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
-import { Subscription, timer } from 'rxjs';
+import { debounceTime, Subscription, timer } from 'rxjs';
 
 import { imagePostModel } from './model/post.model';
 import { PostsRequestsService } from './services/posts-requests.service';
@@ -23,6 +23,7 @@ import { MainStateService } from '../../../../shared/services/main-state.service
 import { CommentComponent } from './components/comment/comment.component';
 import { AutoResizeTextareaDirective } from '../../../../../../../../shared/directives/auto-resize-textarea.directive';
 import { OptionsMenuComponent } from './components/options-menu/options-menu.component';
+import { PostMethodsService } from './services/post-methods.service';
 
 @Component({
   selector: 'app-post',
@@ -72,8 +73,8 @@ export class PostComponent implements OnInit, OnDestroy {
   commentFormGroup!: FormGroup;
 
   private postRequests = inject(PostsRequestsService);
+  private postMethod = inject(PostMethodsService);
   private render = inject(Renderer2);
-  private el = inject(ElementRef);
   router = inject(Router);
   mainState = inject(MainStateService);
   utilityService = inject(UtilitySessionService);
@@ -113,36 +114,27 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   toggleLike() {
-    // Променяме UI веднага
     this.isLiked = !this.isLiked;
     this.totalLikes! += this.isLiked ? 1 : -1;
 
     const currPostId = this.postId();
 
-    // Ако има активен таймер за този пост – анулираме го
-    if (this.likeTimer) {
-      this.likeTimer.unsubscribe();
-    }
-
-    // Стартираме нов таймер
-    this.likeTimer = timer(5000).subscribe(() => {
-      this.postLikeDislike(currPostId);
-      this.likeTimer = null; // След изпращане на заявка нулираме таймера
-    });
+    // Use debounceTime to handle the like action
+    this.subscriptions.add(
+      timer(5000)
+        .pipe(debounceTime(5000))
+        .subscribe(() => {
+          this.postLikeDislike(currPostId);
+        })
+    );
   }
 
-  postLikeDislike(postId: string): Promise<void> {
-    return new Promise((_, reject) => {
-      this.subscriptions.add(
-        this.postRequests.likePost(postId).subscribe({
-          next: () => { },
-          error: (error) => {
-            console.log(error);
-            reject(error);
-          },
-        })
-      );
-    });
+  async postLikeDislike(postId: string): Promise<void> {
+    try {
+      await this.postRequests.likePost(postId).toPromise();
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   onComment(): void {

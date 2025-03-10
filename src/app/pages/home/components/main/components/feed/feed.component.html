@@ -1,5 +1,5 @@
 <div class="feed-container">
-  <app-new-post class="app-new-post" (creatingNewPost)="onNewPost()" />
+  <app-new-post class="app-new-post" />
 
   @for (post of this.state.posts(); track $index) {
   <app-post

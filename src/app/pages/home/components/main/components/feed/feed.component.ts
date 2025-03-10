@@ -25,10 +25,6 @@ export class FeedComponent implements OnInit {
     this.getPosts();
   }
 
-  onNewPost(): void {
-    this.getPosts();
-  }
-
   getPosts(): void {
     this.subscriptions.add(
       this.postRequests.getPosts().subscribe({
