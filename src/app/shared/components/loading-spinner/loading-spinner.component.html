@@ -1,6 +1,8 @@
 <div class="spinner-border text-light"
     [class.text-light]="classes() === 'text-light'"
     [class.text-dark]="classes() === 'text-dark'"
+    [class.spinner-border-sm]="size() === 'small'"
+    [class.spinner-border-md]="size() === 'medium'"
     role="status">
     <span class="visually-hidden">Loading...</span>
 </div>

@@ -4,24 +4,26 @@ import { Router, RouterModule } from '@angular/router';
 
 import { LoginRequestsService } from '../../../services/login-requests.service';
 import { LoginFormService } from '../../../services/login-form.service';
+import { LoadingSpinnerComponent } from '../../../../../shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-login-form',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterModule],
+  imports: [ReactiveFormsModule, RouterModule, LoadingSpinnerComponent],
   providers: [LoginFormService, LoginRequestsService],
   templateUrl: './login-form.component.html',
   styleUrl: './login-form.component.scss',
 })
 export class LoginFormComponent implements OnInit {
+  isLoading: boolean = false;
+  isErrorMsgShowed = false;
+  errorMsg: string = '';
+
   loginForm!: FormGroup;
 
   formService = inject(LoginFormService);
   reqService = inject(LoginRequestsService);
   router = inject(Router);
-
-  isErrorMsgShowed = false;
-  errorMsg: string = '';
 
   ngOnInit(): void {
     this.loginForm = this.formService.createLoginForm();
@@ -29,7 +31,7 @@ export class LoginFormComponent implements OnInit {
 
   onSubmit(): void {
     if (this.loginForm.valid) {
-      console.log(this.loginForm.value);
+      this.isLoading = true;
 
       this.reqService.loginUser(this.loginForm.value).subscribe({
         next: (response) => {
@@ -49,6 +51,9 @@ export class LoginFormComponent implements OnInit {
           }
 
           this.isErrorMsgShowed = true;
+        },
+        complete: () => {
+          this.isLoading = false;
         },
       });
     }
