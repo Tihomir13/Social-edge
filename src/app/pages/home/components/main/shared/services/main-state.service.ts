@@ -61,13 +61,33 @@ export class MainStateService {
     this.posts.update(posts => [newPost, ...posts,]);
   }
 
+  addNewCommentToPost(postId: any, comment: any): void {
+    console.log(comment);
+    
+    this.posts.update(posts => posts.map(post => {
+      if (post._id === postId) {
+        return {
+          ...post,
+          comments: [...post.comments, comment]
+        }
+      }
+      else {
+        return post
+      }
+    }));
+
+    this.openedPost.update(post => {
+      return {
+        ...post,
+        comments: [...post.comments, comment]
+      }
+    })
+  }
+
   deletePost(postId: string): void {
     if (!postId) {
       return;
     }
-
-    console.log(this.posts());
-    
 
     this.posts.update(posts => posts.filter(post => post._id != postId))
   }

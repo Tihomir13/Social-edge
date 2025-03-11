@@ -174,6 +174,8 @@ export class PostModalComponent {
           next: (response) => {
             this.commentFormGroup.reset();
             console.log(response);
+            
+            this.mainState.addNewCommentToPost(this.postId(), response.formattedComment);
           },
           error: (error) => {
             console.log(error);

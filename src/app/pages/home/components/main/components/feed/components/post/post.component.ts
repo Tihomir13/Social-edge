@@ -159,7 +159,7 @@ export class PostComponent implements OnInit, OnDestroy {
         this.postRequests.commentPost(comment, this.postId()).subscribe({
           next: (response) => {
             this.commentFormGroup.reset();
-            console.log(response);
+            this.mainState.addNewCommentToPost(this.postId(), response.formattedComment);
           },
           error: (error) => {
             console.log(error);
