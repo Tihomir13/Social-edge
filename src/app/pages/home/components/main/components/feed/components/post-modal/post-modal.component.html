@@ -25,7 +25,7 @@
       }
     </div>
     }
-    <div class="right-side d-flex flex-column justify-content-between">
+    <div class="right-side d-flex flex-column justify-content-between" [class.w-100]='images().length === 0'>
       <div>
         <div class="header d-flex align-items-center justify-content-between">
           <div class="d-flex gap-10px">
@@ -160,4 +160,4 @@
       ></app-custom-modal>
     </div>
   </div>
-  }
+}

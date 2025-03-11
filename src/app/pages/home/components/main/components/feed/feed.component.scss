@@ -1,3 +1,10 @@
+.fixed-width {
+  max-width: 500px !important;
+  width: 100% !important;
+
+  aspect-ratio: auto !important;
+}
+
 .feed-container {
   max-width: 460px;
   margin: 50px auto;

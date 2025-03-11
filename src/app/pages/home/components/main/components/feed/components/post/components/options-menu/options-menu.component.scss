@@ -3,14 +3,13 @@
 .post-menu {
     background-color: styles.$post-light-color;
     border-radius: styles.$border-radius;
-    transition: all 0.3s ease-out;
     border: 1px solid styles.$primary-purple;
-    width: 150px;
+    max-width: 130px;
     margin-bottom: 0px;
     width: 100%;
 
     .option {
-        height: 50px;
+        height: 40px;
         width: 100%;
         cursor: pointer;
         transition: all 0.3s ease-out;

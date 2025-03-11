@@ -94,8 +94,8 @@ $border-radius: 11px;
 
   .post-modal-container {
     max-height: 90svh;
-    height: 100%;
-    aspect-ratio: 5/4 !important;
+    // height: 100%;
+    aspect-ratio: 5/4;
     z-index: 1001;
     // background-color: rgb(180, 180, 180);
     // border: 1px solid black;
