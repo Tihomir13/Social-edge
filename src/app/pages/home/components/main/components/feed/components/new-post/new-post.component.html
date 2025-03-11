@@ -97,7 +97,7 @@
         (click)="onRemoveTag($index)"
         >{{ tag }}
 
-        <span class="delete-icon fs-1">✖</span>
+        <span class="delete-icon fs-3">✖</span>
       </span>
       }
     </div>
@@ -144,7 +144,16 @@
         Cancel
       </button>
 
-      <button type="submit" class="btn">Post</button>
+      <button type="submit" class="btn" [class.btn-loading]='isSubmitting'>
+        @if (isSubmitting) {
+          <app-loading-spinner [size]="'small'"/>
+        }
+        @else {
+          Post
+        }
+      </button>
+
+      
     </div>
   </div>
   }

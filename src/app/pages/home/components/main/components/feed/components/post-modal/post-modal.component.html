@@ -43,10 +43,11 @@
           </div>
 
           <div class="options-container">
-            <img class="icon" src="assets/icons/more.svg" alt="" (click)="toggleOptionsMenu(); "/>
+            <img class="icon" src="assets/icons/more.svg" alt="" (click)="toggleOptionsMenu(); " />
 
             @if(isOptionsClicked) {
-              <app-options-menu class='post-options-menu' (deletePost)="isDeletionModalOpened = true" [isAuthor]="this.utilityService.userInfo.username === username()"/>
+            <app-options-menu class='post-options-menu' (deletePost)="isDeletionModalOpened = true"
+              [isAuthor]="this.utilityService.userInfo.username === username()" />
             }
           </div>
         </div>
@@ -85,11 +86,9 @@
         <div class="interactions-container d-flex justify-content-between mb-1">
           <div class="row">
             <div class="d-flex gap-10px">
-              <img class="interaction-icon" [src]="
-                    isLiked
-                    ? 'assets/icons/sparkle-colored.png'
-                    : 'assets/icons/sparkle.png'
-                    " alt="" />
+              <img class="interaction-icon"
+                [src]="isLiked ? 'assets/icons/sparkle-colored.png': 'assets/icons/sparkle.png'"
+                (click)="toggleLike()" />
               <img class="interaction-icon" src="assets/icons/comment-black.svg" alt="" />
               <img class="interaction-icon" src="assets/icons/share-arrow.svg" alt="" />
             </div>
@@ -151,13 +150,10 @@
 </div>
 
 @if(isDeletionModalOpened) {
-  <div class="modal-overlay">
-    <div class="modal-container">
-      <app-custom-modal
-        (clickedOption)="onChoseOptionProfile($event)"
-        [title]="'You are about to delete current post'"
-        [options]="modalOptions"
-      ></app-custom-modal>
-    </div>
+<div class="modal-overlay">
+  <div class="modal-container">
+    <app-custom-modal (clickedOption)="onChoseOptionProfile($event)" [title]="'You are about to delete current post'"
+      [options]="modalOptions"></app-custom-modal>
   </div>
+</div>
 }

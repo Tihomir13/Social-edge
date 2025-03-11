@@ -68,7 +68,7 @@ export class MainStateService {
       if (post._id === postId) {
         return {
           ...post,
-          comments: [...post.comments, comment]
+          comments: [...(post.comments || []), comment]
         }
       }
       else {
@@ -79,7 +79,7 @@ export class MainStateService {
     this.openedPost.update(post => {
       return {
         ...post,
-        comments: [...post.comments, comment]
+        comments: [...(post.comments || []), comment]
       }
     })
   }
