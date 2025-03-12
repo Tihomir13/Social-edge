@@ -23,8 +23,7 @@
 @if (state.openedPost()) {
 <div class="modal-overlay">
   <div class="post-modal-container" 
-  [class.fixed-width]='state.openedPost().images.length === 0'
-  [class.h-100]='state.openedPost().images.length > 0'>
+  [class.fixed-width]='state.openedPost().images.length === 0'>
     <app-post-modal
       [username]="state.openedPost().author.username"
       [authorProfileImg]="state.openedPost().author.profileImage"
