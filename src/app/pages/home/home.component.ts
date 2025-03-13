@@ -14,6 +14,8 @@ import { GenerateNewPostForm } from './components/main/components/feed/component
 import { NewPostFormServiceService } from './shared/services/new-post-form-service.service';
 import { JwtSenderService } from './shared/services/jwt-sender.service';
 import { UtilitySessionService } from '../../shared/services/utility/utility.service';
+import { MainStateService } from './components/main/shared/services/main-state.service';
+import { InitialLoadingSpinnerComponent } from '../../shared/components/initial-loading-spinner/initial-loading-spinner.component';
 
 @Component({
   selector: 'app-home',
@@ -21,6 +23,7 @@ import { UtilitySessionService } from '../../shared/services/utility/utility.ser
   imports: [
     HeaderComponent,
     MainComponent,
+    InitialLoadingSpinnerComponent
   ],
   providers: [
     {
@@ -44,6 +47,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   newPostFormService = inject(NewPostFormServiceService);
   utilitySessionService = inject(UtilitySessionService);
   jwtSendService = inject(JwtSenderService);
+  mainState = inject(MainStateService)
 
   ngOnInit(): void {
     const formGenerator = new GenerateNewPostForm(this.formBuilder);

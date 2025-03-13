@@ -43,9 +43,12 @@ export class HeaderComponent {
         if (!notification) {
           return;
         }
-        this.mainState.notifications.update(notifications => [notification, ...notifications]);
-        
-        if(notification.type==='FRIEND_ACCEPT'){
+        this.mainState.notifications.update((notifications) => [
+          notification,
+          ...notifications,
+        ]);
+
+        if (notification.type === 'FRIEND_ACCEPT') {
           setTimeout(() => {
             this.requestNotificationsService.triggerRefreshFriends();
           }, 1000);
@@ -105,6 +108,9 @@ export class HeaderComponent {
         error: (error) => {
           console.log(error);
         },
+        complete: () => {
+          this.mainState.setLoadingState('notifications');
+        },
       })
     );
   }
@@ -119,6 +125,9 @@ export class HeaderComponent {
         },
         error: (error) => {
           console.log(error);
+        },
+        complete: () => {
+          this.mainState.setLoadingState('profileImage');
         },
       })
     );
@@ -158,8 +167,8 @@ export class HeaderComponent {
   }
 
   removeNotificationById(id: string): void {
-    this.mainState.notifications.update(notifications => 
-      notifications.filter(notification => notification._id !== id)
+    this.mainState.notifications.update((notifications) =>
+      notifications.filter((notification) => notification._id !== id)
     );
   }
 

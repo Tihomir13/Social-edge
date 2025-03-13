@@ -18,7 +18,7 @@ import { PostModalComponent } from './components/post-modal/post-modal.component
 export class FeedComponent implements OnInit {
   subscriptions = new Subscription();
 
-  state = inject(MainStateService);
+  mainState = inject(MainStateService);
   private postRequests = inject(PostsRequestsService);
 
   ngOnInit(): void {
@@ -30,12 +30,15 @@ export class FeedComponent implements OnInit {
       this.postRequests.getPosts().subscribe({
         next: (response: any) => {
           console.log(response.posts);
-          this.state.setPosts(response.posts);
-          console.log(this.state.posts());
+          this.mainState.setPosts(response.posts);
+          console.log(this.mainState.posts());
         },
         error: (error) => {
           console.log(error);
         },
+        complete: () => {
+          this.mainState.setLoadingState('posts')
+        }
       })
     );
   }

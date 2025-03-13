@@ -20,6 +20,13 @@ export class MainStateService {
   notifications = signal<any[]>([]);
   userProfileImg = signal<any>(this.defaultProfileImg);
 
+  isLoading = signal({
+    posts: true,
+    friends: true,
+    notifications: true,
+    profileImage: true,
+  });
+
   openedPost = signal<any>(null);
 
   setPosts(posts: any): void {
@@ -58,30 +65,31 @@ export class MainStateService {
   }
 
   addNewPostToFeed(newPost: any): void {
-    this.posts.update(posts => [newPost, ...posts,]);
+    this.posts.update((posts) => [newPost, ...posts]);
   }
 
   addNewCommentToPost(postId: any, comment: any): void {
     console.log(comment);
-    
-    this.posts.update(posts => posts.map(post => {
-      if (post._id === postId) {
-        return {
-          ...post,
-          comments: [...(post.comments || []), comment]
-        }
-      }
-      else {
-        return post
-      }
-    }));
 
-    this.openedPost.update(post => {
+    this.posts.update((posts) =>
+      posts.map((post) => {
+        if (post._id === postId) {
+          return {
+            ...post,
+            comments: [...(post.comments || []), comment],
+          };
+        } else {
+          return post;
+        }
+      })
+    );
+
+    this.openedPost.update((post) => {
       return {
         ...post,
-        comments: [...(post.comments || []), comment]
-      }
-    })
+        comments: [...(post.comments || []), comment],
+      };
+    });
   }
 
   deletePost(postId: string): void {
@@ -89,6 +97,13 @@ export class MainStateService {
       return;
     }
 
-    this.posts.update(posts => posts.filter(post => post._id != postId))
+    this.posts.update((posts) => posts.filter((post) => post._id != postId));
+  }
+
+  setLoadingState(key: keyof ReturnType<typeof this.isLoading>): void {
+    this.isLoading.update((isLoading) => ({
+      ...isLoading,
+      [key]: false,
+    }));
   }
 }

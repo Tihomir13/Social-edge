@@ -1,10 +1,4 @@
-import {
-  Component,
-  effect,
-  inject,
-  output,
-  signal,
-} from '@angular/core';
+import { Component, effect, inject, output, signal } from '@angular/core';
 
 import { SearchBarComponent } from '../../shared/components/search-bar/search-bar.component';
 import { FriendListUserCardComponent } from '../../shared/components/friend-list-user-card/friend-list-user-card.component';
@@ -38,7 +32,7 @@ export class FriendListComponent {
     {
       username: string;
       isOnline: boolean;
-      profileImage: { src: string; contentType: string;};
+      profileImage: { src: string; contentType: string };
     }[]
   >([]);
 
@@ -86,6 +80,9 @@ export class FriendListComponent {
         },
         error: (error) => {
           console.log(error);
+        },
+        complete: () => {
+          this.mainState.setLoadingState('friends');
         },
       })
     );

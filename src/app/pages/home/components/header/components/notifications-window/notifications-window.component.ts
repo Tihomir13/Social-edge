@@ -9,6 +9,8 @@ import {
 
 import { TimeAgoPipe } from '../../../../../../shared/pipes/time-ago.pipe';
 import { MainStateService } from '../../../main/shared/services/main-state.service';
+import { getUsernameFromNotificationContentPattern } from '../../../../../../shared/constants/patterns';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-notifications-window',
@@ -23,6 +25,7 @@ export class NotificationsWindowComponent {
 
   private elementRef = inject(ElementRef);
   mainState = inject(MainStateService);
+  router = inject(Router);
 
   @HostListener('document:click', ['$event.target'])
   public onClick(targetElement: HTMLElement): void {
@@ -32,8 +35,6 @@ export class NotificationsWindowComponent {
       this.closeNotifications();
     }
   }
-
-  ngOnInit() {}
 
   closeNotifications(): void {
     console.log('Notifications component will be removed');
@@ -57,8 +58,9 @@ export class NotificationsWindowComponent {
     this.friendReqNotificationChoice.emit(notification);
   }
 
-  // OnDestroy за почистване на ресурси, ако е необходимо
-  ngOnDestroy(): void {
-    console.log('Notifications component destroyed');
+  navigateToProfile(notificationContent: any): void {
+    const username = notificationContent.match(getUsernameFromNotificationContentPattern)[1];
+  
+    this.router.navigate(['profile', username]);
   }
 }
