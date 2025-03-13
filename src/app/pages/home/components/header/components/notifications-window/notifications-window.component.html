@@ -2,7 +2,7 @@
   @for (notification of notifications(); track $index) {
   <div class="d-flex py-1 gap-1">
     <div
-      class="image-container d-flex align-items-center justify-content-center"
+      class="image-container d-flex align-items-center justify-content-center" (click)="navigateToProfile(notification.content)"
     >
       <img
         class="profile-image"
@@ -13,7 +13,7 @@
       />
     </div>
 
-    <div class="">
+    <div class="w-100">
       <span>{{ notification.content }}</span>
 
       <div class="d-flex justify-content-between mt-2">

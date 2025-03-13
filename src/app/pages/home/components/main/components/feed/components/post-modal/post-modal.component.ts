@@ -22,6 +22,7 @@ import { Subscription, timer } from 'rxjs';
 import { OptionsMenuComponent } from '../post/components/options-menu/options-menu.component';
 import { UtilityService } from '../../../../../../../../shared/services/utility/array-utility.service';
 import { UtilitySessionService } from '../../../../../../../../shared/services/utility/utility.service';
+import { CustomModalComponent } from '../../../../../../../../shared/components/custom-modal/custom-modal.component';
 
 @Component({
   selector: 'app-post-modal',
@@ -31,12 +32,24 @@ import { UtilitySessionService } from '../../../../../../../../shared/services/u
     ReactiveFormsModule,
     AutoResizeTextareaDirective,
     NgClass,
-    OptionsMenuComponent
+    OptionsMenuComponent,
+    CustomModalComponent,
   ],
   templateUrl: './post-modal.component.html',
   styleUrl: './post-modal.component.scss',
 })
 export class PostModalComponent {
+  modalOptions = [
+    {
+      optionName: 'Delete',
+      optionColor: 'red',
+    },
+    {
+      optionName: 'Cancel',
+      optionColor: 'white',
+    },
+  ];
+
   postId = input<string>('');
   username = input<string>('');
   authorProfileImg = input<any>();
@@ -55,6 +68,7 @@ export class PostModalComponent {
   totalLikes: number | undefined;
 
   isOptionsClicked = false;
+  isDeletionModalOpened: boolean = false;
 
   likeTimer: Subscription | null = null;
   isCollapsed = true;
@@ -75,17 +89,23 @@ export class PostModalComponent {
   @ViewChild('comment') comment!: ElementRef<HTMLTextAreaElement>;
   currentImageIndex = 0;
 
+  isOnMobile!: boolean;
+
   commentFormGroup!: FormGroup;
 
   ngOnInit(): void {
-    this.unlisten = this.renderer.listen('document', 'click', (event: Event) => {
-      const target = event.target as HTMLElement;
+    this.unlisten = this.renderer.listen(
+      'document',
+      'click',
+      (event: Event) => {
+        const target = event.target as HTMLElement;
 
-      if (!target.closest('.post-modal-container') && this.postId()) {
-        this.mainState.closePost();
-        this.unlisten();
+        if (!target.closest('.post-modal-container') && this.postId()) {
+          this.mainState.closePost();
+          this.unlisten();
+        }
       }
-    });
+    );
 
     this.isLiked = this.isLikedByCurrUser$();
     this.totalLikes = this.totalLikes$();
@@ -93,6 +113,8 @@ export class PostModalComponent {
     this.commentFormGroup = new GenerateCommentForm(
       this.fb
     ).generateCommentPost();
+
+    this.isOnMobile = window.innerWidth <= 768;
   }
 
   toggleLike(): void {
@@ -118,7 +140,7 @@ export class PostModalComponent {
     return new Promise((_, reject) => {
       this.subscriptions.add(
         this.postRequests.likePost(postId).subscribe({
-          next: () => { },
+          next: () => {},
           error: (error) => {
             console.log(error);
             reject(error);
@@ -136,7 +158,6 @@ export class PostModalComponent {
     if (this.currentImageIndex < this.images().length - 1) {
       this.currentImageIndex++;
     }
-
   }
 
   prevImage(): void {
@@ -149,7 +170,7 @@ export class PostModalComponent {
     this.router.navigate(['profile', this.username()]);
   }
 
-  showMoreComments(): void { }
+  showMoreComments(): void {}
 
   onComment(): void {
     const comment = this.commentFormGroup.value.comment.trim();
@@ -160,6 +181,11 @@ export class PostModalComponent {
           next: (response) => {
             this.commentFormGroup.reset();
             console.log(response);
+
+            this.mainState.addNewCommentToPost(
+              this.postId(),
+              response.formattedComment
+            );
           },
           error: (error) => {
             console.log(error);
@@ -175,14 +201,18 @@ export class PostModalComponent {
   }
 
   addListenerToOptionsMenu(): void {
-    this.unlistenOptionsMenu = this.renderer.listen('document', 'click', (event: Event) => {
-      const target = event.target as HTMLElement;
+    this.unlistenOptionsMenu = this.renderer.listen(
+      'document',
+      'click',
+      (event: Event) => {
+        const target = event.target as HTMLElement;
 
-      if (!target.closest('.options-container')) {
-        this.isOptionsClicked = false;
-        this.unlistenOptionsMenu();
+        if (!target.closest('.options-container')) {
+          this.isOptionsClicked = false;
+          this.unlistenOptionsMenu();
+        }
       }
-    });
+    );
   }
 
   toggleOptionsMenu(): void {
@@ -194,17 +224,30 @@ export class PostModalComponent {
     this.isOptionsClicked = !this.isOptionsClicked;
   }
 
-  deletePost(postId: string): void {
-    this.subscriptions.add(this.postRequests.deletePost(postId).subscribe({
-      next: (response) => {
-        console.log(response);
+  deletePost(): void {
+    this.subscriptions.add(
+      this.postRequests.deletePost(this.postId()).subscribe({
+        next: (response) => {
+          console.log(response);
 
-        this.mainState.deletePost(this.postId());
-      },
-      error: (error) => {
-        console.log(error);
-      }
-    }))
+          this.mainState.deletePost(this.postId());
+        },
+        error: (error) => {
+          console.log(error);
+        },
+        complete: () => {
+          this.mainState.closePost();
+        },
+      })
+    );
+  }
+
+  onChoseOptionProfile(modalOption: string): void {
+    if (modalOption === 'Delete') {
+      this.deletePost();
+    }
+
+    this.isDeletionModalOpened = false;
   }
 
   ngOnDestroy(): void {

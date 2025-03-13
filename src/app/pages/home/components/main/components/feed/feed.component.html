@@ -1,7 +1,7 @@
 <div class="feed-container">
-  <app-new-post class="app-new-post" (creatingNewPost)="onNewPost()" />
+  <app-new-post class="app-new-post" />
 
-  @for (post of this.state.posts(); track $index) {
+  @for (post of this.mainState.posts(); track $index) {
   <app-post
     [username]="post.author.username"
     [authorProfileImg]="post.author.profileImage"
@@ -12,7 +12,7 @@
     [tags]="post.tags"
     [postId]="post._id"
     [comments]="post.comments"
-    [currUserImg]="state.userProfileImg()"
+    [currUserImg]="mainState.userProfileImg()"
     [totalCommentsCount]="post.commentsCount"
     [totalLikes$]="post.totalLikes"
     [isLikedByCurrUser$]="post.isLiked"
@@ -20,24 +20,25 @@
   }
 </div>
 
-@if (state.openedPost()) {
+@if (mainState.openedPost()) {
 <div class="modal-overlay">
-  <div class="post-modal-container">
+  <div class="post-modal-container" 
+  [class.fixed-width]='mainState.openedPost().images.length === 0'>
     <app-post-modal
-      [username]="state.openedPost().author.username"
-      [authorProfileImg]="state.openedPost().author.profileImage"
-      [images]="state.openedPost().images"
-      [likes]="state.openedPost().likes"
-      [title]="state.openedPost().title"
-      [text]="state.openedPost().text"
-      [tags]="state.openedPost().tags"
-      [postId]="state.openedPost()._id"
-      [comments]="state.openedPost().comments"
-      [currUserImg]="state.userProfileImg()"
-      [totalCommentsCount]="state.openedPost().commentsCount"
-      [totalLikes$]="state.openedPost().totalLikes"
-      [isLikedByCurrUser$]="state.openedPost().isLiked"
-      [createdAt]="state.openedPost().createdAt"
+      [username]="mainState.openedPost().author.username"
+      [authorProfileImg]="mainState.openedPost().author.profileImage"
+      [images]="mainState.openedPost().images"
+      [likes]="mainState.openedPost().likes"
+      [title]="mainState.openedPost().title"
+      [text]="mainState.openedPost().text"
+      [tags]="mainState.openedPost().tags"
+      [postId]="mainState.openedPost()._id"
+      [comments]="mainState.openedPost().comments"
+      [currUserImg]="mainState.userProfileImg()"
+      [totalCommentsCount]="mainState.openedPost().commentsCount"
+      [totalLikes$]="mainState.openedPost().totalLikes"
+      [isLikedByCurrUser$]="mainState.openedPost().isLiked"
+      [createdAt]="mainState.openedPost().createdAt"
     />
   </div>
 </div>

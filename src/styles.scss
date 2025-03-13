@@ -1,5 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
 
+@mixin mobile {
+  @media (max-width: 768px) {
+    @content;
+  }
+}
+
 $primary-purple: rgb(166, 78, 255);
 $dark-purple: rgb(143, 30, 255);
 $light-purple: rgb(200, 146, 255);
@@ -79,7 +85,7 @@ $border-radius: 11px;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* Увери се, че е над останалото съдържание */
+  z-index: 10000; /* Увери се, че е над останалото съдържание */
   animation: fadeIn 0.2s ease-out;
 
   .modal-container {
@@ -94,13 +100,15 @@ $border-radius: 11px;
 
   .post-modal-container {
     max-height: 90svh;
-    height: 100%;
-    aspect-ratio: 5/4 !important;
+    max-width: 1100px;
+    width: 100%;
     z-index: 1001;
-    // background-color: rgb(180, 180, 180);
-    // border: 1px solid black;
 
-    // border-radius: $border-radius;
+    @include mobile {
+      max-height: none;
+      overflow-y: auto;
+      height: 100%;
+    }
   }
 }
 
@@ -123,5 +131,11 @@ $border-radius: 11px;
   }
   to {
     opacity: 0;
+  }
+}
+
+@mixin mobile {
+  @media (max-width: 768px) {
+    @content;
   }
 }

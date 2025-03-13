@@ -1,2 +1,7 @@
 <app-header />
-<app-main/>
+<app-main />
+
+@if(mainState.isLoading().friends || mainState.isLoading().posts ||
+mainState.isLoading().notifications || mainState.isLoading().profileImage) {
+<app-initial-loading-spinner />
+}

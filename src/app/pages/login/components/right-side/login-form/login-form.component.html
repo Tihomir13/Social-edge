@@ -38,5 +38,11 @@
   </div>
 
 
-  <button class="btn" type="submit">Login</button>
+  <button class="btn d-flex justify-content-center align-items-center fs-5 gap-2"
+    [class.btn-loading]="isLoading"
+    type="submit">Login
+    @if (isLoading) {
+      <app-loading-spinner [size]="'medium'"/>
+    }
+  </button>
 </form>

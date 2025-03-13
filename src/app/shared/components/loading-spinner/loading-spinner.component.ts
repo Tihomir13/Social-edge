@@ -8,4 +8,5 @@ import { Component, input } from '@angular/core';
 })
 export class LoadingSpinnerComponent {
   classes = input<string>('text-light');
+  size = input<string>()
 }

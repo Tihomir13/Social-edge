@@ -26,6 +26,8 @@ import { MainStateService } from '../../../../shared/services/main-state.service
 import { CustomModalComponent } from '../../../../../../../../shared/components/custom-modal/custom-modal.component';
 import { LoadingSpinnerComponent } from '../../../../../../../../shared/components/loading-spinner/loading-spinner.component';
 
+import { PostModel } from '../post/model/post.model';
+
 @Component({
   selector: 'app-new-post',
   standalone: true,
@@ -79,12 +81,9 @@ export class NewPostComponent implements OnDestroy {
   private elRef = inject(ElementRef);
   mainState = inject(MainStateService);
   private cdr = inject(ChangeDetectorRef);
-  private modalService = inject(ModalService);
   private formBuilder = inject(FormBuilder);
   newPostState = inject(NewPostStateService);
   private newPostRequests = inject(NewPostRequestsService);
-
-  creatingNewPost = output();
 
   onAddTag(tag: string): void {
     if (tag === '') {
@@ -319,13 +318,14 @@ export class NewPostComponent implements OnDestroy {
   
     this.subscriptions.add(
       this.newPostRequests.savePost(formData).subscribe({
-        next: (response) => {
+        next: (response: { messages?: string, fetchedNewPost?: PostModel}) => {
           this.clearFormArrays();
           this.newPostFormService.newPostFormGroup()?.reset();
           this.newPostState.isCreatingNewPost = false;
           this.newPostState.resetUI();
           this.resetPost();
-          this.creatingNewPost.emit();
+
+          this.mainState.addNewPostToFeed(response.fetchedNewPost)
         },
         error: (error) => {
           console.error('Error saving post', error);

@@ -1,6 +1,7 @@
 @use "../../../../../../../styles.scss" as styles;
 
 .profile-options-container {
+  max-width: 250px;
   position: relative;
 
   .profile-container {
@@ -49,8 +50,8 @@
 
   .profile-menu {
     position: absolute;
-    top: 25px;
-    max-width: 250px;
+    top: 15px;
+    max-width: 248px;
     max-height: 0px;
     height: 300%;
     width: 100%;
@@ -78,6 +79,10 @@
         background-color: styles.$light-purple;
         color: white;
       }
+    }
+
+    .last-option {
+      border-radius: 0px 0px styles.$border-radius styles.$border-radius;
     }
 
     &.open {

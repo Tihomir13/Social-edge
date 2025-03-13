@@ -115,18 +115,21 @@ $square-width: 110px;
         padding: 5px 15px;
         color: rgb(255, 255, 255);
         // background-color: rgba(249, 39, 249, 1);
-        background-color: $light-plus-purple;
+        // background-color: $light-plus-purple;
+        background-color: rgb(217, 91, 255);
         border-radius: $border-radius;
         display: inline-flex;
         align-items: center;
-        transition: background-color 0.2s ease;
+        transition: transform 0.3s ease;
 
         &:hover {
           cursor: pointer;
           opacity: 0.2;
+          transform: scale(1.05);
 
           .delete-icon {
             display: block;
+            color: red;
           }
         }
 
@@ -220,10 +223,15 @@ $square-width: 110px;
       border-radius: 11px;
       box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
       transition: 0.2s;
+      min-width: 76.81px;
 
       &:hover {
         background-color: $light-purple;
       }
+    }
+
+    .btn-loading {
+      filter: brightness(90%);
     }
 
     .btn-cancel {
