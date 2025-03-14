@@ -16,6 +16,7 @@ import { JwtSenderService } from './shared/services/jwt-sender.service';
 import { UtilitySessionService } from '../../shared/services/utility/utility.service';
 import { MainStateService } from './components/main/shared/services/main-state.service';
 import { InitialLoadingSpinnerComponent } from '../../shared/components/initial-loading-spinner/initial-loading-spinner.component';
+import { PostModalComponent } from './components/main/components/feed/components/post-modal/post-modal.component';
 
 @Component({
   selector: 'app-home',
@@ -23,7 +24,8 @@ import { InitialLoadingSpinnerComponent } from '../../shared/components/initial-
   imports: [
     HeaderComponent,
     MainComponent,
-    InitialLoadingSpinnerComponent
+    InitialLoadingSpinnerComponent,
+    PostModalComponent
   ],
   providers: [
     {

@@ -7,12 +7,13 @@ import { Subscription } from 'rxjs';
 import { PostComponent } from '../../../feed/components/post/post.component';
 import { ProfileRequestsService } from '../../services/profile-requests.service';
 import { MainStateService } from '../../../../shared/services/main-state.service';
+import { PostsRequestsService } from '../../../feed/components/post/services/posts-requests.service';
 
 @Component({
   selector: 'app-user-posts',
   standalone: true,
   imports: [PostComponent],
-  providers: [HttpClient, ProfileRequestsService],
+  providers: [HttpClient, ProfileRequestsService, PostsRequestsService],
   templateUrl: './user-posts.component.html',
   styleUrl: './user-posts.component.scss',
 })
@@ -22,7 +23,7 @@ export class UserPostsComponent {
   username: string | null = '';
 
   private profileRequestService = inject(ProfileRequestsService);
-  state = inject(MainStateService);
+  mainState = inject(MainStateService);
   route = inject(ActivatedRoute);
 
   ngOnInit(): void {

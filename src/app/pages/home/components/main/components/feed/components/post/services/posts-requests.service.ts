@@ -6,7 +6,9 @@ import { Observable } from 'rxjs';
 import { UtilitySessionService } from '../../../../../../../../../shared/services/utility/utility.service';
 import { api } from '../../../../../../../../../shared/constants/api';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class PostsRequestsService {
   http = inject(HttpClient);
   utility = inject(UtilitySessionService);
@@ -50,6 +52,6 @@ export class PostsRequestsService {
   deletePost(postId: string): Observable<any> {
     return this.http.delete(`${api}/posts/delete${postId}`, {
       headers: this.utility.headers,
-    })
+    });
   }
 }
