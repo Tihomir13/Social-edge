@@ -8,7 +8,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgClass, SlicePipe } from '@angular/common';
 
 import { Subscription, timer } from 'rxjs';
@@ -65,6 +65,8 @@ export class PostModalComponent {
   isLiked: boolean | undefined;
   totalLikes: number | undefined;
 
+  postParamId?: string;
+
   isOptionsClicked = false;
   isDeletionModalOpened: boolean = false;
 
@@ -83,6 +85,7 @@ export class PostModalComponent {
   router = inject(Router);
   fb = inject(FormBuilder);
   private postRequests = inject(PostsRequestsService);
+  private route = inject(ActivatedRoute);
 
   @ViewChild('comment') comment!: ElementRef<HTMLTextAreaElement>;
   currentImageIndex = 0;
@@ -92,6 +95,24 @@ export class PostModalComponent {
   commentFormGroup!: FormGroup;
 
   ngOnInit(): void {
+    this.route.paramMap.subscribe((params) => {
+      this.postParamId = params.get('id')!;
+
+      console.log(this.postParamId);
+      
+
+      this.subscriptions.add(
+        this.postRequests.getPostById(this.postParamId).subscribe({
+          next: (response) => {
+            this.mainState.setOpenedPost(response.post);
+          },
+          error: (error) => {
+            console.log(error);
+          },
+        })
+      );
+    })
+
     this.unlisten = this.renderer.listen(
       'document',
       'click',
@@ -104,14 +125,14 @@ export class PostModalComponent {
         }
       }
     );
-
+    
     this.isLiked = this.isLikedByCurrUser$();
     this.totalLikes = this.totalLikes$();
-
+    
     this.commentFormGroup = new GenerateCommentForm(
       this.fb
     ).generateCommentPost();
-
+    
     this.isOnMobile = window.innerWidth <= 768;
   }
 
@@ -252,6 +273,8 @@ export class PostModalComponent {
     if (this.unlisten) {
       this.unlisten();
     }
+    console.log('des');
+    
 
     this.subscriptions.unsubscribe();
   }

@@ -53,10 +53,14 @@ export class MainStateService {
     this.userProfileImg.set(image);
   }
 
-  setOpenedPost(postId: any): void {
+  setOpenedPreFetchPost(postId: any): void {
     if (postId) {
       this.openedPost.set(this.posts().find((post) => post._id === postId));
     }
+  }
+
+  setOpenedPost(post: any): void {
+    this.openedPost.set(post);
   }
 
   closePost(): void {
@@ -105,4 +109,38 @@ export class MainStateService {
       [key]: false,
     }));
   }
+
+  // updateCommentLikeState(postId: string, commentId: string) {
+  //   // Променяме постовете и използваме set, за да зададем нова стойност на posts
+  //   const updatedPosts = this.posts().map((post) => {
+  //     if (post._id === postId) {
+  //       return {
+  //         ...post,
+  //         comments: post.comments.map((comment: any) =>
+  //           comment._id === commentId
+  //             ? { ...comment, isLiked: !comment.isLiked }
+  //             : comment
+  //         ),
+  //       };
+  //     }
+  //     return post;
+  //   });
+
+  //   // Задаваме новото състояние на feed-а с set
+  //   this.posts.set(updatedPosts);
+
+  //   // Проверяваме ако постът е отворен в modal-а
+  //   const openedPost = this.openedPost();
+  //   if (openedPost && openedPost._id === postId) {
+  //     // Обновяваме коментара и в modal-а с set
+  //     this.openedPost.set({
+  //       ...openedPost,
+  //       comments: openedPost.comments.map((comment: any) =>
+  //         comment._id === commentId
+  //           ? { ...comment, isLiked: !comment.isLiked }
+  //           : comment
+  //       ),
+  //     });
+  //   }
+  // }
 }

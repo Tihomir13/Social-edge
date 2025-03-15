@@ -21,6 +21,10 @@ export class PostsRequestsService {
     return this.http.get(`${api}/posts`, this.headers);
   }
 
+  getPostById(postId: string): Observable<any> {
+    return this.http.get(`${api}/posts/${postId}`, this.headers);
+  }
+  
   likePost(postId: string): Observable<any> {
     const body = {
       id: postId,

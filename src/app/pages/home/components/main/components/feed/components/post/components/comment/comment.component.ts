@@ -53,16 +53,21 @@ export class CommentComponent {
       this.likeTimer.unsubscribe();
     }
 
+    // this.mainState.updateCommentLikeState(this.postId()!, this.commentId()!);
+
     // Стартираме нов таймер
     this.likeTimer = timer(5000).subscribe(() => {
-      this.postLikeDislike();
-      this.likeTimer = null; // След изпращане на заявка нулираме таймера
+      this.commentLikeDislike();
+      this.likeTimer = null;
     });
   }
 
-  async postLikeDislike(): Promise<void> {
+  async commentLikeDislike(): Promise<void> {
     try {
-      await this.postRequests.likeComment(this.postId()!, this.commentId()!).toPromise();
+
+      await this.postRequests
+        .likeComment(this.postId()!, this.commentId()!)
+        .toPromise();
     } catch (error) {
       console.error(error);
     }

@@ -13,6 +13,7 @@ import { SearchComponent } from './pages/home/components/main/components/pages/s
 import { CustomModalComponent } from './shared/components/custom-modal/custom-modal.component';
 import { ForgottenPasswordComponent } from './pages/forgotten-password/forgotten-password.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
+import { PostModalComponent } from './pages/home/components/main/components/feed/components/post-modal/post-modal.component';
 
 export const routes: Routes = [
   {
@@ -29,21 +30,23 @@ export const routes: Routes = [
     component: LoginComponent,
   },
   {
-    path:'forgotten-password',
-    component: ForgottenPasswordComponent
+    path: 'forgotten-password',
+    component: ForgottenPasswordComponent,
   },
   {
-    path:'reset-password',
-    component: ResetPasswordComponent
+    path: 'reset-password',
+    component: ResetPasswordComponent,
   },
   {
     path: '',
     component: HomeComponent,
     canActivate: [AuthGuard],
     children: [
-      { path: 'feed', component: FeedComponent, children: [
-        { path: ':postId', component: UserPostsComponent },
-      ] },
+      {
+        path: 'feed',
+        component: FeedComponent,
+        children: [{ path: ':postId', component: UserPostsComponent }],
+      },
       {
         path: 'profile/:username',
         component: ProfileComponent,
@@ -55,6 +58,7 @@ export const routes: Routes = [
         ],
       },
       { path: 'search', component: SearchComponent },
+      { path: 'posts/:id', component: PostModalComponent },
     ],
   },
 ];

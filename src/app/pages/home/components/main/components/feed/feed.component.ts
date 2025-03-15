@@ -30,7 +30,6 @@ export class FeedComponent implements OnInit {
         next: (response: any) => {
           console.log(response.posts);
           this.mainState.setPosts(response.posts);
-          console.log(this.mainState.posts());
         },
         error: (error) => {
           console.log(error);
