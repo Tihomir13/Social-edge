@@ -160,6 +160,8 @@ export class PostComponent implements OnInit, OnDestroy {
           next: (response) => {
             this.commentFormGroup.reset();
             this.mainState.addNewCommentToPost(this.postId(), response.formattedComment);
+            console.log(response);
+            
           },
           error: (error) => {
             console.log(error);

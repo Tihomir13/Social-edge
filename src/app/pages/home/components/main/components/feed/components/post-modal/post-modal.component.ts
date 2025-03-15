@@ -1,7 +1,6 @@
 import {
   Component,
   ElementRef,
-  HostListener,
   inject,
   input,
   output,
@@ -9,18 +8,17 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-
 import { Router } from '@angular/router';
 import { NgClass, SlicePipe } from '@angular/common';
+
+import { Subscription, timer } from 'rxjs';
 
 import { MainStateService } from '../../../../shared/services/main-state.service';
 import { CommentComponent } from '../post/components/comment/comment.component';
 import { GenerateCommentForm } from '../post/helper/comment.form';
 import { AutoResizeTextareaDirective } from '../../../../../../../../shared/directives/auto-resize-textarea.directive';
 import { PostsRequestsService } from '../post/services/posts-requests.service';
-import { Subscription, timer } from 'rxjs';
 import { OptionsMenuComponent } from '../post/components/options-menu/options-menu.component';
-import { UtilityService } from '../../../../../../../../shared/services/utility/array-utility.service';
 import { UtilitySessionService } from '../../../../../../../../shared/services/utility/utility.service';
 import { CustomModalComponent } from '../../../../../../../../shared/components/custom-modal/custom-modal.component';
 

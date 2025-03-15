@@ -29,13 +29,22 @@ export class PostsRequestsService {
     return this.http.patch(`${api}/posts/like`, body, this.headers);
   }
 
+  likeComment(postId: string, commentId: string): Observable<any> {
+    const body = {
+      postId,
+      commentId,
+    };
+
+    return this.http.patch(`${api}/comments/like`, body, this.headers);
+  }
+
   commentPost(comment: string, postId: string): Observable<any> {
     const body = {
       postId,
       comment,
     };
 
-    return this.http.patch(`${api}/posts/comment`, body, this.headers);
+    return this.http.patch(`${api}/comments/add`, body, this.headers);
   }
 
   showMoreComments(
@@ -43,7 +52,7 @@ export class PostsRequestsService {
     page: number,
     limit: number = 10
   ): Observable<any> {
-    return this.http.get(`${api}/comments`, {
+    return this.http.get(`${api}/comments/get`, {
       params: { postId, page: page.toString(), limit: limit.toString() },
       headers: this.utility.headers,
     });

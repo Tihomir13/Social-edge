@@ -14,6 +14,7 @@
       alt="like icon"
       width="23px"
       height="23px"
+      (click)="toggleLike()"
     />
   </div>
 
@@ -38,7 +39,7 @@
 
     <div class="d-flex gap-3">
       <span> {{ date() | timeAgo }} </span>
-      <span> {{ likes() }} likes </span>
+      <span> {{ totalLikes }} likes </span>
       <span> Reply </span>
     </div>
   </div>

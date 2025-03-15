@@ -57,7 +57,6 @@ export class MainStateService {
     if (postId) {
       this.openedPost.set(this.posts().find((post) => post._id === postId));
     }
-    console.log(this.openedPost());
   }
 
   closePost(): void {
@@ -69,8 +68,6 @@ export class MainStateService {
   }
 
   addNewCommentToPost(postId: any, comment: any): void {
-    console.log(comment);
-
     this.posts.update((posts) =>
       posts.map((post) => {
         if (post._id === postId) {
@@ -84,12 +81,14 @@ export class MainStateService {
       })
     );
 
-    this.openedPost.update((post) => {
-      return {
-        ...post,
-        comments: [...(post.comments || []), comment],
-      };
-    });
+    if (this.openedPost()) {
+      this.openedPost.update((post) => {
+        return {
+          ...post,
+          comments: [...(post.comments || []), comment],
+        };
+      });
+    }
   }
 
   deletePost(postId: string): void {
