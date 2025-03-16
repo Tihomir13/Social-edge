@@ -50,6 +50,14 @@ $square-width: 110px;
       }
     }
 
+    .status-container {
+      position: relative;
+
+      @include styles.mobile {
+        position: static;
+      }
+    }
+
     .status-picker-component {
       position: absolute;
       border: 1px solid styles.$light-gray;
@@ -58,9 +66,17 @@ $square-width: 110px;
       z-index: 1000;
 
       width: 480px;
+
       top: 47px;
       left: 50%;
       transform: translate(-50%);
+
+      @include styles.mobile {
+        border-radius: 0px;
+        top: 48px;
+        left: 0px;
+        width: 100svw;
+      }
     }
   }
 
@@ -268,11 +284,11 @@ $square-width: 110px;
 
     .new-post-title {
       .status-picker-component {
-        top: 0;
-        left: 0;
+        border-radius: 0px 0px 11px 11px;
+        position: absolute;
+        right: 0px;
         transform: none;
-
-        width: 100svw;
+        top: 115px;
       }
     }
   }
