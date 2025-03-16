@@ -136,7 +136,7 @@ export class PostComponent implements OnInit, OnDestroy {
     // Use debounceTime to handle the like action
     this.subscriptions.add(
       timer(5000)
-        .pipe(debounceTime(5000))
+        .pipe(debounceTime(2000))
         .subscribe(() => {
           this.postLikeDislike(currPostId);
         })

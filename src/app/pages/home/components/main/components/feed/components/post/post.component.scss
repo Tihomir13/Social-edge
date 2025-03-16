@@ -52,13 +52,18 @@
   .title-container,
   .text-container {
     word-break: break-word;
-  }
-
-  .text-container {
     @include styles.mobile {
       padding: 0px 10px;
     }
+  }
+  
+  .tags-container {
+    @include styles.mobile {
+      padding: 0px 5px;
+    }
+  }
 
+  .text-container {
     .text {
       overflow: hidden;
 
@@ -309,7 +314,6 @@
     }
 
     .images-container {
-      height: 350px;
       border-radius: 0px;
 
       .image-wrapper .image {

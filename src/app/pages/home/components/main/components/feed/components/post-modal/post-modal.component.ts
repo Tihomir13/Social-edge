@@ -11,7 +11,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgClass, SlicePipe } from '@angular/common';
 
-import { Subscription, timer } from 'rxjs';
+import { debounceTime, Subscription, timer } from 'rxjs';
 
 import { MainStateService } from '../../../../shared/services/main-state.service';
 import { CommentComponent } from '../post/components/comment/comment.component';
@@ -136,23 +136,20 @@ export class PostModalComponent {
     this.isOnMobile = window.innerWidth <= 768;
   }
 
-  toggleLike(): void {
-    // Променяме UI веднага
+  toggleLike() {
     this.isLiked = !this.isLiked;
     this.totalLikes! += this.isLiked ? 1 : -1;
 
     const currPostId = this.postId();
 
-    // Ако има активен таймер за този пост – анулираме го
-    if (this.likeTimer) {
-      this.likeTimer.unsubscribe();
-    }
-
-    // Стартираме нов таймер
-    this.likeTimer = timer(5000).subscribe(() => {
-      this.postLikeDislike(currPostId);
-      this.likeTimer = null; // След изпращане на заявка нулираме таймера
-    });
+    // Use debounceTime to handle the like action
+    this.subscriptions.add(
+      timer(5000)
+        .pipe(debounceTime(2000))
+        .subscribe(() => {
+          this.postLikeDislike(currPostId);
+        })
+    );
   }
 
   postLikeDislike(postId: string): Promise<void> {
