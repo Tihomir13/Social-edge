@@ -17,6 +17,7 @@ import { UtilitySessionService } from '../../shared/services/utility/utility.ser
 import { MainStateService } from './components/main/shared/services/main-state.service';
 import { InitialLoadingSpinnerComponent } from '../../shared/components/initial-loading-spinner/initial-loading-spinner.component';
 import { PostModalComponent } from './components/main/components/feed/components/post-modal/post-modal.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -25,7 +26,7 @@ import { PostModalComponent } from './components/main/components/feed/components
     HeaderComponent,
     MainComponent,
     InitialLoadingSpinnerComponent,
-    PostModalComponent
+    PostModalComponent,
   ],
   providers: [
     {
@@ -40,6 +41,7 @@ import { PostModalComponent } from './components/main/components/feed/components
 })
 export class HomeComponent implements OnInit, OnDestroy {
   subscriptions = new Subscription();
+  currentRoute!: string;
 
   getJwtInterval = 3000000;
 
@@ -49,18 +51,21 @@ export class HomeComponent implements OnInit, OnDestroy {
   newPostFormService = inject(NewPostFormServiceService);
   utilitySessionService = inject(UtilitySessionService);
   jwtSendService = inject(JwtSenderService);
-  mainState = inject(MainStateService)
+  mainState = inject(MainStateService);
+  private router = inject(Router);
 
   ngOnInit(): void {
     const formGenerator = new GenerateNewPostForm(this.formBuilder);
     const newPostFormGroup = formGenerator.generateNewPostForm();
+
+    this.currentRoute = this.router.url.split('/')[1];
 
     this.newPostFormService.setFormGroup(newPostFormGroup);
 
     this.getNewJwt();
   }
 
-  getNewJwt():void {
+  getNewJwt(): void {
     const timer = setInterval(() => {
       this.subscriptions.add(
         this.jwtSendService.getNewJwt().subscribe({

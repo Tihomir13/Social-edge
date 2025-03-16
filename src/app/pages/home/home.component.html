@@ -1,10 +1,13 @@
 <app-header />
 <app-main />
 
-@if(mainState.isLoading().friends || mainState.isLoading().posts ||
-mainState.isLoading().notifications || mainState.isLoading().profileImage) {
+@if((mainState.isLoading().posts || mainState.isLoading().profileImage) && currentRoute === 'feed') {
 <app-initial-loading-spinner />
 } 
+
+@if((mainState.isLoading().friends || mainState.isLoading().profileImage) && currentRoute === 'friends') {
+  <app-initial-loading-spinner />
+}
 
 @if (mainState.openedPost()) {
 <div class="modal-overlay">

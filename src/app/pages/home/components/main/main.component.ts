@@ -46,7 +46,7 @@ export class MainComponent implements OnInit {
   }
 
   onMinimizeChat(user: any): void {
-    if(this.state.currentChatHeads().includes(user)) {
+    if (this.state.currentChatHeads().includes(user)) {
       return;
     }
 
@@ -61,16 +61,13 @@ export class MainComponent implements OnInit {
 
   onProfileClick(username: string): void {
     this.currProfileUserChat = this.state
-    .currentChatHeads()
-    .find((chatHead) => chatHead.username === username);
+      .currentChatHeads()
+      .find((chatHead) => chatHead.username === username);
 
     this.state.setChat(true);
   }
 
   onUserProfileClick(user: any): void {
     this.currProfileUserChat = user;
-    console.log(user);
-
-    this.state.setChat(true);
   }
 }

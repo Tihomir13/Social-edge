@@ -32,7 +32,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this.segments = fullUrl.split('/');
     this.mainRoute = this.segments[1];
     this.markOption(this.mainRoute);
-  
+
     this.subscriptions.add(
       this.router.events
         .pipe(filter((event) => event instanceof NavigationEnd))
@@ -64,6 +64,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
         this.selectedOption = this.navItems[2];
         break;
       case 'chat':
+        this.router.navigate(['friends']);
         this.selectedOption = this.navItems[3];
         break;
     }
@@ -86,10 +87,9 @@ export class NavigationComponent implements OnInit, OnDestroy {
           this.selectedOption = undefined;
           break;
         }
-
         this.selectedOption = this.navItems[2];
         break;
-      case 'chat':
+      case 'friends':
         this.selectedOption = this.navItems[3];
         break;
     }

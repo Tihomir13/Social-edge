@@ -46,7 +46,9 @@
       }
 
       .right {
-        display: none;
+        .friend-list {
+          display: none;
+        }
       }
     }
   }

@@ -96,6 +96,8 @@ export class FriendListComponent {
 
   onUserProfileClick(friend: any): void {
     this.open.emit(friend);
+
+    this.mainState.setChat(true)
   }
 
   ngOnDestroy() {

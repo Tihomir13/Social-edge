@@ -14,8 +14,9 @@ import { Router } from '@angular/router';
 import { MainStateService } from '../../shared/services/main-state.service';
 import { InputFieldComponent } from './components/input-field/input-field.component';
 import { MainSocketService } from '../../../../../../shared/services/websocket/main-socket.service';
-import { messageModel } from './interfaces';
+
 import { Subscription } from 'rxjs';
+
 import { MessagesRequestService } from './services/messages-request.service';
 import { LoadingSpinnerComponent } from '../../../../../../shared/components/loading-spinner/loading-spinner.component';
 
@@ -28,7 +29,7 @@ import { LoadingSpinnerComponent } from '../../../../../../shared/components/loa
 })
 export class ChatComponent implements OnInit {
   currChatUser = input<any>();
-  minimizeChat = output();
+  minimizeChat = output<any>();
 
   isLoadingMessages: boolean = false;
 
@@ -47,6 +48,8 @@ export class ChatComponent implements OnInit {
   messages = signal<any>([])
 
   ngOnInit(): void {
+    console.log(this.currChatUser());
+    
     this.mainSocketService.onNewMessage().subscribe((message) => {
       console.log('Получено съобщение:', message);
       this.messages.update(messages => [message, ...messages]);
@@ -58,7 +61,7 @@ export class ChatComponent implements OnInit {
   }
 
   navigateToProfile(): void {
-    this.router.navigate(['profile', this.currChatUser().username]);
+    this.router.navigate(['profile', this.currChatUser()!.username]);
   }
 
   onScroll(): void {
@@ -102,7 +105,7 @@ export class ChatComponent implements OnInit {
   sendMessage(message: string | void): void {
     console.log(this.currChatUser());
 
-    this.mainSocketService.sendMessage(this.currChatUser().username, message!);
+    this.mainSocketService.sendMessage(this.currChatUser()!.username, message!);
   }
 
   getMessages(): void {
