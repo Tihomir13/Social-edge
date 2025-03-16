@@ -4,9 +4,9 @@ export interface messageModel {
   text: string;
 }
 
-// export interface ChatUserModel {
-//   username: string;
-//   profileImage: { src: string; contentType: string } | null;
-//   isOnline: boolean;
-// }
+export interface ChatUserModel {
+  username: string;
+  profileImage: { src: string; contentType: string } | null;
+  isOnline: boolean;
+}
 

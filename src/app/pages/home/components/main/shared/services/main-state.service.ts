@@ -1,4 +1,5 @@
 import { Injectable, signal } from '@angular/core';
+import { ChatUserModel } from '../../components/chat/interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +17,7 @@ export class MainStateService {
   >([]);
   currentChatHeads = signal<any[]>([]);
   isChatActive = signal<boolean>(false);
+  currChatProfileUser = signal<null | ChatUserModel>(null);
   searchedUsers = signal<any[]>([]);
   notifications = signal<any[]>([]);
   userProfileImg = signal<any>(this.defaultProfileImg);

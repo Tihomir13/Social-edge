@@ -13,7 +13,6 @@
       <div class="right">
         <app-friend-list
           class="friend-list"
-          (open)="onUserProfileClick($event)"
         />
 
         <app-chat-heads
@@ -22,10 +21,10 @@
           (close)="onCloseChatHead($event)"
         />
 
-        @if (this.state.isChatActive()) {
+        @if (this.state.isChatActive() && this.state.currChatProfileUser()) {
         <app-chat
           class="chat"
-          [currChatUser]="currProfileUserChat"
+          [currChatUser]="this.state.currChatProfileUser()"
           (minimizeChat)="onMinimizeChat($event)"
         />
         }
