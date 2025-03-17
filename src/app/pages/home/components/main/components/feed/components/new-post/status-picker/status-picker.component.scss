@@ -8,18 +8,17 @@
   overflow-x: hidden;
   scrollbar-width: thin;
   padding: 10px;
-  clip-path: inset(0 0 0 0 round 11px);
-
+  
   .statuses-container {
     display: flex;
     flex-wrap: wrap;
-
+    
     .status-container {
       cursor: pointer;
       border-radius: 11px;
       margin: 5px;
       padding: 5px;
-
+      
       &:hover {
         background-color: rgb(180, 180, 180);
       }
@@ -29,7 +28,9 @@
 
 @media screen and (max-width: 768px) {
   .status-picker-container {
-    max-height: 300px;
+    border-radius: 0px 0px 11px 11px;
+    max-height: 400px;
+    max-width: 100svw;
     width: 100%;
   }
 }

@@ -1,7 +1,6 @@
 import {
   Component,
   ElementRef,
-  HostListener,
   inject,
   input,
   output,
@@ -9,18 +8,17 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgClass, SlicePipe } from '@angular/common';
+
+import { debounceTime, Subscription, timer } from 'rxjs';
 
 import { MainStateService } from '../../../../shared/services/main-state.service';
 import { CommentComponent } from '../post/components/comment/comment.component';
 import { GenerateCommentForm } from '../post/helper/comment.form';
 import { AutoResizeTextareaDirective } from '../../../../../../../../shared/directives/auto-resize-textarea.directive';
 import { PostsRequestsService } from '../post/services/posts-requests.service';
-import { Subscription, timer } from 'rxjs';
 import { OptionsMenuComponent } from '../post/components/options-menu/options-menu.component';
-import { UtilityService } from '../../../../../../../../shared/services/utility/array-utility.service';
 import { UtilitySessionService } from '../../../../../../../../shared/services/utility/utility.service';
 import { CustomModalComponent } from '../../../../../../../../shared/components/custom-modal/custom-modal.component';
 
@@ -67,6 +65,8 @@ export class PostModalComponent {
   isLiked: boolean | undefined;
   totalLikes: number | undefined;
 
+  postParamId?: string;
+
   isOptionsClicked = false;
   isDeletionModalOpened: boolean = false;
 
@@ -85,6 +85,7 @@ export class PostModalComponent {
   router = inject(Router);
   fb = inject(FormBuilder);
   private postRequests = inject(PostsRequestsService);
+  private route = inject(ActivatedRoute);
 
   @ViewChild('comment') comment!: ElementRef<HTMLTextAreaElement>;
   currentImageIndex = 0;
@@ -94,6 +95,24 @@ export class PostModalComponent {
   commentFormGroup!: FormGroup;
 
   ngOnInit(): void {
+    this.route.paramMap.subscribe((params) => {
+      this.postParamId = params.get('id')!;
+
+      console.log(this.postParamId);
+      
+
+      this.subscriptions.add(
+        this.postRequests.getPostById(this.postParamId).subscribe({
+          next: (response) => {
+            this.mainState.setOpenedPost(response.post);
+          },
+          error: (error) => {
+            console.log(error);
+          },
+        })
+      );
+    })
+
     this.unlisten = this.renderer.listen(
       'document',
       'click',
@@ -106,34 +125,31 @@ export class PostModalComponent {
         }
       }
     );
-
+    
     this.isLiked = this.isLikedByCurrUser$();
     this.totalLikes = this.totalLikes$();
-
+    
     this.commentFormGroup = new GenerateCommentForm(
       this.fb
     ).generateCommentPost();
-
+    
     this.isOnMobile = window.innerWidth <= 768;
   }
 
-  toggleLike(): void {
-    // Променяме UI веднага
+  toggleLike() {
     this.isLiked = !this.isLiked;
     this.totalLikes! += this.isLiked ? 1 : -1;
 
     const currPostId = this.postId();
 
-    // Ако има активен таймер за този пост – анулираме го
-    if (this.likeTimer) {
-      this.likeTimer.unsubscribe();
-    }
-
-    // Стартираме нов таймер
-    this.likeTimer = timer(5000).subscribe(() => {
-      this.postLikeDislike(currPostId);
-      this.likeTimer = null; // След изпращане на заявка нулираме таймера
-    });
+    // Use debounceTime to handle the like action
+    this.subscriptions.add(
+      timer(5000)
+        .pipe(debounceTime(2000))
+        .subscribe(() => {
+          this.postLikeDislike(currPostId);
+        })
+    );
   }
 
   postLikeDislike(postId: string): Promise<void> {
@@ -254,6 +270,8 @@ export class PostModalComponent {
     if (this.unlisten) {
       this.unlisten();
     }
+    console.log('des');
+    
 
     this.subscriptions.unsubscribe();
   }

@@ -2,7 +2,7 @@
   <div class="row">
     <div class="content">
       <div class="left">
-        <app-navigation class="navigation" />
+        <app-navigation class="navigation"/>
         <!-- <app-suggested-profiles class="suggested-profiles"/> -->
       </div>
 
@@ -13,18 +13,18 @@
       <div class="right">
         <app-friend-list
           class="friend-list"
-          (open)="onUserProfileClick($event)"
         />
+
         <app-chat-heads
           class="chat-heads"
           (open)="onProfileClick($event)"
           (close)="onCloseChatHead($event)"
         />
 
-        @if (this.state.isChatActive()) {
+        @if (this.state.isChatActive() && this.state.currChatProfileUser()) {
         <app-chat
           class="chat"
-          [currChatUser]="currProfileUserChat"
+          [currChatUser]="this.state.currChatProfileUser()"
           (minimizeChat)="onMinimizeChat($event)"
         />
         }

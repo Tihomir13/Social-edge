@@ -5,30 +5,37 @@
     object-fit: cover;
     border-radius: 50%;
   }
-  
-    .like-icon {
+
+  .like-icon {
     cursor: pointer;
   }
 
-  .text {
-    display: block;
-    max-width: 379px;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    white-space: normal;
-
-    &.collapsed {
-      max-height: none;
+  .content {
+    max-width: 380px;
+    
+    @include styles.mobile {
+      max-width: 280px;
     }
-  }
 
-  .read-more {
-    color: styles.$primary-purple;
-    cursor: pointer;
-    user-select: none;
+    .text {
+      display: block;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+      white-space: normal;
 
-    &:hover {
-      color: styles.$light-purple;
+      &.collapsed {
+        max-height: none;
+      }
+    }
+
+    .read-more {
+      color: styles.$primary-purple;
+      cursor: pointer;
+      user-select: none;
+
+      &:hover {
+        color: styles.$light-purple;
+      }
     }
   }
 }

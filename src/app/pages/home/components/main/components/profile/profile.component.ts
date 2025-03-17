@@ -119,16 +119,16 @@ export class ProfileComponent implements OnInit, OnDestroy {
           this.state.setIsProfileOwner(response.userData.isProfileOwner);
           this.isFriend = response.userData.isFriend;
           this.isRequested = response.userData.isRequestedBySender;
-          this.isRequestedByRecipient = response.userData.isRequestedByRecipient;
-
-          console.log(response);
-          
-
+          this.isRequestedByRecipient =
+            response.userData.isRequestedByRecipient;
           this.isUserHasProfileImage(response.userData.profileImage);
           this.isUserHasBannerImage(response.userData.bannerImage);
         },
         error: (error) => {
           console.log(error);
+        },
+        complete: () => {
+          this.mainState.setLoadingState('posts');
         },
       })
     );
@@ -472,21 +472,26 @@ export class ProfileComponent implements OnInit, OnDestroy {
     );
   }
 
-  acceptFriendRequest():void {
+  acceptFriendRequest(): void {
     const notifications = this.mainState.notifications();
     console.log(notifications);
-    
 
-    const notification = notifications.find(notification => notification.sender === this.username)
+    const notification = notifications.find(
+      (notification) => notification.sender === this.username
+    );
 
-    this.subscriptions.add(this.profileRequestService.acceptFriendRequestById(notification._id).subscribe({
-      next: (response) => {
-        this.profileRequestService.getInitialUserData(this.username!);
-      },
-      error: (error) => {
-        console.log(error);
-      }
-    }))
+    this.subscriptions.add(
+      this.profileRequestService
+        .acceptFriendRequestById(notification._id)
+        .subscribe({
+          next: (response) => {
+            this.profileRequestService.getInitialUserData(this.username!);
+          },
+          error: (error) => {
+            console.log(error);
+          },
+        })
+    );
   }
 
   ngOnDestroy(): void {

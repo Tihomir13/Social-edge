@@ -36,7 +36,7 @@ import { CustomModalComponent } from '../../../../../../../../shared/components/
     AutoResizeTextareaDirective,
     NgClass,
     OptionsMenuComponent,
-    CustomModalComponent
+    CustomModalComponent,
   ],
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss',
@@ -136,7 +136,7 @@ export class PostComponent implements OnInit, OnDestroy {
     // Use debounceTime to handle the like action
     this.subscriptions.add(
       timer(5000)
-        .pipe(debounceTime(5000))
+        .pipe(debounceTime(2000))
         .subscribe(() => {
           this.postLikeDislike(currPostId);
         })
@@ -159,7 +159,11 @@ export class PostComponent implements OnInit, OnDestroy {
         this.postRequests.commentPost(comment, this.postId()).subscribe({
           next: (response) => {
             this.commentFormGroup.reset();
-            this.mainState.addNewCommentToPost(this.postId(), response.formattedComment);
+            this.mainState.addNewCommentToPost(
+              this.postId(),
+              response.formattedComment
+            );
+            console.log(response);
           },
           error: (error) => {
             console.log(error);
@@ -170,7 +174,16 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   openPostModal(): void {
-    this.mainState.setOpenedPost(this.postId());
+    this.subscriptions.add(
+      this.postRequests.getPostById(this.postId()).subscribe({
+        next: (response) => {
+          this.mainState.setOpenedPost(response.post);
+        },
+        error: (error) => {
+          console.log(error);
+        },
+      })
+    );
   }
 
   showMoreComments(): void {
@@ -183,14 +196,18 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   addListenerToOptionsMenu(): void {
-    this.unlistenOptionsMenu = this.render.listen('document', 'click', (event: Event) => {
-      const target = event.target as HTMLElement;
+    this.unlistenOptionsMenu = this.render.listen(
+      'document',
+      'click',
+      (event: Event) => {
+        const target = event.target as HTMLElement;
 
-      if (!target.closest('.options-container')) {
-        this.isOptionsClicked = false;
-        this.unlistenOptionsMenu();
+        if (!target.closest('.options-container')) {
+          this.isOptionsClicked = false;
+          this.unlistenOptionsMenu();
+        }
       }
-    });
+    );
   }
 
   toggleOptionsMenu(): void {
@@ -203,14 +220,16 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   deletePost(): void {
-    this.subscriptions.add(this.postRequests.deletePost(this.postId()).subscribe({
-      next: (response) => {
-        this.mainState.deletePost(this.postId());
-      },
-      error: (error) => {
-        console.log(error);
-      }
-    }))
+    this.subscriptions.add(
+      this.postRequests.deletePost(this.postId()).subscribe({
+        next: (response) => {
+          this.mainState.deletePost(this.postId());
+        },
+        error: (error) => {
+          console.log(error);
+        },
+      })
+    );
   }
 
   onChoseOptionProfile(modalOption: string): void {

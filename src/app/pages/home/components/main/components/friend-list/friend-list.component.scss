@@ -1,16 +1,35 @@
+@use '../../../../../../../styles.scss' as styles;
+
 .content {
   width: 370px;
-  padding: 0px 20px;
-  height: calc(100vh - 30px);
+  padding: 0px 0px;
+  height: calc(100vh - 44px);
   overflow-y: auto;
   scrollbar-width: thin;
+  
+  @include styles.mobile {
+    position: relative;
+    width: 100svw !important;
+    padding: 0px 10px;
+    
+    .header {
+      padding: 0px 20px;
+    }
 
-  .search-bar {
-    height: 35px;
+    .search-bar-container {
+      max-width: 340px;
+    }
+  }
+
+  .search-bar-container {
+    .search-bar {
+      height: 35px;
+    }
   }
 
   .friend-list {
     margin-top: 10px;
     padding-top: 20px;
+
   }
 }

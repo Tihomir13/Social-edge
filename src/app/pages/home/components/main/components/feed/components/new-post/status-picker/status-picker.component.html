@@ -3,7 +3,7 @@
 
   <div class="statuses-container">
     @for (status of currentStatuses; track $index) {
-    <div class="status-container fs-5" (click)="onChosenStatus($index)">
+    <div class="status-container fs-6" (click)="onChosenStatus($index)">
       <span>{{ status.emoji }}</span>
       <span>{{ status.name }}</span>
     </div>

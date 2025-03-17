@@ -1,4 +1,5 @@
 import { Injectable, signal } from '@angular/core';
+import { ChatUserModel } from '../../components/chat/interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +17,7 @@ export class MainStateService {
   >([]);
   currentChatHeads = signal<any[]>([]);
   isChatActive = signal<boolean>(false);
+  currChatProfileUser = signal<null | ChatUserModel>(null);
   searchedUsers = signal<any[]>([]);
   notifications = signal<any[]>([]);
   userProfileImg = signal<any>(this.defaultProfileImg);
@@ -53,11 +55,14 @@ export class MainStateService {
     this.userProfileImg.set(image);
   }
 
-  setOpenedPost(postId: any): void {
+  setOpenedPreFetchPost(postId: any): void {
     if (postId) {
       this.openedPost.set(this.posts().find((post) => post._id === postId));
     }
-    console.log(this.openedPost());
+  }
+
+  setOpenedPost(post: any): void {
+    this.openedPost.set(post);
   }
 
   closePost(): void {
@@ -69,8 +74,6 @@ export class MainStateService {
   }
 
   addNewCommentToPost(postId: any, comment: any): void {
-    console.log(comment);
-
     this.posts.update((posts) =>
       posts.map((post) => {
         if (post._id === postId) {
@@ -84,12 +87,14 @@ export class MainStateService {
       })
     );
 
-    this.openedPost.update((post) => {
-      return {
-        ...post,
-        comments: [...(post.comments || []), comment],
-      };
-    });
+    if (this.openedPost()) {
+      this.openedPost.update((post) => {
+        return {
+          ...post,
+          comments: [...(post.comments || []), comment],
+        };
+      });
+    }
   }
 
   deletePost(postId: string): void {
@@ -106,4 +111,38 @@ export class MainStateService {
       [key]: false,
     }));
   }
+
+  // updateCommentLikeState(postId: string, commentId: string) {
+  //   // Променяме постовете и използваме set, за да зададем нова стойност на posts
+  //   const updatedPosts = this.posts().map((post) => {
+  //     if (post._id === postId) {
+  //       return {
+  //         ...post,
+  //         comments: post.comments.map((comment: any) =>
+  //           comment._id === commentId
+  //             ? { ...comment, isLiked: !comment.isLiked }
+  //             : comment
+  //         ),
+  //       };
+  //     }
+  //     return post;
+  //   });
+
+  //   // Задаваме новото състояние на feed-а с set
+  //   this.posts.set(updatedPosts);
+
+  //   // Проверяваме ако постът е отворен в modal-а
+  //   const openedPost = this.openedPost();
+  //   if (openedPost && openedPost._id === postId) {
+  //     // Обновяваме коментара и в modal-а с set
+  //     this.openedPost.set({
+  //       ...openedPost,
+  //       comments: openedPost.comments.map((comment: any) =>
+  //         comment._id === commentId
+  //           ? { ...comment, isLiked: !comment.isLiked }
+  //           : comment
+  //       ),
+  //     });
+  //   }
+  // }
 }

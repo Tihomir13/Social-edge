@@ -16,6 +16,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
     { label: 'Feed', icon: 'assets/icons/navigation/homepage.svg' },
     { label: 'People', icon: 'assets/icons/navigation/people.svg' },
     { label: 'Profile', icon: 'assets/icons/navigation/profile.svg' },
+    { label: 'Chat', icon: 'assets/icons/navigation/chat.svg' },
   ];
   selectedOption: undefined | { label: string; icon: string } = undefined;
   subscriptions = new Subscription();
@@ -31,7 +32,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this.segments = fullUrl.split('/');
     this.mainRoute = this.segments[1];
     this.markOption(this.mainRoute);
-  
+
     this.subscriptions.add(
       this.router.events
         .pipe(filter((event) => event instanceof NavigationEnd))
@@ -62,6 +63,10 @@ export class NavigationComponent implements OnInit, OnDestroy {
         this.router.navigate(['profile', username, 'posts']);
         this.selectedOption = this.navItems[2];
         break;
+      case 'chat':
+        this.router.navigate(['friends']);
+        this.selectedOption = this.navItems[3];
+        break;
     }
   }
 
@@ -82,8 +87,10 @@ export class NavigationComponent implements OnInit, OnDestroy {
           this.selectedOption = undefined;
           break;
         }
-
         this.selectedOption = this.navItems[2];
+        break;
+      case 'friends':
+        this.selectedOption = this.navItems[3];
         break;
     }
   }

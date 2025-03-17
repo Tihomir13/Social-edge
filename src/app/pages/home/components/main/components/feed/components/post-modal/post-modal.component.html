@@ -233,11 +233,14 @@
 
           <div class="comments-container">
             @for (comment of comments(); track $index) {
-            <app-comment
+              <app-comment
+              [postId]="postId()"
+              [commentId]="comment._id"
               [username]="comment.author.username"
               [authorProfileImage]="comment.author.profileImage"
               [text]="comment.text"
-              [likes]="comment.likes.length"
+              [initialIsLiked]="comment.isLiked"
+              [initialTotalLikes]="comment.totalLikes"
               [date]="comment.createdAt"
             ></app-comment>
             } @if (totalCommentsCount() > 2) {
@@ -254,7 +257,7 @@
           </div>
         </div>
 
-        <div class="add-comment-container mt-3 d-flex gap-10px">
+        <div class="add-comment-container d-flex gap-10px">
           <div class="profile-icon-container">
             <img
               width="45"
