@@ -70,6 +70,15 @@
           display: none;
         }
       }
+
+      .right {
+        .chat {
+          width: 100svw;
+          z-index: 1000;
+          bottom: calc(-100svh + 94px);
+          right: -12px;
+        }
+      }
     }
   }
 }

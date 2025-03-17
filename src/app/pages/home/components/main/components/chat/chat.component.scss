@@ -7,6 +7,11 @@
   border-radius: $border-radius $border-radius 0px 0px;
   background-color: $post-light-color;
   border: 2px solid $light-purple;
+  
+  @include mobile {
+    width: 100svw;
+    height: calc(70svh);
+  }
 
   .header {
     .minimize-icon,
