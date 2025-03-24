@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, ElementRef, HostListener, inject, input, output, ViewChild } from '@angular/core';
 import { ProfileStateService } from '../../../services/profile-state.service';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { UserInfoFormService } from '../info-card/user-info-form.service';
+import { UserInfoFormService } from '../../../../profile/components/user-information/info-card/user-info-form.service';
 
 @Component({
   selector: 'app-info-card-select',

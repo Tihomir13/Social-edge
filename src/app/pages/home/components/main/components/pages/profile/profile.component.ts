@@ -12,15 +12,15 @@ import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 
 import { Subscription } from 'rxjs';
 
-import { UtilitySessionService } from '../../../../../../shared/services/utility/utility.service';
+import { UtilitySessionService } from '../../../../../../../shared/services/utility/utility.service';
 import { ProfileRequestsService } from './services/profile-requests.service';
 import { ProfileStateService } from './services/profile-state.service';
-import { ModalService } from '../../../../shared/services/modal.service';
-import { CustomModalComponent } from '../../../../../../shared/components/custom-modal/custom-modal.component';
-import { maxImageSize } from '../../../../../../shared/constants/settings';
+import { ModalService } from '../../../../../shared/services/modal.service';
+import { CustomModalComponent } from '../../../../../../../shared/components/custom-modal/custom-modal.component';
+import { maxImageSize } from '../../../../../../../shared/constants/settings';
 import * as nsfwjs from 'nsfwjs';
-import { MainStateService } from '../../shared/services/main-state.service';
-import { NotificationsService } from '../../../header/components/notifications-window/services/notifications.service';
+import { MainStateService } from '../../../shared/services/main-state.service';
+import { NotificationsService } from '../../../../header/components/notifications-window/services/notifications.service';
 
 @Component({
   selector: 'app-profile',

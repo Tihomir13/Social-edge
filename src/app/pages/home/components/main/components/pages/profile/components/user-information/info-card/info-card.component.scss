@@ -1,13 +1,11 @@
-@import "../../../../../../../../../../styles.scss";
+@use '../../../../../../../../../../../styles.scss' as styles;
 
 img {
   width: 35px;
 }
 
 .form {
-  .form-select {
-    cursor: pointer;
-
+  .form-control {
     &:focus {
       outline: none;
       box-shadow: none;
@@ -25,7 +23,7 @@ img {
   }
 
   .edit {
-    color: $primary-purple;
+    color: styles.$primary-purple;
     cursor: pointer;
   }
 

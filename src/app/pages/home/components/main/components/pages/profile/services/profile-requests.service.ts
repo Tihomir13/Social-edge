@@ -3,8 +3,8 @@ import { inject, Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
-import { UtilitySessionService } from '../../../../../../../shared/services/utility/utility.service';
-import { api } from '../../../../../../../shared/constants/api';
+import { UtilitySessionService } from '../../../../../../../../shared/services/utility/utility.service';
+import { api } from '../../../../../../../../shared/constants/api';
 
 @Injectable({
   providedIn: 'root',

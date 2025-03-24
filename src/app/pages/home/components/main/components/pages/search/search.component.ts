@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 
 import { UtilitySessionService } from '../../../../../../../shared/services/utility/utility.service';
 import { Subscription } from 'rxjs';
-import { ProfileRequestsService } from '../../profile/services/profile-requests.service';
+import { ProfileRequestsService } from '../profile/services/profile-requests.service';
 
 @Component({
   selector: 'app-search',
