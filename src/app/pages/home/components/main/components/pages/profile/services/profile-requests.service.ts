@@ -118,4 +118,8 @@ export class ProfileRequestsService {
   getProfileImage(): Observable<any> {
     return this.http.get(`${api}/profiles/profile-image`, this.headers);
   }
+
+  getSuggestedProfiles(): Observable<any> {
+    return this.http.get(`${api}/profiles/suggested-people`, this.headers);
+  }
 }

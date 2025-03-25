@@ -1,7 +1,7 @@
 import { Component, input, output } from '@angular/core';
 
 @Component({
-  selector: 'app-user-card',
+  selector: 'app-user-big-card',
   standalone: true,
   imports: [],
   templateUrl: './user-card.component.html',
