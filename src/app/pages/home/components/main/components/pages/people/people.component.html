@@ -1,9 +1,9 @@
 <div class="people-container">
-    <h1 class="px-2 my-3">People</h1>
+  <h1 class="px-2 my-3">People</h1>
 
-    <div class='flex-wrap d-flex gap-4'>
-        @for (item of items; track $index) {
-            <app-user-big-card class='mt-3'/>
-        }
-    </div>
+  <div class="flex-wrap d-flex gap-4">
+    @for (user of people(); track $index) {
+    <app-user-big-card [user]="user" class="mt-3" />
+    }
+  </div>
 </div>

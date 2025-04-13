@@ -1,14 +1,13 @@
-<div class='container-user-card d-flex flex-column justify-content-around align-items-center p-4 py-5'>
+<a [routerLink]="['/profile', user().username]"  class='container-user-card d-flex flex-column justify-content-around align-items-center p-3 pb-5'>
     <div class='profile-image-container'>
         <img width='150' height='150' class='profile-image' [src]='"assets/images/default-images/profile-image.png"' alt='profile image'>
     </div>
 
-    <div class="container-text d-flex align-items-center justify-content-center">
-        {{ user()?.username ?? 'Guest' }}
-    </div>
+    <h2 class="fs-4 container-text d-flex align-items-center justify-content-center">
+        {{ user().username }}
+    </h2>
 
     <div class='container-btn'>
-
         @switch(userState?.()) {
             @case ('isNotFriend') {
             <div class="add-btn-container col-md-4 col-12 order-md-3 order-2 d-flex justify-content-center">
@@ -35,4 +34,4 @@
             }
         }
     </div>
-</div>
+</a>

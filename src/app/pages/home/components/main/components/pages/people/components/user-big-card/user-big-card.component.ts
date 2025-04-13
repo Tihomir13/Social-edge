@@ -1,16 +1,22 @@
-import { Component, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
+import { MainStateService } from '../../../../../shared/services/main-state.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-user-big-card',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './user-big-card.component.html',
-  styleUrl: './user-big-card.component.scss'
+  styleUrl: './user-big-card.component.scss',
 })
 export class UserBigCardComponent {
   userState? = input<string>();
-  user = input<any>({
-    username: 'isNotFriend'
-  });
+
+  mainState = inject(MainStateService);
+  user = input<any>();
+
+  ngOnInit(): void {
+    console.log(this.user());
+  }
 
   onAddFriend(): void {}
   onRemoveFriendRequest(): void {}
