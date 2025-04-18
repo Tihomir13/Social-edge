@@ -82,6 +82,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   defaultBannerImg = 'assets/images/default-images/banner-image.png';
 
   @ViewChild('fileInput') fileInput!: ElementRef;
+  @ViewChild(CustomModalComponent) customModal!: CustomModalComponent;
 
   utilitySession = inject(UtilitySessionService);
   state = inject(ProfileStateService);
@@ -123,6 +124,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
             response.userData.isRequestedByRecipient;
           this.isUserHasProfileImage(response.userData.profileImage);
           this.isUserHasBannerImage(response.userData.bannerImage);
+
+          console.log(response);
         },
         error: (error) => {
           console.log(error);
@@ -338,7 +341,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.uploadProfileImage(files[0]);
+    await this.uploadProfileImage(files[0]);
   }
 
   async onAddFileBanner(event: any): Promise<void> {
@@ -409,6 +412,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   async checkNsfw(file: File): Promise<boolean> {
+    this.customModal.setLoading({
+      listElemIndex: 0,
+      isLoading: true,
+    });
+
     return new Promise((resolve) => {
       const reader = new FileReader();
       reader.onload = async () => {
