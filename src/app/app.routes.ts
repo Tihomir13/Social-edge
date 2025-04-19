@@ -17,6 +17,7 @@ import { PostModalComponent } from './pages/home/components/main/components/feed
 import { FriendListComponent } from './pages/home/components/main/components/friend-list/friend-list.component';
 import { mobileGuard } from './shared/guards/mobile.guard';
 import { PeopleComponent } from './pages/home/components/main/components/pages/people/people.component';
+import { BlankComponent } from './pages/blank/blank.component';
 
 export const routes: Routes = [
   {
@@ -48,7 +49,12 @@ export const routes: Routes = [
       {
         path: 'feed',
         component: FeedComponent,
-        children: [{ path: ':postId', component: UserPostsComponent }],
+        // children: [{ path: ':postId', component: UserPostsComponent }],
+      },
+      {
+        path: 'posts/:id',
+        component: BlankComponent,
+        // children: [{ path: ':id', component: PostModalComponent }],
       },
       {
         path: 'profile/:username',
@@ -62,8 +68,11 @@ export const routes: Routes = [
       },
       { path: 'people', component: PeopleComponent },
       { path: 'search', component: SearchComponent },
-      { path: 'posts/:id', component: PostModalComponent },
-      { path: 'friends', component: FriendListComponent, canActivate: [mobileGuard] },
+      {
+        path: 'friends',
+        component: FriendListComponent,
+        canActivate: [mobileGuard],
+      },
     ],
   },
 ];

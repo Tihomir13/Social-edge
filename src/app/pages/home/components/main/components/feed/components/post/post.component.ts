@@ -177,7 +177,7 @@ export class PostComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.postRequests.getPostById(this.postId()).subscribe({
         next: (response) => {
-          this.mainState.setOpenedPost(response.post);
+          this.mainState.setOpenedPost(response.post, true);
         },
         error: (error) => {
           console.log(error);

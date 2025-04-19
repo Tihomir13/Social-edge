@@ -62,6 +62,8 @@ export class PostModalComponent {
   totalLikes$ = input<number>();
   isLikedByCurrUser$ = input<boolean>();
   createdAt = input();
+  isClickOutsideOn = input<boolean>(false);
+
   isLiked: boolean | undefined;
   totalLikes: number | undefined;
 
@@ -95,44 +97,28 @@ export class PostModalComponent {
   commentFormGroup!: FormGroup;
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe((params) => {
-      this.postParamId = params.get('id')!;
+    if (this.isClickOutsideOn()) {
+      this.unlisten = this.renderer.listen(
+        'document',
+        'click',
+        (event: Event) => {
+          const target = event.target as HTMLElement;
 
-      console.log(this.postParamId);
-      
-
-      this.subscriptions.add(
-        this.postRequests.getPostById(this.postParamId).subscribe({
-          next: (response) => {
-            this.mainState.setOpenedPost(response.post);
-          },
-          error: (error) => {
-            console.log(error);
-          },
-        })
-      );
-    })
-
-    this.unlisten = this.renderer.listen(
-      'document',
-      'click',
-      (event: Event) => {
-        const target = event.target as HTMLElement;
-
-        if (!target.closest('.post-modal-container') && this.postId()) {
-          this.mainState.closePost();
-          this.unlisten();
+          if (!target.closest('.post-modal-container') && this.postId()) {
+            this.mainState.closePost();
+            this.unlisten();
+          }
         }
-      }
-    );
-    
+      );
+    }
+
     this.isLiked = this.isLikedByCurrUser$();
     this.totalLikes = this.totalLikes$();
-    
+
     this.commentFormGroup = new GenerateCommentForm(
       this.fb
     ).generateCommentPost();
-    
+
     this.isOnMobile = window.innerWidth <= 768;
   }
 
@@ -271,7 +257,6 @@ export class PostModalComponent {
       this.unlisten();
     }
     console.log('des');
-    
 
     this.subscriptions.unsubscribe();
   }

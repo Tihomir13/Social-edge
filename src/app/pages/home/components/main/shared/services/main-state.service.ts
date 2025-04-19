@@ -61,8 +61,13 @@ export class MainStateService {
     }
   }
 
-  setOpenedPost(post: any): void {
-    this.openedPost.set(post);
+  setOpenedPost(post: any, isModal: boolean): void {
+    const openedPost = {
+      ...post,
+      isModal,
+    };
+
+    this.openedPost.set(openedPost);
   }
 
   closePost(): void {
