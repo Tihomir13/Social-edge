@@ -40,4 +40,10 @@ export class ShareModalComponent {
       this.clickedOption.emit('Cancel');
     }
   }
+
+  copyText() {
+    navigator.clipboard.writeText(this.link!).catch((err) => {
+      console.error('Грешка при копиране на текста: ', err);
+    });
+  }
 }
