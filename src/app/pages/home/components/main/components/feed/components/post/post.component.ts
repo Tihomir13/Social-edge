@@ -25,6 +25,7 @@ import { AutoResizeTextareaDirective } from '../../../../../../../../shared/dire
 import { OptionsMenuComponent } from './components/options-menu/options-menu.component';
 import { PostMethodsService } from './services/post-methods.service';
 import { CustomModalComponent } from '../../../../../../../../shared/components/custom-modal/custom-modal.component';
+import { ShareModalComponent } from "../../../../../../../../shared/components/share-modal/share-modal.component";
 
 @Component({
   selector: 'app-post',
@@ -37,7 +38,8 @@ import { CustomModalComponent } from '../../../../../../../../shared/components/
     NgClass,
     OptionsMenuComponent,
     CustomModalComponent,
-  ],
+    ShareModalComponent
+],
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss',
   providers: [],
@@ -58,6 +60,7 @@ export class PostComponent implements OnInit, OnDestroy {
 
   isCommentsClicked: boolean = true;
   isDeletionModalOpened: boolean = false;
+  isShareModalOpened: boolean = false;
   isCollapsed = true;
   isOptionsClicked = false;
 
@@ -232,12 +235,17 @@ export class PostComponent implements OnInit, OnDestroy {
     );
   }
 
+  showShareModal() {
+    this.isShareModalOpened = true;
+  }
+
   onChoseOptionProfile(modalOption: string): void {
     if (modalOption === 'Delete') {
       this.deletePost();
     }
 
     this.isDeletionModalOpened = false;
+    this.isShareModalOpened = false;
   }
 
   ngOnDestroy(): void {

@@ -1,0 +1,45 @@
+@import "../../../../styles.scss";
+
+@mixin display-center($height) {
+  height: $height;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container-fluid {
+  opacity: 1;
+  .modal-container {
+    text-align: center;
+    max-width: 500px;
+    background-color: rgb(50, 50, 50);
+    border-radius: $border-radius;
+    position: absolute;
+    z-index: 1000;
+
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    .title-container {
+      color: white;
+      @include display-center(100px);
+    }
+
+    .option-container {
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      @include display-center(65px);
+      cursor: pointer;
+
+      &:active {
+        background-color: rgb(60, 60, 60);
+      }
+
+      &:last-child:active {
+        background-color: rgb(60, 60, 60);
+        border-bottom-left-radius: $border-radius;
+        border-bottom-right-radius: $border-radius;
+      }
+    }
+  }
+}
