@@ -13,7 +13,6 @@ import { FormArray, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 import { Subscription } from 'rxjs';
 
-import * as nsfwjs from 'nsfwjs';
 import { UtilityService } from '../../../../../../../../shared/services/utility/array-utility.service';
 import { StatusPickerComponent } from './status-picker/status-picker.component';
 import { statuses } from '../../../../../../../../shared/constants/arrays';
@@ -27,6 +26,7 @@ import { LoadingSpinnerComponent } from '../../../../../../../../shared/componen
 
 import { PostModel } from '../post/model/post.model';
 import { ToxicityService } from '../../../../../../shared/services/AI/toxicity.service';
+import { NsfwService } from '../../../../../../shared/services/AI/nsfw.service';
 
 @Component({
   selector: 'app-new-post',
@@ -71,6 +71,7 @@ export class NewPostComponent implements OnDestroy {
 
   newPostFormService = inject(NewPostFormServiceService);
   toxicityService = inject(ToxicityService);
+    private nsfwService = inject(NsfwService);
 
   subscriptions = new Subscription();
 
@@ -135,7 +136,7 @@ export class NewPostComponent implements OnDestroy {
       }
 
       this.isImageLoading = true;
-      const nsfwCheck = await this.checkNsfw(file);
+      const nsfwCheck = await this.nsfwService.checkNsfw(file);
       this.isImageLoading = false;
 
       if (!nsfwCheck) {
@@ -176,25 +177,6 @@ export class NewPostComponent implements OnDestroy {
   isValidFileSize(file: File): boolean {
     const maxFileSize = maxImageSize * 1024 * 1024;
     return file.size <= maxFileSize;
-  }
-
-  async checkNsfw(file: File): Promise<boolean> {
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = async () => {
-        const image = new Image();
-        image.src = reader.result as string;
-        image.onload = async () => {
-          const model = await nsfwjs.load('InceptionV3');
-          const predictions = await model.classify(image);
-          const nsfwResult = predictions.find(
-            (p) => p.className === 'Porn' || p.className === 'Hentai'
-          );
-          resolve(!(nsfwResult && nsfwResult.probability > 0.5));
-        };
-      };
-      reader.readAsDataURL(file);
-    });
   }
 
   async getPreviewUrl(file: File): Promise<string> {

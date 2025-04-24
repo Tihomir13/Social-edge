@@ -18,9 +18,9 @@ import { ProfileStateService } from './services/profile-state.service';
 import { ModalService } from '../../../../../shared/services/modal.service';
 import { CustomModalComponent } from '../../../../../../../shared/components/custom-modal/custom-modal.component';
 import { maxImageSize } from '../../../../../../../shared/constants/settings';
-import * as nsfwjs from 'nsfwjs';
 import { MainStateService } from '../../../shared/services/main-state.service';
 import { NotificationsService } from '../../../../header/components/notifications-window/services/notifications.service';
+import { NsfwService } from '../../../../../shared/services/AI/nsfw.service';
 
 @Component({
   selector: 'app-profile',
@@ -92,6 +92,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   private renderer = inject(Renderer2);
   mainState = inject(MainStateService);
   private requestNotificationsService = inject(NotificationsService);
+  private nsfwService = inject(NsfwService);
 
   modalService = inject(ModalService);
 
@@ -335,7 +336,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const nsfwCheck = await this.checkNsfw(files[0]);
+    this.customModal.setLoading({
+      listElemIndex: 0,
+      isLoading: true,
+    });
+
+    const nsfwCheck = await this.nsfwService.checkNsfw(files[0]);
     if (!nsfwCheck) {
       this.closeModal();
       return;
@@ -362,7 +368,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const nsfwCheck = await this.checkNsfw(files[0]);
+    this.customModal.setLoading({
+      listElemIndex: 0,
+      isLoading: true,
+    });
+
+    const nsfwCheck = await this.nsfwService.checkNsfw(files[0]);
     if (!nsfwCheck) {
       this.closeModal();
       return;
@@ -409,30 +420,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
   isValidFileSize(file: File): boolean {
     const maxFileSize = maxImageSize * 1024 * 1024;
     return file.size <= maxFileSize;
-  }
-
-  async checkNsfw(file: File): Promise<boolean> {
-    this.customModal.setLoading({
-      listElemIndex: 0,
-      isLoading: true,
-    });
-
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = async () => {
-        const image = new Image();
-        image.src = reader.result as string;
-        image.onload = async () => {
-          const model = await nsfwjs.load('InceptionV3');
-          const predictions = await model.classify(image);
-          const nsfwResult = predictions.find(
-            (p) => p.className === 'Porn' || p.className === 'Hentai'
-          );
-          resolve(!(nsfwResult && nsfwResult.probability > 0.3));
-        };
-      };
-      reader.readAsDataURL(file);
-    });
   }
 
   onAddFriend(): void {
