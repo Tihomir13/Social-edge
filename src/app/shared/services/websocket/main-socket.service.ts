@@ -5,16 +5,18 @@ import { Observable } from 'rxjs';
 import io from 'socket.io-client';
 import { api } from '../../constants/api';
 import { MainStateService } from '../../../pages/home/components/main/shared/services/main-state.service';
+import { UtilitySessionService } from '../utility/utility.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MainSocketService {
-  token = sessionStorage.getItem('token');
-  private socket = io(`${api}?token=${this.token}`);
-
   private onlineUsers = signal<{ [key: string]: boolean }>({});
   private state = inject(MainStateService);
+  private utilitySessionStorage = inject(UtilitySessionService);
+
+  token = this.utilitySessionStorage.getToken();
+  private socket = io(`${api}?token=${this.token}`);
 
   sendStatus() {
     this.socket.emit('set-status');

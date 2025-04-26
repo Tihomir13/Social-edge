@@ -21,6 +21,7 @@ import { PostsRequestsService } from '../post/services/posts-requests.service';
 import { OptionsMenuComponent } from '../post/components/options-menu/options-menu.component';
 import { UtilitySessionService } from '../../../../../../../../shared/services/utility/utility.service';
 import { CustomModalComponent } from '../../../../../../../../shared/components/custom-modal/custom-modal.component';
+import { ShareModalComponent } from "../../../../../../../../shared/components/share-modal/share-modal.component";
 
 @Component({
   selector: 'app-post-modal',
@@ -32,7 +33,8 @@ import { CustomModalComponent } from '../../../../../../../../shared/components/
     NgClass,
     OptionsMenuComponent,
     CustomModalComponent,
-  ],
+    ShareModalComponent
+],
   templateUrl: './post-modal.component.html',
   styleUrl: './post-modal.component.scss',
 })
@@ -70,7 +72,9 @@ export class PostModalComponent {
   postParamId?: string;
 
   isOptionsClicked = false;
+ 
   isDeletionModalOpened: boolean = false;
+  isShareModalOpened: boolean = false;
 
   likeTimer: Subscription | null = null;
   isCollapsed = true;
@@ -244,12 +248,17 @@ export class PostModalComponent {
     );
   }
 
+  showShareModal() {
+    this.isShareModalOpened = true;
+  }
+
   onChoseOptionProfile(modalOption: string): void {
     if (modalOption === 'Delete') {
       this.deletePost();
     }
 
     this.isDeletionModalOpened = false;
+    this.isShareModalOpened = false;
   }
 
   ngOnDestroy(): void {

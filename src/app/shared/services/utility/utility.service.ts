@@ -4,17 +4,20 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class UtilitySessionService {
+
+  storage = sessionStorage; 
+
   get headers():
     | {
         Authorization: string;
       }
     | undefined {
-    const token = sessionStorage.getItem('token');
+    const token = this.storage.getItem('token');
     return token ? { Authorization: `${token}` } : undefined;
   }
 
   get userInfo() {
-    const userInfo = sessionStorage.getItem('userInfo');
+    const userInfo = this.storage.getItem('userInfo');
     if (userInfo) {
       return JSON.parse(userInfo);
     } else {
@@ -22,11 +25,19 @@ export class UtilitySessionService {
     }
   }
 
-  setToken(newToken: any) {
-    sessionStorage.setItem('token', newToken);
+  setToken(newToken: string): void {
+    this.storage.setItem('token', newToken);
+  }
+
+  getToken(): string | null {
+    return this.storage.getItem('token');
+  }
+
+  setUserInfo(userInfo: object): void {
+    this.storage.setItem('userInfo', JSON.stringify(userInfo));
   }
 
   resetSession(): void {
-    sessionStorage.clear();
+    this.storage.clear();
   }
 }

@@ -45,6 +45,7 @@
 .post-modal-container {
   background-color: styles.$post-light-color;
   border-radius: styles.$border-radius;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px; 
   height: 775px;
   
   @include styles.mobile {

@@ -1,19 +1,24 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
   HttpInterceptor,
   HttpRequest,
   HttpHandler,
   HttpEvent,
 } from '@angular/common/http';
+
 import { Observable } from 'rxjs';
+
+import { UtilitySessionService } from '../services/utility/utility.service';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
+  utilitySessionStorage = inject(UtilitySessionService);
+
   intercept(
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    const token = sessionStorage.getItem('token');
+    const token = this.utilitySessionStorage.getToken();
     console.log('JwtInterceptor is adding token to request:', token);
 
     if (token) {

@@ -22,6 +22,8 @@ export class ShareModalComponent {
 
   loading = this._loading.asReadonly();
 
+  isCopied = false;
+
   ngOnInit() {
     console.log(this.postId());
 
@@ -45,5 +47,11 @@ export class ShareModalComponent {
     navigator.clipboard.writeText(this.link!).catch((err) => {
       console.error('Грешка при копиране на текста: ', err);
     });
+
+    this.isCopied = true;
+
+    setTimeout(() => {
+      this.isCopied = false;
+    }, 2000);
   }
 }
