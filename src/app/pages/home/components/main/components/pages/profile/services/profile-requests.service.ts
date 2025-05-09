@@ -3,8 +3,8 @@ import { inject, Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
-import { UtilitySessionService } from '../../../../../../../shared/services/utility/utility.service';
-import { api } from '../../../../../../../shared/constants/api';
+import { UtilitySessionService } from '../../../../../../../../shared/services/utility/utility.service';
+import { api } from '../../../../../../../../shared/constants/api';
 
 @Injectable({
   providedIn: 'root',
@@ -117,5 +117,9 @@ export class ProfileRequestsService {
 
   getProfileImage(): Observable<any> {
     return this.http.get(`${api}/profiles/profile-image`, this.headers);
+  }
+
+  getSuggestedProfiles(): Observable<any> {
+    return this.http.get(`${api}/profiles/suggested-people`, this.headers);
   }
 }

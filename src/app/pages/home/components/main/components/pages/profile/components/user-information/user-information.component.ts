@@ -3,7 +3,7 @@ import { ProfileRequestsService } from '../../services/profile-requests.service'
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { ProfileStateService } from '../../services/profile-state.service';
-import { InfoCardComponent } from '../user-information/info-card/info-card.component';
+import { InfoCardComponent } from './info-card/info-card.component';
 import { InfoCardSelectComponent } from './info-card-select/info-card-select.component';
 
 @Component({

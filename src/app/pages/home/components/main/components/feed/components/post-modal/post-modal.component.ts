@@ -21,6 +21,7 @@ import { PostsRequestsService } from '../post/services/posts-requests.service';
 import { OptionsMenuComponent } from '../post/components/options-menu/options-menu.component';
 import { UtilitySessionService } from '../../../../../../../../shared/services/utility/utility.service';
 import { CustomModalComponent } from '../../../../../../../../shared/components/custom-modal/custom-modal.component';
+import { ShareModalComponent } from "../../../../../../../../shared/components/share-modal/share-modal.component";
 
 @Component({
   selector: 'app-post-modal',
@@ -32,7 +33,8 @@ import { CustomModalComponent } from '../../../../../../../../shared/components/
     NgClass,
     OptionsMenuComponent,
     CustomModalComponent,
-  ],
+    ShareModalComponent
+],
   templateUrl: './post-modal.component.html',
   styleUrl: './post-modal.component.scss',
 })
@@ -62,13 +64,17 @@ export class PostModalComponent {
   totalLikes$ = input<number>();
   isLikedByCurrUser$ = input<boolean>();
   createdAt = input();
+  isClickOutsideOn = input<boolean>(false);
+
   isLiked: boolean | undefined;
   totalLikes: number | undefined;
 
   postParamId?: string;
 
   isOptionsClicked = false;
+ 
   isDeletionModalOpened: boolean = false;
+  isShareModalOpened: boolean = false;
 
   likeTimer: Subscription | null = null;
   isCollapsed = true;
@@ -95,44 +101,28 @@ export class PostModalComponent {
   commentFormGroup!: FormGroup;
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe((params) => {
-      this.postParamId = params.get('id')!;
+    if (this.isClickOutsideOn()) {
+      this.unlisten = this.renderer.listen(
+        'document',
+        'click',
+        (event: Event) => {
+          const target = event.target as HTMLElement;
 
-      console.log(this.postParamId);
-      
-
-      this.subscriptions.add(
-        this.postRequests.getPostById(this.postParamId).subscribe({
-          next: (response) => {
-            this.mainState.setOpenedPost(response.post);
-          },
-          error: (error) => {
-            console.log(error);
-          },
-        })
-      );
-    })
-
-    this.unlisten = this.renderer.listen(
-      'document',
-      'click',
-      (event: Event) => {
-        const target = event.target as HTMLElement;
-
-        if (!target.closest('.post-modal-container') && this.postId()) {
-          this.mainState.closePost();
-          this.unlisten();
+          if (!target.closest('.post-modal-container') && this.postId()) {
+            this.mainState.closePost();
+            this.unlisten();
+          }
         }
-      }
-    );
-    
+      );
+    }
+
     this.isLiked = this.isLikedByCurrUser$();
     this.totalLikes = this.totalLikes$();
-    
+
     this.commentFormGroup = new GenerateCommentForm(
       this.fb
     ).generateCommentPost();
-    
+
     this.isOnMobile = window.innerWidth <= 768;
   }
 
@@ -258,12 +248,17 @@ export class PostModalComponent {
     );
   }
 
+  showShareModal() {
+    this.isShareModalOpened = true;
+  }
+
   onChoseOptionProfile(modalOption: string): void {
     if (modalOption === 'Delete') {
       this.deletePost();
     }
 
     this.isDeletionModalOpened = false;
+    this.isShareModalOpened = false;
   }
 
   ngOnDestroy(): void {
@@ -271,7 +266,6 @@ export class PostModalComponent {
       this.unlisten();
     }
     console.log('des');
-    
 
     this.subscriptions.unsubscribe();
   }

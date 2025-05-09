@@ -1,0 +1,10 @@
+@use '../../../../../../../../../../styles.scss' as styles;
+
+.information-card-container {
+  background-color: styles.$post-light-color;
+  border-radius: styles.$border-radius;
+  background-color: styles.$light-gray;
+  padding: 11px;
+  max-width: 550px;
+  margin: 50px auto;
+}

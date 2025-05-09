@@ -1,4 +1,4 @@
-@import "../../../../../../../../../../styles.scss";
+@use '../../../../../../../../../../../styles.scss' as styles;
 
 img {
   width: 35px;
@@ -15,7 +15,7 @@ select {
 }
 
 .edit {
-  color: $primary-purple;
+  color: styles.$primary-purple;
   cursor: pointer;
 }
 
@@ -27,7 +27,7 @@ select {
 .dropdown {
   width: 70px;
   height: 40px;
-  border-radius: $border-radius;
+  border-radius: styles.$border-radius;
   text-align: center;
-  border-color: $light-gray;
+  border-color: styles.$light-gray;
 }

@@ -2,17 +2,38 @@
   <div class="header d-flex align-items-center justify-content-between">
     <div class="d-flex gap-10px">
       <div class="profile-icon-container" (click)="navigateToAuthorProfile()">
-        <img width="45" height="45" class="profile-image" [src]="authorProfileImg() ? authorProfileImg().src : mainState.defaultProfileImg" alt="" />
+        <img
+          width="45"
+          height="45"
+          class="profile-image"
+          [src]="
+            authorProfileImg()
+              ? authorProfileImg().src
+              : mainState.defaultProfileImg
+          "
+          alt=""
+        />
       </div>
 
-      <span class="username-container" (click)="navigateToAuthorProfile()"> {{ username() }} </span>
+      <span class="username-container" (click)="navigateToAuthorProfile()">
+        {{ username() }}
+      </span>
     </div>
 
     <div class="options-container">
-      <img class="options-icon" src="assets/icons/more.svg" alt="" (click)="toggleOptionsMenu(); "/>
+      <img
+        class="options-icon"
+        src="assets/icons/more.svg"
+        alt=""
+        (click)="toggleOptionsMenu()"
+      />
 
       @if(isOptionsClicked) {
-        <app-options-menu class='post-options-menu' (deletePost)="isDeletionModalOpened = true" [isAuthor]="this.utilityService.userInfo.username === username()"/>
+      <app-options-menu
+        class="post-options-menu"
+        (deletePost)="isDeletionModalOpened = true"
+        [isAuthor]="this.utilityService.userInfo.username === username()"
+      />
       }
     </div>
   </div>
@@ -30,7 +51,11 @@
       [class.collapsed]="isCollapsed"
       [class.expanded]="!isCollapsed"
     >
-      {{ isCollapsed && text().length > 75 ? (text() | slice : 0 : 75) + "..." : text() }}
+      {{
+        isCollapsed && text().length > 75
+          ? (text() | slice : 0 : 75) + "..."
+          : text()
+      }}
     </p>
 
     @if (text().length > 100) {
@@ -94,7 +119,11 @@
         <div class="d-flex gap-10px">
           <img
             class="interaction-icon"
-            [src]="isLiked ? 'assets/icons/sparkle-colored.png': 'assets/icons/sparkle.png'"
+            [src]="
+              isLiked
+                ? 'assets/icons/sparkle-colored.png'
+                : 'assets/icons/sparkle.png'
+            "
             alt=""
             (click)="toggleLike()"
           />
@@ -108,6 +137,7 @@
             class="interaction-icon"
             src="assets/icons/share-arrow.svg"
             alt=""
+            (click)="showShareModal()"
           />
         </div>
       </div>
@@ -145,17 +175,27 @@
         [initialTotalLikes]="comment.totalLikes"
         [date]="comment.createdAt"
       ></app-comment>
-      }
-
-      @if (totalCommentsCount() > 2) {
-        <div class="view-more-btn mt-3 d-flex justify-content-center align-items-center" (click)="showMoreComments()">
-          <span class="view-more-btn d-flex justify-content-center align-items-center fw-semibold">View more</span>
-        </div>
+      } @if (totalCommentsCount() > 2) {
+      <div
+        class="view-more-btn mt-3 d-flex justify-content-center align-items-center"
+        (click)="showMoreComments()"
+      >
+        <span
+          class="view-more-btn d-flex justify-content-center align-items-center fw-semibold"
+          >View more</span
+        >
+      </div>
       }
 
       <div class="add-comment-container d-flex gap-10px">
         <div class="profile-icon-container">
-          <img width="45" height="45" class="profile-image" [src]="currUserImg()" alt="profile image" />
+          <img
+            width="45"
+            height="45"
+            class="profile-image"
+            [src]="currUserImg()"
+            alt="profile image"
+          />
         </div>
 
         <form
@@ -174,16 +214,22 @@
               appAutoResizeTextarea
               [minHeight]="45"
               [maxHeight]="200"
-              >
+            >
             </textarea>
           </div>
-        
-          @if(comment.value.trim() !== '') {
-            <div class="d-flex justify-content-end">
-              <button class="post-comment-btn" type="submit">Post</button>
 
-              <button class="cancel-comment-btn" type="button" (click)="onCancelComment()">Cancel</button>
-            </div>
+          @if(comment.value.trim() !== '') {
+          <div class="d-flex justify-content-end">
+            <button class="post-comment-btn" type="submit">Post</button>
+
+            <button
+              class="cancel-comment-btn"
+              type="button"
+              (click)="onCancelComment()"
+            >
+              Cancel
+            </button>
+          </div>
           }
         </form>
       </div>
@@ -192,13 +238,25 @@
 </div>
 
 @if(isDeletionModalOpened) {
-  <div class="modal-overlay">
-    <div class="modal-container">
-      <app-custom-modal
-        (clickedOption)="onChoseOptionProfile($event)"
-        [title]="'You are about to delete current post'"
-        [options]="modalOptions"
-      ></app-custom-modal>
-    </div>
+<div class="modal-overlay">
+  <div class="modal-container">
+    <app-custom-modal
+      (clickedOption)="onChoseOptionProfile($event)"
+      [title]="'You are about to delete current post'"
+      [options]="modalOptions"
+    ></app-custom-modal>
   </div>
-  }
+</div>
+} 
+
+@if(isShareModalOpened) {
+<div class="modal-overlay">
+  <div class="modal-container">
+    <app-share-modal
+      (clickedOption)="onChoseOptionProfile($event)"
+      [title]="'Share post'"
+      [postId]="postId()"
+    ></app-share-modal>
+  </div>
+</div>
+}

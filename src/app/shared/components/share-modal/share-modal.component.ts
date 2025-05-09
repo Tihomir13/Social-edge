@@ -1,15 +1,13 @@
-import { NgStyle } from '@angular/common';
 import { Component, HostListener, input, output, signal } from '@angular/core';
-import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
+import { feApi } from '../../constants/api';
 
 @Component({
-  selector: 'app-custom-modal',
-  standalone: true,
-  imports: [NgStyle, LoadingSpinnerComponent],
-  templateUrl: './custom-modal.component.html',
-  styleUrl: './custom-modal.component.scss',
+  selector: 'app-share-modal',
+  imports: [],
+  templateUrl: './share-modal.component.html',
+  styleUrl: './share-modal.component.scss',
 })
-export class CustomModalComponent {
+export class ShareModalComponent {
   title = input();
   options = input<{ optionName: string; optionColor: string }[]>();
   private _loading = signal<{
@@ -18,7 +16,19 @@ export class CustomModalComponent {
   } | null>(null);
   clickedOption = output<string>();
 
+  postId = input();
+
+  link?: string;
+
   loading = this._loading.asReadonly();
+
+  isCopied = false;
+
+  ngOnInit() {
+    console.log(this.postId());
+
+    this.link = `${feApi}/posts/${this.postId()}`;
+  }
 
   onChosenOption(optionName: string) {
     this.clickedOption.emit(optionName);
@@ -33,11 +43,15 @@ export class CustomModalComponent {
     }
   }
 
-  setLoading(state: { listElemIndex: number; isLoading: boolean }) {
-    this._loading.set(state);
-  }
+  copyText() {
+    navigator.clipboard.writeText(this.link!).catch((err) => {
+      console.error('Грешка при копиране на текста: ', err);
+    });
 
-  clearLoading() {
-    this._loading.set(null);
+    this.isCopied = true;
+
+    setTimeout(() => {
+      this.isCopied = false;
+    }, 2000);
   }
 }

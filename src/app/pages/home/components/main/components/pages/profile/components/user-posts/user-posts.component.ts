@@ -4,10 +4,10 @@ import { HttpClient } from '@angular/common/http';
 
 import { Subscription } from 'rxjs';
 
-import { PostComponent } from '../../../feed/components/post/post.component';
+import { PostComponent } from '../../../../feed/components/post/post.component';
 import { ProfileRequestsService } from '../../services/profile-requests.service';
-import { MainStateService } from '../../../../shared/services/main-state.service';
-import { PostsRequestsService } from '../../../feed/components/post/services/posts-requests.service';
+import { MainStateService } from '../../../../../shared/services/main-state.service';
+import { PostsRequestsService } from '../../../../feed/components/post/services/posts-requests.service';
 
 @Component({
   selector: 'app-user-posts',

@@ -9,10 +9,10 @@
   <app-initial-loading-spinner />
 }
 
-@if (mainState.openedPost()) {
+@if (mainState.openedPost() && mainState.openedPost().isModal) {
 <div class="modal-overlay">
   <div
-    class="post-modal-container" [class.without-image]="mainState.openedPost().images.length === 0"
+    class="post-modal-container" [class.without-image]="mainState.openedPost()?.images.length === 0"
     [class.fixed-width]="mainState.openedPost().images.length === 0"
   >
     <app-post-modal
@@ -30,6 +30,7 @@
       [totalLikes$]="mainState.openedPost().totalLikes"
       [isLikedByCurrUser$]="mainState.openedPost().isLiked"
       [createdAt]="mainState.openedPost().createdAt"
+      [isClickOutsideOn]="true"
     />
   </div>
 </div>

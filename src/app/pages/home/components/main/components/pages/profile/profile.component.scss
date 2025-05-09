@@ -1,4 +1,4 @@
-@import "../../../../../../../styles.scss";
+@use '../../../../../../../../styles.scss' as styles;
 
 .profile-container {
   position: relative;
@@ -17,7 +17,7 @@
     .banner-image {
       position: relative;
       z-index: 1;
-      border-radius: 0px 0px $border-radius $border-radius;
+      border-radius: 0px 0px styles.$border-radius styles.$border-radius;
       width: 100%;
       max-height: 420px;
       object-fit: cover;
@@ -78,12 +78,12 @@
         transition: background-color 0.3s ease;
 
         &:hover {
-          background-color: $light-purple;
+          background-color: styles.$light-purple;
         }
       }
 
       .selected {
-        background-color: $primary-purple;
+        background-color: styles.$primary-purple;
       }
     }
 
@@ -93,19 +93,19 @@
       .btn {
         max-width: 228px;
         width: 100%;
-        background-color: $dark-purple;
+        background-color: styles.$dark-purple;
         transition: background-color 0.3s ease;
         color: white;
 
         &:hover {
-          background-color: $primary-purple;
+          background-color: styles.$primary-purple;
         }
       }
 
       .request {
         background-color: transparent;
-        border-color: $primary-purple;
-        color: $primary-purple;
+        border-color: styles.$primary-purple;
+        color: styles.$primary-purple;
 
         &:hover {
           color: white;
