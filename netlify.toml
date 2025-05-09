@@ -1,7 +1,3 @@
-[build]
-  command = "npm install --legacy-peer-deps && npm run build"
-  publish = "build" # Adjust based on your output directory, e.g., "dist" or "public"
-
 [[redirects]]
   from = "/*"
   to = "/index.html"
