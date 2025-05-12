@@ -23,6 +23,7 @@
     "@tensorflow/tfjs-converter": "^4.22.0",
     "@tensorflow/tfjs-core": "^4.22.0",
     "bootstrap": "^5.3.3",
+    "buffer": "^6.0.3",
     "nsfwjs": "^4.2.0",
     "rxjs": "~7.8.0",
     "socket.io-client": "^4.8.1",
