@@ -1,6 +1,5 @@
 import { inject, Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
-import { StoragesService } from '../../pages/home/shared/services/storages.service';
 import { UtilitySessionService } from '../services/utility/utility.service';
 
 @Injectable({
