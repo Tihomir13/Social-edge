@@ -78,9 +78,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   subscriptions = new Subscription();
 
-  defaultProfileImg = 'assets/images/default-images/profile-image.png';
-  defaultBannerImg = 'assets/images/default-images/banner-image.png';
-
   @ViewChild('fileInput') fileInput!: ElementRef;
   @ViewChild(CustomModalComponent) customModal!: CustomModalComponent;
 
@@ -185,8 +182,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     contentType: string;
     src: string;
   }): void {
-    if (bannerImage === null) {
-      this.bannerImage = this.defaultBannerImg;
+    if (bannerImage === null) { 
+      this.bannerImage = this.mainState.defaultBannerImg;
     } else {
       this.bannerImage = bannerImage.src;
     }
@@ -197,9 +194,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
     src: string;
   }): void {
     if (profileImage === null) {
-      this.profileImage = this.defaultProfileImg;
+      this.profileImage = this.mainState.defaultProfileImg;
     } else {
       this.profileImage = profileImage.src;
+      this.mainState.setProfileImage(this.profileImage);
       console.log(this.profileImage);
     }
   }

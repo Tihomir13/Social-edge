@@ -6,6 +6,7 @@ import { ChatUserModel } from '../../components/chat/interfaces';
 })
 export class MainStateService {
   defaultProfileImg = 'assets/images/default-images/profile-image.png';
+  defaultBannerImg = 'assets/images/default-images/banner-image.png';
 
   posts = signal<any[]>([]);
   friends = signal<
