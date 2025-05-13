@@ -12,15 +12,14 @@ import { Subscription } from 'rxjs';
   styleUrl: './people.component.scss',
 })
 export class PeopleComponent {
-  subscription = new Subscription();
+  subscriptions = new Subscription();
 
-  people = signal([]);
-  // items = [{ user: { username: 'isNotFriend' } }, { user: { username: 'isNotFriend' } }, { user: { username: 'isNotFriend' } }, { user: { username: 'isNotFriend' } }, { user: { username: 'isNotFriend' } }, { user: { username: 'isNotFriend' } },]
+  people = signal<any>([]);
 
   private profileRequestService = inject(ProfileRequestsService);
 
   ngOnInit(): void {
-    this.subscription.add(
+    this.subscriptions.add(
       this.profileRequestService.getSuggestedProfiles().subscribe({
         next: (response) => {
           console.log(response);
@@ -33,7 +32,67 @@ export class PeopleComponent {
     );
   }
 
+   onAddFriend(username: string): void {
+    this.subscriptions.add(
+      this.profileRequestService.addNewFriend(username).subscribe({
+        next: (response) => {
+          console.log(response);
+          this.updateUserRequestStatus(username, true);
+        },
+        error: (error) => {
+          console.log(error);
+        },
+      })
+    );
+  }
+
+  onRemoveFriendRequest(username: string): void {
+    this.subscriptions.add(
+      this.profileRequestService
+        .removeFriendRequestByUsername(username)
+        .subscribe({
+          next: (response) => {
+            console.log(response);
+            this.updateUserRequestStatus(username, false);
+          },
+          error: (error) => {
+            console.log(error);
+          },
+        })
+    );
+  }
+
+  private updateUserRequestStatus(username: string, status: boolean) {
+    this.people.update((users) =>
+      users.map((user: any) =>
+        user.username === username ? { ...user, isRequestedBySender: status } : user
+      )
+    );
+  }
+
+  // acceptFriendRequest(): void {
+  //   const notifications = this.mainState.notifications();
+  //   console.log(notifications);
+
+  //   const notification = notifications.find(
+  //     (notification) => notification.sender === this.user().username
+  //   );
+
+  //   this.subscriptions.add(
+  //     this.profileRequestService
+  //       .acceptFriendRequestById(notification._id)
+  //       .subscribe({
+  //         next: (response) => {
+  //           this.profileRequestService.getInitialUserData(this.user().username!);
+  //         },
+  //         error: (error) => {
+  //           console.log(error);
+  //         },
+  //       })
+  //   );
+  // }
+
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.subscriptions.unsubscribe();
   }
 }

@@ -6,7 +6,9 @@
 
   max-width: 180px;
   border-radius: styles.$border-radius;
-  background-color: rgba(black, 0.2);
+  background-color: styles.$post-light-color;
+
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 
   .profile-image-container {
     .profile-image {
@@ -17,8 +19,6 @@
 
 .add-btn-container,
 .remove-btn-container {
-  padding-bottom: 150px;
-
   .btn {
     max-width: 228px;
     width: 100%;
