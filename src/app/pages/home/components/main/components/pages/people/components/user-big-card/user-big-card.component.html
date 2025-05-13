@@ -1,37 +1,25 @@
-<a [routerLink]="['/profile', user().username]"  class='container-user-card d-flex flex-column justify-content-around align-items-center p-3 pb-5'>
+<a [routerLink]="['/profile', user().username]"
+    class='container-user-card d-flex flex-column justify-content-around align-items-center p-3'>
     <div class='profile-image-container'>
-        <img width='150' height='150' class='profile-image' [src]='"assets/images/default-images/profile-image.png"' alt='profile image'>
+        <img width='150' height='150' class='profile-image'
+            [src]='user().profileImage ? user().profileImage.src : mainState.defaultProfileImg' alt='profile image'>
     </div>
 
-    <h2 class="fs-4 container-text d-flex align-items-center justify-content-center">
+    <h2 class="fs-4 text-dark container-text d-flex align-items-center justify-content-center">
         {{ user().username }}
     </h2>
 
     <div class='container-btn'>
-        @switch(userState?.()) {
-            @case ('isNotFriend') {
-            <div class="add-btn-container col-md-4 col-12 order-md-3 order-2 d-flex justify-content-center">
-                <button class="btn" (click)="onAddFriend()">Add friend</button>
-            </div>
-            }
+        @if (!user().isFriend && !user().isRequestedBySender) {
+        <div class="add-btn-container col-12 d-flex justify-content-center">
+            <button class="btn" (click)="$event.stopPropagation(); $event.preventDefault(); onAddFriend()">Add friend</button>
+        </div>
+        }
 
-            @case('isRequested') {
-            <div class="add-btn-container col-md-4 col-12 order-md-3 order-2 d-flex justify-content-center">
-                <button class="btn request" (click)="onRemoveFriendRequest()">Remove request</button>
-            </div>
-            }
-
-            @case('isFriend') {
-            <div class="remove-btn-container col-md-4 col-12 order-md-3 order-2 d-flex justify-content-center">
-                <button class="btn" (click)="openModalRemoveFriend()">Remove friend</button>
-            </div>
-            }
-
-            @case('isRequestedByRecipient') {
-            <div class="add-btn-container col-md-4 col-12 order-md-3 order-2 d-flex justify-content-center">
-                <button class="btn request" (click)="acceptFriendRequest()">Accept</button>
-            </div>
-            }
+        @if(user().isRequestedBySender) {
+        <div class="remove-btn-container col-12 d-flex justify-content-center">
+            <button class="btn request" (click)="$event.stopPropagation(); $event.preventDefault(); onRemoveFriendRequest()">Remove request</button>
+        </div>
         }
     </div>
 </a>
