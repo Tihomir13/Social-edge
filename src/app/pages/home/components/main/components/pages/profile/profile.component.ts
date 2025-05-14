@@ -384,7 +384,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.profileRequestService.removeProfilePhoto(this.username).subscribe({
         next: () => {
-          this.getInitialData(this.username);
+          this.mainState.setProfileImage(this.mainState.defaultProfileImg);
         },
         error: (error) => {
           console.log(error);
@@ -399,7 +399,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.profileRequestService.removeBannerPhoto(this.username).subscribe({
         next: () => {
-          this.getInitialData(this.username);
+          this.bannerImage = this.mainState.defaultBannerImg;
         },
         error: (error) => {
           console.log(error);
