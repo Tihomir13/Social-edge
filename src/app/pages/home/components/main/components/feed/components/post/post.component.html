@@ -131,7 +131,7 @@
             class="interaction-icon"
             src="assets/icons/comment-black.svg"
             alt=""
-            (click)="showMoreComments()"
+            (click)="openPostModal()"
           />
           <img
             class="interaction-icon"
@@ -178,7 +178,7 @@
       } @if (totalCommentsCount() > 2) {
       <div
         class="view-more-btn mt-3 d-flex justify-content-center align-items-center"
-        (click)="showMoreComments()"
+        (click)="openPostModal()"
       >
         <span
           class="view-more-btn d-flex justify-content-center align-items-center fw-semibold"

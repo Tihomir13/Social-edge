@@ -37,9 +37,10 @@
       width: 25px;
       right: 25px;
       transition: transform 0.2s ease-in-out;
+      rotate: 180deg;
 
       &:hover {
-        transform: translateY(-2px);
+        transform: translateY(+2px);
       }
 
       &.rotated {

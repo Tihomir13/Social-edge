@@ -5,6 +5,7 @@ import {
   input,
   output,
   Renderer2,
+  signal,
   ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -21,7 +22,7 @@ import { PostsRequestsService } from '../post/services/posts-requests.service';
 import { OptionsMenuComponent } from '../post/components/options-menu/options-menu.component';
 import { UtilitySessionService } from '../../../../../../../../shared/services/utility/utility.service';
 import { CustomModalComponent } from '../../../../../../../../shared/components/custom-modal/custom-modal.component';
-import { ShareModalComponent } from "../../../../../../../../shared/components/share-modal/share-modal.component";
+import { ShareModalComponent } from '../../../../../../../../shared/components/share-modal/share-modal.component';
 
 @Component({
   selector: 'app-post-modal',
@@ -33,8 +34,8 @@ import { ShareModalComponent } from "../../../../../../../../shared/components/s
     NgClass,
     OptionsMenuComponent,
     CustomModalComponent,
-    ShareModalComponent
-],
+    ShareModalComponent,
+  ],
   templateUrl: './post-modal.component.html',
   styleUrl: './post-modal.component.scss',
 })
@@ -58,7 +59,8 @@ export class PostModalComponent {
   tags = input<string[]>([]);
   likes = input<string[]>([]);
   images = input<any[]>([]);
-  comments = input<any[]>([]);
+  initialComments = input<any[]>([]);
+  comments = signal<any>([]);
   totalCommentsCount = input<number>(0);
   currUserImg = input();
   totalLikes$ = input<number>();
@@ -66,13 +68,15 @@ export class PostModalComponent {
   createdAt = input();
   isClickOutsideOn = input<boolean>(false);
 
+  commentsPageNum: number = 1;
+
   isLiked: boolean | undefined;
   totalLikes: number | undefined;
 
   postParamId?: string;
 
   isOptionsClicked = false;
- 
+
   isDeletionModalOpened: boolean = false;
   isShareModalOpened: boolean = false;
 
@@ -101,6 +105,11 @@ export class PostModalComponent {
   commentFormGroup!: FormGroup;
 
   ngOnInit(): void {
+    this.comments.set(this.initialComments());
+
+    console.log(this.comments());
+    
+
     if (this.isClickOutsideOn()) {
       this.unlisten = this.renderer.listen(
         'document',
@@ -176,7 +185,30 @@ export class PostModalComponent {
     this.router.navigate(['profile', this.username()]);
   }
 
-  showMoreComments(): void {}
+  showMoreComments(): void {
+    this.subscriptions.add(
+      this.postRequests
+        .showMoreComments(this.postId(), this.commentsPageNum)
+        .subscribe({
+          next: (response: any) => {
+            console.log(response);
+
+            // this.comments.set(response.comments);
+            this.comments.update((prevComments) => [
+              ...prevComments,
+              ...response.comments,
+            ]);
+
+            this.commentsPageNum += 1;
+
+            console.log(response);
+          },
+          error: (error) => {
+            console.log(error);
+          },
+        })
+    );
+  }
 
   onComment(): void {
     const comment = this.commentFormGroup.value.comment.trim();

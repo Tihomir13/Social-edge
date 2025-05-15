@@ -201,11 +201,11 @@
                   "
                   (click)="toggleLike()"
                 />
-                <img
+                <!-- <img
                   class="interaction-icon"
                   src="assets/icons/comment-black.svg"
                   alt=""
-                />
+                /> -->
                 <img
                   class="interaction-icon"
                   src="assets/icons/share-arrow.svg"
@@ -246,7 +246,7 @@
             ></app-comment>
             } @if (totalCommentsCount() > 2) {
             <div
-              class="view-more-btn mt-3 d-flex justify-content-center align-items-center"
+              class="view-more-btn my-3 mb-md-0 d-flex justify-content-center align-items-center"
               (click)="showMoreComments()"
             >
               <span

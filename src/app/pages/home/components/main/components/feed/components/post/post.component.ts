@@ -189,10 +189,6 @@ export class PostComponent implements OnInit, OnDestroy {
     );
   }
 
-  showMoreComments(): void {
-    this.openPostModal();
-  }
-
   onCancelComment(): void {
     this.commentFormGroup.reset();
     this.render.setStyle(this.comment.nativeElement, 'height', '45px');

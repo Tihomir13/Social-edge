@@ -228,10 +228,14 @@
     }
 
     .comments-container {
-      height: 330px;
+      max-height: 445px;
       overflow-y: auto;
       scroll-behavior: smooth;
       scrollbar-width: none;
+
+      @include styles.mobile {
+        max-height: none;
+      }
     }
 
     .view-more-btn {
