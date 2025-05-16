@@ -61,7 +61,8 @@ export class PostModalComponent {
   images = input<any[]>([]);
   initialComments = input<any[]>([]);
   comments = signal<any>([]);
-  totalCommentsCount = input<number>(0);
+  initialTotalCommentsCount = input<number>(0);
+  totalCommentsCount = signal<number>(this.initialTotalCommentsCount());
   currUserImg = input();
   totalLikes$ = input<number>();
   isLikedByCurrUser$ = input<boolean>();
@@ -106,9 +107,9 @@ export class PostModalComponent {
 
   ngOnInit(): void {
     this.comments.set(this.initialComments());
+    this.totalCommentsCount.set(this.initialTotalCommentsCount());
 
-    console.log(this.comments());
-    
+    this.showMoreComments(true);
 
     if (this.isClickOutsideOn()) {
       this.unlisten = this.renderer.listen(
@@ -155,7 +156,7 @@ export class PostModalComponent {
     return new Promise((_, reject) => {
       this.subscriptions.add(
         this.postRequests.likePost(postId).subscribe({
-          next: () => {},
+          next: () => { },
           error: (error) => {
             console.log(error);
             reject(error);
@@ -185,23 +186,25 @@ export class PostModalComponent {
     this.router.navigate(['profile', this.username()]);
   }
 
-  showMoreComments(): void {
+  showMoreComments(initial = false): void {
     this.subscriptions.add(
       this.postRequests
         .showMoreComments(this.postId(), this.commentsPageNum)
         .subscribe({
           next: (response: any) => {
             console.log(response);
+            
 
-            // this.comments.set(response.comments);
-            this.comments.update((prevComments) => [
-              ...prevComments,
-              ...response.comments,
-            ]);
-
+            if (initial) {
+              this.comments.set(response.comments);
+            }
+            else {
+              this.comments.update((prevComments) => [
+                ...prevComments,
+                ...response.comments,
+              ]);
+            }
             this.commentsPageNum += 1;
-
-            console.log(response);
           },
           error: (error) => {
             console.log(error);
@@ -224,6 +227,14 @@ export class PostModalComponent {
               this.postId(),
               response.formattedComment
             );
+
+            this.comments.update((prevComments) => [
+              ...prevComments,
+              response.formattedComment,
+            ]);
+
+            this.totalCommentsCount.update((prevCount) => prevCount + 1);
+          
           },
           error: (error) => {
             console.log(error);
@@ -297,7 +308,6 @@ export class PostModalComponent {
     if (this.unlisten) {
       this.unlisten();
     }
-    console.log('des');
 
     this.subscriptions.unsubscribe();
   }

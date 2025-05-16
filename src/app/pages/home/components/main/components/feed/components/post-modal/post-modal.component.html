@@ -1,4 +1,4 @@
-<div class="container-fluid px-0">
+<div class="container-fluid position-relative px-0">
   <div class="row m-0">
     <div class="post-modal-container px-0 d-flex">
       @if(images().length > 0) {
@@ -244,7 +244,9 @@
               [initialTotalLikes]="comment.totalLikes"
               [date]="comment.createdAt"
             ></app-comment>
-            } @if (totalCommentsCount() > 2) {
+            } @if (totalCommentsCount() < comments().length) {
+              {{totalCommentsCount()}}
+              {{comments().length}}
             <div
               class="view-more-btn my-3 mb-md-0 d-flex justify-content-center align-items-center"
               (click)="showMoreComments()"
