@@ -23,19 +23,27 @@ export class UserBigCardComponent {
 
   subscriptions = new Subscription();
 
+  isAddFriendDisabled = false;
+  isRemoveFriendRequestDisabled = false;
+
   profileRequestService = inject(ProfileRequestsService)
 
-  ngOnInit(): void {
-    console.log(this.user());
-  }
 
   onAddFriend(): void {
-    console.log(this.user().username);
-    this.onAddFriendEmitter.emit(this.user().username)
+    if (this.isAddFriendDisabled) return;
+    this.isAddFriendDisabled = true;
+    this.onAddFriendEmitter.emit(this.user().username);
+    setTimeout(() => {
+      this.isAddFriendDisabled = false;
+    }, 1000);
   }
-  
+
   onRemoveFriendRequest(): void {
-    console.log(this.user().username);
-    this.onRemoveFriendRequestEmitter.emit(this.user().username)
+    if (this.isRemoveFriendRequestDisabled) return;
+    this.isRemoveFriendRequestDisabled = true;
+    this.onRemoveFriendRequestEmitter.emit(this.user().username);
+    setTimeout(() => {
+      this.isRemoveFriendRequestDisabled = false;
+    }, 1000);
   }
 }

@@ -5,6 +5,7 @@ import {
   input,
   output,
   Renderer2,
+  signal,
   ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -21,7 +22,7 @@ import { PostsRequestsService } from '../post/services/posts-requests.service';
 import { OptionsMenuComponent } from '../post/components/options-menu/options-menu.component';
 import { UtilitySessionService } from '../../../../../../../../shared/services/utility/utility.service';
 import { CustomModalComponent } from '../../../../../../../../shared/components/custom-modal/custom-modal.component';
-import { ShareModalComponent } from "../../../../../../../../shared/components/share-modal/share-modal.component";
+import { ShareModalComponent } from '../../../../../../../../shared/components/share-modal/share-modal.component';
 
 @Component({
   selector: 'app-post-modal',
@@ -33,8 +34,8 @@ import { ShareModalComponent } from "../../../../../../../../shared/components/s
     NgClass,
     OptionsMenuComponent,
     CustomModalComponent,
-    ShareModalComponent
-],
+    ShareModalComponent,
+  ],
   templateUrl: './post-modal.component.html',
   styleUrl: './post-modal.component.scss',
 })
@@ -58,13 +59,17 @@ export class PostModalComponent {
   tags = input<string[]>([]);
   likes = input<string[]>([]);
   images = input<any[]>([]);
-  comments = input<any[]>([]);
-  totalCommentsCount = input<number>(0);
+  initialComments = input<any[]>([]);
+  comments = signal<any>([]);
+  initialTotalCommentsCount = input<number>(0);
+  totalCommentsCount = signal<number>(this.initialTotalCommentsCount());
   currUserImg = input();
   totalLikes$ = input<number>();
   isLikedByCurrUser$ = input<boolean>();
   createdAt = input();
   isClickOutsideOn = input<boolean>(false);
+
+  commentsPageNum: number = 1;
 
   isLiked: boolean | undefined;
   totalLikes: number | undefined;
@@ -72,7 +77,7 @@ export class PostModalComponent {
   postParamId?: string;
 
   isOptionsClicked = false;
- 
+
   isDeletionModalOpened: boolean = false;
   isShareModalOpened: boolean = false;
 
@@ -101,6 +106,11 @@ export class PostModalComponent {
   commentFormGroup!: FormGroup;
 
   ngOnInit(): void {
+    this.comments.set(this.initialComments());
+    this.totalCommentsCount.set(this.initialTotalCommentsCount());
+
+    this.showMoreComments(true);
+
     if (this.isClickOutsideOn()) {
       this.unlisten = this.renderer.listen(
         'document',
@@ -146,7 +156,7 @@ export class PostModalComponent {
     return new Promise((_, reject) => {
       this.subscriptions.add(
         this.postRequests.likePost(postId).subscribe({
-          next: () => {},
+          next: () => { },
           error: (error) => {
             console.log(error);
             reject(error);
@@ -176,7 +186,32 @@ export class PostModalComponent {
     this.router.navigate(['profile', this.username()]);
   }
 
-  showMoreComments(): void {}
+  showMoreComments(initial = false): void {
+    this.subscriptions.add(
+      this.postRequests
+        .showMoreComments(this.postId(), this.commentsPageNum)
+        .subscribe({
+          next: (response: any) => {
+            console.log(response);
+            
+
+            if (initial) {
+              this.comments.set(response.comments);
+            }
+            else {
+              this.comments.update((prevComments) => [
+                ...prevComments,
+                ...response.comments,
+              ]);
+            }
+            this.commentsPageNum += 1;
+          },
+          error: (error) => {
+            console.log(error);
+          },
+        })
+    );
+  }
 
   onComment(): void {
     const comment = this.commentFormGroup.value.comment.trim();
@@ -192,6 +227,14 @@ export class PostModalComponent {
               this.postId(),
               response.formattedComment
             );
+
+            this.comments.update((prevComments) => [
+              ...prevComments,
+              response.formattedComment,
+            ]);
+
+            this.totalCommentsCount.update((prevCount) => prevCount + 1);
+          
           },
           error: (error) => {
             console.log(error);
@@ -265,7 +308,6 @@ export class PostModalComponent {
     if (this.unlisten) {
       this.unlisten();
     }
-    console.log('des');
 
     this.subscriptions.unsubscribe();
   }
