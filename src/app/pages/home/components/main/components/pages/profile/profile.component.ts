@@ -45,6 +45,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   isFriend!: boolean;
   isRequested!: boolean;
   isRequestedByRecipient!: boolean;
+  friendsCounter: number = 0;
 
   isModalProfilePhotoOpened = false;
   isModalBannerPhotoOpened = false;
@@ -123,7 +124,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
           this.isUserHasProfileImage(response.userData.profileImage);
           this.isUserHasBannerImage(response.userData.bannerImage);
 
-          console.log(response);
+          this.friendsCounter = response.userData.friends
         },
         error: (error) => {
           console.log(error);

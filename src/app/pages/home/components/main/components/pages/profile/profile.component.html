@@ -79,6 +79,10 @@
           {{ "@" + username }}
         </span>
       </h1>
+
+      <span class="text-center fs-5">
+        {{ "friends: " + friendsCounter }}
+      </span>
     </div>
 
     @if(!state.isProfileOwner() && !isFriend && !isRequested && !isRequestedByRecipient) {
