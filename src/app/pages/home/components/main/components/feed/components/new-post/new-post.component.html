@@ -146,7 +146,7 @@
 
       <button type="submit" class="btn" [class.btn-loading]='isSubmitting'>
         @if (isSubmitting) {
-          <app-loading-spinner [size]="'small'"/>
+          <app-loading-spinner [size]="loadingSize.small"/>
         }
         @else {
           Post

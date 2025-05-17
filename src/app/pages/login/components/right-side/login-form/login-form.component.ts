@@ -7,6 +7,7 @@ import { LoginFormService } from '../../../services/login-form.service';
 import { LoadingSpinnerComponent } from '../../../../../shared/components/loading-spinner/loading-spinner.component';
 
 import { UtilitySessionService } from '../../../../../shared/services/utility/utility.service';
+import { size } from '../../../../../shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-login-form',
@@ -20,6 +21,7 @@ export class LoginFormComponent implements OnInit {
   isLoading: boolean = false;
   isErrorMsgShowed = false;
   errorMsg: string = '';
+  size = size;
 
   loginForm!: FormGroup;
 

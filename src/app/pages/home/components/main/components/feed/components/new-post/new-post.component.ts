@@ -22,7 +22,7 @@ import { NewPostRequestsService } from './services/new-post-requests.service';
 import { NewPostFormServiceService } from '../../../../../../shared/services/new-post-form-service.service';
 import { MainStateService } from '../../../../shared/services/main-state.service';
 import { CustomModalComponent } from '../../../../../../../../shared/components/custom-modal/custom-modal.component';
-import { LoadingSpinnerComponent } from '../../../../../../../../shared/components/loading-spinner/loading-spinner.component';
+import { LoadingSpinnerComponent, size } from '../../../../../../../../shared/components/loading-spinner/loading-spinner.component';
 
 import { PostModel } from '../post/model/post.model';
 import { ToxicityService } from '../../../../../../shared/services/AI/toxicity.service';
@@ -47,6 +47,8 @@ export class NewPostComponent implements OnDestroy {
   get tags(): FormArray {
     return this.newPostFormService.newPostFormGroup()?.get('tags') as FormArray;
   }
+
+  loadingSize = size
 
   isSubmitting: boolean = false;
   isImageLoading: boolean = false;
