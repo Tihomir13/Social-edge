@@ -1,5 +1,11 @@
 import { Component, input } from '@angular/core';
 
+export enum size {
+  small = 'small',
+  medium = 'medium',
+  large = 'large',
+}
+
 @Component({
   selector: 'app-loading-spinner',
   imports: [],
@@ -8,5 +14,5 @@ import { Component, input } from '@angular/core';
 })
 export class LoadingSpinnerComponent {
   classes = input<string>('text-light');
-  size = input<string>()
+  size = input<size>()
 }
