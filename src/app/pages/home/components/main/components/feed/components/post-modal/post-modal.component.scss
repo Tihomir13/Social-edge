@@ -133,6 +133,9 @@
     }
 
     .right-arrow-container {
+      max-height: 775px; // или каквато височина искаш
+      overflow-y: auto;
+      
       right: 10px;
       top: 50%;
       transform: translateY(-50%);
@@ -171,91 +174,117 @@
   .right-side {
     width: 500px;
     padding: 10px;
-
+    display: flex;
+    flex-direction: column;
+    height: 775px; // Fixed height for desktop
+    position: relative;
+  
     @include styles.mobile {
       width: auto;
+      height: auto; // Allow height to adjust on mobile
     }
-
-    .title-container,
-    .text-container {
-      word-break: break-word;
-    }
-
-    .text-container {
-      .text {
-        overflow: hidden;
-
-        &.collapsed {
+  
+    .scrollable-content {
+      flex: 1; // Take up available space
+      overflow-y: auto; // Enable vertical scrolling
+      max-height: calc(775px - 75px); // Adjust based on comment input height
+      scroll-behavior: smooth;
+      scrollbar-width: none; // Hide scrollbar for Firefox
+      -ms-overflow-style: none; // Hide scrollbar for IE/Edge
+      padding-bottom: 20px; // Prevent content from being hidden under comment input
+  
+      &::-webkit-scrollbar {
+        display: none; // Hide scrollbar for Webkit browsers
+      }
+  
+      @include styles.mobile {
+        max-height: none; // Allow full height on mobile
+      }
+  
+      // Ensure existing containers inherit proper styles
+      .title-container,
+      .text-container {
+        word-break: break-word;
+      }
+  
+      .text-container {
+        .text {
+          overflow: hidden;
+  
+          &.collapsed {
+            max-height: none;
+          }
+        }
+  
+        .read-more {
+          color: styles.$primary-purple;
+          cursor: pointer;
+          user-select: none;
+  
+          &:hover {
+            color: styles.$light-purple;
+          }
+        }
+      }
+  
+      .tags-container {
+        flex-wrap: wrap;
+        margin: 10px 0px;
+  
+        .tag {
+          position: relative;
+          margin: 5px;
+          height: 45px;
+          padding: 5px 15px;
+          color: rgb(255, 255, 255);
+          background-color: rgb(250, 180, 250);
+          border-radius: styles.$border-radius;
+          display: inline-flex;
+          align-items: center;
+        }
+      }
+  
+      .interactions-container {
+        margin-top: 10px;
+  
+        .interaction-icon {
+          cursor: pointer;
+        }
+      }
+  
+      .comments-container {
+        // Remove max-height from comments-container to allow it to grow
+        scroll-behavior: smooth;
+        scrollbar-width: none;
+  
+        @include styles.mobile {
           max-height: none;
         }
       }
-
-      .read-more {
+  
+      .view-more-btn {
+        height: 30px;
+        border-radius: 11px;
         color: styles.$primary-purple;
+        background-color: rgb(238, 238, 238);
         cursor: pointer;
-        user-select: none;
-
+  
         &:hover {
-          color: styles.$light-purple;
+          .view-more-btn {
+            opacity: 0.6;
+          }
         }
       }
     }
-
-    // Previous tags styles remain the same
-    .tags-container {
-      flex-wrap: wrap;
-      margin: 10px 0px;
-
-      .tag {
-        position: relative;
-        margin: 5px;
-        height: 45px;
-        padding: 5px 15px;
-        color: rgb(255, 255, 255);
-        background-color: rgb(250, 180, 250);
-        border-radius: styles.$border-radius;
-        display: inline-flex;
-        align-items: center;
-      }
-    }
-
-    .interactions-container {
-      margin-top: 10px;
-
-      .interaction-icon {
-        cursor: pointer;
-      }
-    }
-
-    .comments-container {
-      max-height: 445px;
-      overflow-y: auto;
-      scroll-behavior: smooth;
-      scrollbar-width: none;
-
-      @include styles.mobile {
-        max-height: none;
-      }
-    }
-
-    .view-more-btn {
-      height: 30px;
-      border-radius: 11px;
-      color: styles.$primary-purple;
-      background-color: rgb(238, 238, 238);
-      cursor: pointer;
-
-      &:hover {
-        .view-more-btn {
-          opacity: 0.6;
-        }
-      }
-    }
-
+  
     .add-comment-container {
-      bottom: 35px;
-      position: static !important;
-
+      position: sticky;
+      bottom: 0;
+      background-color: styles.$post-light-color; // Match background
+      padding: 10px 0;
+      z-index: 10; // Ensure it stays above scrolling content
+      border-top: 1px solid rgba(0, 0, 0, 0.1); // Optional: subtle separator
+  
       .profile-icon-container {
         .profile-image {
           object-fit: cover;
@@ -264,55 +293,48 @@
           border-radius: 50%;
         }
       }
-
+  
       .my-comment-form {
         .my-comment {
           position: relative;
           justify-content: center;
           align-items: center;
-
           width: 100%;
-
+  
           .form-control {
             width: 100%;
             border-radius: 25px;
             height: 45px;
             resize: none;
-
+  
             &:focus {
               outline: none;
               box-shadow: none;
             }
           }
         }
-
+  
         .post-comment-btn {
-          bottom: 8px;
-          right: 22px;
           border: none;
           background-color: transparent;
-
           color: styles.$primary-purple;
           cursor: pointer;
           font-weight: bold;
           display: inline-block;
-
+  
           &:hover {
             opacity: 0.8;
           }
         }
-
+  
         .cancel-comment-btn {
-          bottom: 8px;
-          right: 70px;
           border: none;
           background-color: transparent;
-
           color: red;
           cursor: pointer;
           font-weight: bold;
           display: inline-block;
-
+  
           &:hover {
             opacity: 0.5;
           }

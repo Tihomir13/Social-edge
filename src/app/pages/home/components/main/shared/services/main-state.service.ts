@@ -79,13 +79,14 @@ export class MainStateService {
     this.posts.update((posts) => [newPost, ...posts]);
   }
 
-  addNewCommentToPost(postId: any, comment: any): void {
+  addNewCommentToPost(postId: any, newComment: any): void {
     this.posts.update((posts) =>
       posts.map((post) => {
         if (post._id === postId) {
           return {
             ...post,
-            comments: [...(post.comments || []), comment],
+            comments: [newComment, ...(post.comments || []) ],
+            commentsCount: post.commentsCount + 1,
           };
         } else {
           return post;
@@ -97,7 +98,7 @@ export class MainStateService {
       this.openedPost.update((post) => {
         return {
           ...post,
-          comments: [...(post.comments || []), comment],
+          comments: [newComment, ...(post.comments || [])],
         };
       });
     }

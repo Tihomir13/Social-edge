@@ -109,6 +109,9 @@ export class PostModalComponent {
     this.comments.set(this.initialComments());
     this.totalCommentsCount.set(this.initialTotalCommentsCount());
 
+    console.log(this.comments());
+    
+
     this.showMoreComments(true);
 
     if (this.isClickOutsideOn()) {
@@ -192,9 +195,6 @@ export class PostModalComponent {
         .showMoreComments(this.postId(), this.commentsPageNum)
         .subscribe({
           next: (response: any) => {
-            console.log(response);
-            
-
             if (initial) {
               this.comments.set(response.comments);
             }
@@ -205,6 +205,9 @@ export class PostModalComponent {
               ]);
             }
             this.commentsPageNum += 1;
+
+            console.log(response);
+            
           },
           error: (error) => {
             console.log(error);
@@ -229,8 +232,8 @@ export class PostModalComponent {
             );
 
             this.comments.update((prevComments) => [
-              ...prevComments,
               response.formattedComment,
+              ...prevComments,
             ]);
 
             this.totalCommentsCount.update((prevCount) => prevCount + 1);

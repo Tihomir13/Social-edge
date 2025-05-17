@@ -4,60 +4,66 @@
       @if(images().length > 0) {
       <div class="images-container">
         @if(isOnMobile) {
-          
 
-          <div class="header p-2 d-flex align-items-center justify-content-between">
-            <div class="return-arrow-container d-flex justify-content-center align-items-center" (click)="this.mainState.closePost();">
-              <img width="25px" height="25px" src="assets/icons/chevron-left-grey.svg" alt="return arrow">
-            </div>
-
-            <div class="d-flex gap-10px">
-              <div
-                class="profile-icon-container"
-                (click)="navigateToAuthorProfile()"
-              >
-                <img
-                  width="55"
-                  height="55"
-                  class="profile-image"
-                  [src]="
-                    authorProfileImg()
-                      ? authorProfileImg().src
-                      : mainState.defaultProfileImg
-                  "
-                  alt=""
-                />
-              </div>
-
-              <span
-                class="username-container"
-                (click)="navigateToAuthorProfile()"
-              >
-                {{ username() }}
-              </span>
-            </div>
-
-            <div class="options-container">
-              <img
-                class="icon"
-                src="assets/icons/more.svg"
-                alt=""
-                (click)="toggleOptionsMenu()"
-              />
-
-              @if(isOptionsClicked) {
-              <app-options-menu
-                class="post-options-menu"
-                (deletePost)="isDeletionModalOpened = true"
-                [isAuthor]="
-                  this.utilityService.userInfo.username === username()
-                "
-              />
-              }
-            </div>
+        <div
+          class="header p-2 d-flex align-items-center justify-content-between"
+        >
+          <div
+            class="return-arrow-container d-flex justify-content-center align-items-center"
+            (click)="this.mainState.closePost()"
+          >
+            <img
+              width="25px"
+              height="25px"
+              src="assets/icons/chevron-left-grey.svg"
+              alt="return arrow"
+            />
           </div>
-        }
-        @for (image of images(); track $index) {
+
+          <div class="d-flex gap-10px">
+            <div
+              class="profile-icon-container"
+              (click)="navigateToAuthorProfile()"
+            >
+              <img
+                width="55"
+                height="55"
+                class="profile-image"
+                [src]="
+                  authorProfileImg()
+                    ? authorProfileImg().src
+                    : mainState.defaultProfileImg
+                "
+                alt=""
+              />
+            </div>
+
+            <span
+              class="username-container"
+              (click)="navigateToAuthorProfile()"
+            >
+              {{ username() }}
+            </span>
+          </div>
+
+          <div class="options-container">
+            <img
+              class="icon"
+              src="assets/icons/more.svg"
+              alt=""
+              (click)="toggleOptionsMenu()"
+            />
+
+            @if(isOptionsClicked) {
+            <app-options-menu
+              class="post-options-menu"
+              (deletePost)="isDeletionModalOpened = true"
+              [isAuthor]="this.utilityService.userInfo.username === username()"
+            />
+            }
+          </div>
+        </div>
+        } @for (image of images(); track $index) {
         <div
           class="image-wrapper"
           [class.active]="currentImageIndex === $index"
@@ -105,7 +111,8 @@
         class="right-side d-flex flex-column justify-content-between"
         [class.w-100]="images().length === 0"
       >
-        <div>
+        <!-- Scrollable content -->
+        <div class="scrollable-content">
           @if(!isOnMobile) {
           <div class="header d-flex align-items-center justify-content-between">
             <div class="d-flex gap-10px">
@@ -201,11 +208,6 @@
                   "
                   (click)="toggleLike()"
                 />
-                <!-- <img
-                  class="interaction-icon"
-                  src="assets/icons/comment-black.svg"
-                  alt=""
-                /> -->
                 <img
                   class="interaction-icon"
                   src="assets/icons/share-arrow.svg"
@@ -234,7 +236,7 @@
 
           <div class="comments-container">
             @for (comment of comments(); track $index) {
-              <app-comment
+            <app-comment
               [postId]="postId()"
               [commentId]="comment._id"
               [username]="comment.author.username"
@@ -245,8 +247,6 @@
               [date]="comment.createdAt"
             ></app-comment>
             } @if (totalCommentsCount() < comments().length) {
-              {{totalCommentsCount()}}
-              {{comments().length}}
             <div
               class="view-more-btn my-3 mb-md-0 d-flex justify-content-center align-items-center"
               (click)="showMoreComments()"
@@ -260,6 +260,7 @@
           </div>
         </div>
 
+        <!-- Fixed comment input -->
         <div class="add-comment-container d-flex gap-10px">
           <div class="profile-icon-container">
             <img
@@ -309,21 +310,18 @@
       </div>
     </div>
   </div>
-</div>
 
-@if(isDeletionModalOpened) {
-<div class="modal-overlay">
-  <div class="modal-container">
-    <app-custom-modal
-      (clickedOption)="onChoseOptionProfile($event)"
-      [title]="'You are about to delete current post'"
-      [options]="modalOptions"
-    ></app-custom-modal>
+  @if(isDeletionModalOpened) {
+  <div class="modal-overlay">
+    <div class="modal-container">
+      <app-custom-modal
+        (clickedOption)="onChoseOptionProfile($event)"
+        [title]="'You are about to delete current post'"
+        [options]="modalOptions"
+      ></app-custom-modal>
+    </div>
   </div>
-</div>
-}
-
-@if(isShareModalOpened) {
+  } @if(isShareModalOpened) {
   <div class="modal-overlay">
     <div class="modal-container">
       <app-share-modal
@@ -334,4 +332,4 @@
     </div>
   </div>
   }
-  
+</div>
