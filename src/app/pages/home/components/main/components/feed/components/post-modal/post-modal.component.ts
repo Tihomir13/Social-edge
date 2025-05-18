@@ -8,7 +8,12 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgClass, SlicePipe } from '@angular/common';
 
@@ -23,6 +28,10 @@ import { OptionsMenuComponent } from '../post/components/options-menu/options-me
 import { UtilitySessionService } from '../../../../../../../../shared/services/utility/utility.service';
 import { CustomModalComponent } from '../../../../../../../../shared/components/custom-modal/custom-modal.component';
 import { ShareModalComponent } from '../../../../../../../../shared/components/share-modal/share-modal.component';
+import { AutoResizeChatTextareaDirective } from '../../../../../../../../shared/directives/auto-resize-chat-textarea.directive';
+import { TimeAgoPipe } from '../../../../../../../../shared/pipes/time-ago.pipe';
+import { ToxicityClassifier } from '@tensorflow-models/toxicity';
+import { ToxicityService } from '../../../../../../shared/services/AI/toxicity.service';
 
 @Component({
   selector: 'app-post-modal',
@@ -35,11 +44,15 @@ import { ShareModalComponent } from '../../../../../../../../shared/components/s
     OptionsMenuComponent,
     CustomModalComponent,
     ShareModalComponent,
+    TimeAgoPipe,
   ],
   templateUrl: './post-modal.component.html',
   styleUrl: './post-modal.component.scss',
 })
 export class PostModalComponent {
+  resetPost() {
+    throw new Error('Method not implemented.');
+  }
   modalOptions = [
     {
       optionName: 'Delete',
@@ -59,6 +72,8 @@ export class PostModalComponent {
   tags = input<string[]>([]);
   likes = input<string[]>([]);
   images = input<any[]>([]);
+  date = input<Date | string>(new Date());
+  status = input<string>();
   initialComments = input<any[]>([]);
   comments = signal<any>([]);
   initialTotalCommentsCount = input<number>(0);
@@ -68,6 +83,12 @@ export class PostModalComponent {
   isLikedByCurrUser$ = input<boolean>();
   createdAt = input();
   isClickOutsideOn = input<boolean>(false);
+
+  get tagsArr(): FormArray {
+    return this.editPostFormGroup?.get('tags') as FormArray;
+  }
+
+  errorMsgTag: string = '';
 
   commentsPageNum: number = 1;
 
@@ -85,6 +106,8 @@ export class PostModalComponent {
   isCollapsed = true;
   subscriptions = new Subscription();
 
+  editPostFormGroup!: FormGroup;
+
   closeModal = output();
 
   private unlistenOptionsMenu!: () => void;
@@ -96,7 +119,7 @@ export class PostModalComponent {
   router = inject(Router);
   fb = inject(FormBuilder);
   private postRequests = inject(PostsRequestsService);
-  private route = inject(ActivatedRoute);
+  private toxicityService = inject(ToxicityService);
 
   @ViewChild('comment') comment!: ElementRef<HTMLTextAreaElement>;
   currentImageIndex = 0;
@@ -109,8 +132,11 @@ export class PostModalComponent {
     this.comments.set(this.initialComments());
     this.totalCommentsCount.set(this.initialTotalCommentsCount());
 
-    console.log(this.comments());
-    
+    this.editPostFormGroup = this.fb.group({
+      title: this.fb.control<string | null>(this.title()),
+      text: this.fb.control<string | null>(this.text()),
+      tags: this.fb.array<string>(this.tags()),
+    });
 
     this.showMoreComments(true);
 
@@ -159,7 +185,7 @@ export class PostModalComponent {
     return new Promise((_, reject) => {
       this.subscriptions.add(
         this.postRequests.likePost(postId).subscribe({
-          next: () => { },
+          next: () => {},
           error: (error) => {
             console.log(error);
             reject(error);
@@ -197,8 +223,7 @@ export class PostModalComponent {
           next: (response: any) => {
             if (initial) {
               this.comments.set(response.comments);
-            }
-            else {
+            } else {
               this.comments.update((prevComments) => [
                 ...prevComments,
                 ...response.comments,
@@ -207,7 +232,6 @@ export class PostModalComponent {
             this.commentsPageNum += 1;
 
             console.log(response);
-            
           },
           error: (error) => {
             console.log(error);
@@ -237,7 +261,6 @@ export class PostModalComponent {
             ]);
 
             this.totalCommentsCount.update((prevCount) => prevCount + 1);
-          
           },
           error: (error) => {
             console.log(error);
@@ -245,6 +268,31 @@ export class PostModalComponent {
         })
       );
     }
+  }
+
+  onAddTag(tag: string): void {
+    if (tag === '') {
+      return;
+    }
+
+    if (!tag.startsWith('#')) {
+      tag = '#' + tag;
+    }
+
+    if (this.tags().includes(tag)) {
+      this.errorMsgTag = `You have already entered ${tag}.`;
+      return;
+    }
+
+    if (this.errorMsgTag != '') {
+      this.errorMsgTag = '';
+    }
+
+    this.tagsArr.push(this.fb.control(tag));
+  }
+
+  onRemoveTag(index: number): void {
+    this.tagsArr.removeAt(index);
   }
 
   onCancelComment(): void {
@@ -290,6 +338,47 @@ export class PostModalComponent {
         complete: () => {
           this.mainState.closePost();
         },
+      })
+    );
+  }
+
+  async onSubmitEdit(): Promise<void> {
+    const isTitleToxic = await this.toxicityService.checkToxicText(
+      this.editPostFormGroup.get('title')!.value
+    );
+
+    if (isTitleToxic) {
+      this.resetPost();
+      return;
+    }
+
+    const isTextToxic = await this.toxicityService.checkToxicText(
+      this.editPostFormGroup.get('text')!.value
+    );
+
+    if (isTextToxic) {
+      this.resetPost();
+      return;
+    }
+
+    const formData = this.editPostFormGroup?.value;
+
+    this.subscriptions.add(
+      this.postRequests.editPost(this.postId(), formData).subscribe({
+        next: (response) => {
+          this.mainState.openedPost.update((prevPost) => ({
+            ...prevPost,
+            isEditing: false,
+          }));
+
+          // this.mainState.addNewPostToFeed(response.fetchedNewPost);
+        },
+        error: (error) => {
+          console.error('Error saving post', error);
+        },
+        // complete: () => {
+        //   this.resetPost();
+        // },
       })
     );
   }

@@ -4,7 +4,6 @@
       @if(images().length > 0) {
       <div class="images-container">
         @if(isOnMobile) {
-
         <div
           class="header p-2 d-flex align-items-center justify-content-between"
         >
@@ -38,12 +37,18 @@
               />
             </div>
 
-            <span
-              class="username-container"
-              (click)="navigateToAuthorProfile()"
-            >
-              {{ username() }}
-            </span>
+            <div class="d-flex flex-column">
+              <span
+                class="username-container"
+                (click)="navigateToAuthorProfile()"
+              >
+                {{ username() }}
+              </span>
+
+              <span>
+                {{ date() | timeAgo }}
+              </span>
+            </div>
           </div>
 
           <div class="options-container">
@@ -112,7 +117,7 @@
         [class.w-100]="images().length === 0"
       >
         <!-- Scrollable content -->
-        <div class="scrollable-content">
+        <form class="scrollable-content" [formGroup]="editPostFormGroup" (ngSubmit)="onSubmitEdit()">
           @if(!isOnMobile) {
           <div class="header d-flex align-items-center justify-content-between">
             <div class="d-flex gap-10px">
@@ -160,13 +165,29 @@
               }
             </div>
           </div>
-          } @if(title()) {
+          } @if(title()) { @if(mainState.openedPost().isEditing) {
+          <textarea
+            type="textarea"
+            [value]="title()"
+            rows="3"
+            class="form-control textarea mb-3"
+          >
+          </textarea>
+          } @else {
           <div class="title-container">
             <h5 class="title">
               {{ title() }}
             </h5>
           </div>
-          } @if(text()) {
+          } } @if(text()) { @if(mainState.openedPost().isEditing) {
+          <textarea
+            type="textarea"
+            [value]="text()"
+            rows="10"
+            class="form-control textarea mb-3"
+          >
+          </textarea>
+          } @else {
           <div class="text-container">
             <p
               class="text"
@@ -186,13 +207,58 @@
             </span>
             }
           </div>
-          } @if(tags().length > 0) {
+          } } @if(tags().length > 0) { @if (mainState.openedPost().isEditing) {
+          <div class="tags-container-edit d-flex" formArrayName="tags">
+            <div class="add-tag-container d-flex">
+              <input
+                #newTag
+                class="form-control"
+                type="text"
+                placeholder="add a tag"
+              />
+              <button
+                type="button"
+                class="add-tag-btn"
+                (click)="onAddTag(newTag.value); newTag.value = ''"
+              >
+                <img
+                  class="add-tag-img"
+                  src="./assets/icons/plus.svg"
+                  alt="add tag icon"
+                />
+              </button>
+            </div>
+
+            @for (tag of tagsArr.value; track $index) {
+            <span
+              class="tag-edit d-flex align-items-center justify-content-center"
+              (click)="onRemoveTag($index)"
+              >{{ tag }}
+
+              <span class="delete-icon fs-3">✖</span>
+            </span>
+            }
+          </div>
+          } @else {
           <div class="tags-container">
             @for (tag of tags(); track $index) {
             <span class="tag"> {{ tag }}</span>
             }
           </div>
-          }
+          } }
+
+          <div class="btn-container d-flex justify-content-between mt-5">
+            <button type="button" class="btn btn-cancel" (click)="resetPost()">
+              Cancel
+            </button>
+
+            <button
+              type="submit"
+              class="btn"
+            >
+              Save
+            </button>
+          </div>
 
           <div
             class="interactions-container d-flex justify-content-between mb-1"
@@ -258,7 +324,7 @@
             </div>
             }
           </div>
-        </div>
+        </form>
 
         <!-- Fixed comment input -->
         <div class="add-comment-container d-flex gap-10px">

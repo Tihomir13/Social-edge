@@ -15,9 +15,17 @@
         />
       </div>
 
-      <span class="username-container" (click)="navigateToAuthorProfile()">
-        {{ username() }}
-      </span>
+      <div class="d-flex flex-column">
+        <span class="username-container" (click)="navigateToAuthorProfile()">
+          {{ username() }}
+        </span>
+        
+        <span>
+          {{
+            date() | timeAgo
+          }}
+        </span>
+      </div>
     </div>
 
     <div class="options-container">
@@ -32,6 +40,7 @@
       <app-options-menu
         class="post-options-menu"
         (deletePost)="isDeletionModalOpened = true"
+        (editPost)="onEditPost()"
         [isAuthor]="this.utilityService.userInfo.username === username()"
       />
       }
