@@ -51,7 +51,7 @@
             </div>
           </div>
 
-          <div class="options-container">
+          <!-- <div class="options-container">
             <img
               class="icon"
               src="assets/icons/more.svg"
@@ -66,7 +66,7 @@
               [isAuthor]="this.utilityService.userInfo.username === username()"
             />
             }
-          </div>
+          </div> -->
         </div>
         } @for (image of images(); track $index) {
         <div
@@ -116,7 +116,6 @@
         class="right-side d-flex flex-column justify-content-between"
         [class.w-100]="images().length === 0"
       >
-        <!-- Scrollable content -->
         <form class="scrollable-content" [formGroup]="editPostFormGroup" (ngSubmit)="onSubmitEdit()">
           @if(!isOnMobile) {
           <div class="header d-flex align-items-center justify-content-between">
@@ -158,6 +157,7 @@
               <app-options-menu
                 class="post-options-menu"
                 (deletePost)="isDeletionModalOpened = true"
+                (editPost)="startEditPost()"
                 [isAuthor]="
                   this.utilityService.userInfo.username === username()
                 "
@@ -168,7 +168,6 @@
           } @if(title()) { @if(mainState.openedPost().isEditing) {
           <textarea
             type="textarea"
-            [value]="title()"
             rows="3"
             class="form-control textarea mb-3"
           >
@@ -182,7 +181,6 @@
           } } @if(text()) { @if(mainState.openedPost().isEditing) {
           <textarea
             type="textarea"
-            [value]="text()"
             rows="10"
             class="form-control textarea mb-3"
           >
@@ -247,19 +245,22 @@
           </div>
           } }
 
-          <div class="btn-container d-flex justify-content-between mt-5">
-            <button type="button" class="btn btn-cancel" (click)="resetPost()">
-              Cancel
-            </button>
 
-            <button
+          @if(mainState.openedPost().isEditing) {
+            <div class="btn-container d-flex justify-content-between mt-5">
+              <button type="button" class="btn btn-cancel" (click)="cancelEditMode()">
+                Cancel
+              </button>
+              
+              <button
               type="submit"
               class="btn"
-            >
+              >
               Save
             </button>
           </div>
-
+          }
+          
           <div
             class="interactions-container d-flex justify-content-between mb-1"
           >
@@ -326,7 +327,7 @@
           </div>
         </form>
 
-        <!-- Fixed comment input -->
+        <!-- Add comment Form -->
         <div class="add-comment-container d-flex gap-10px">
           <div class="profile-icon-container">
             <img

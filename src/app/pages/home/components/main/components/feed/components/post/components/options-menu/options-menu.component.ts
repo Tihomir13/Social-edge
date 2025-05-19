@@ -1,4 +1,5 @@
-import { Component, input, output } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
+import { MainStateService } from '../../../../../../shared/services/main-state.service';
 
 @Component({
   selector: 'app-options-menu',
@@ -12,8 +13,35 @@ export class OptionsMenuComponent {
   deletePost = output();
   editPost = output();
 
-  onEditPost() {
-    this.editPost.emit();
+  mainState = inject(MainStateService)
+
+  cancelEditMode() {
+    this.mainState.openedPost.update((prevPost) => ({
+      ...prevPost,
+      isEditing: false,
+    }));
+  }
+
+  toggleEdit() {
+    if (!this.mainState.openedPost()) {
+      this.editPost.emit();
+      return;
+    }
+
+    if (!this.mainState.openedPost() && !this.mainState.openedPost().isEditing) {
+      this.editPost.emit();
+      return;
+    }
+
+    if (this.mainState.openedPost() && !this.mainState.openedPost().isEditing) {
+      this.editPost.emit();
+      return;
+    }
+
+    if (this.mainState.openedPost() && this.mainState.openedPost().isEditing) {
+      this.cancelEditMode()
+      return;
+    }
   }
 
   onDeletePost(): void {
