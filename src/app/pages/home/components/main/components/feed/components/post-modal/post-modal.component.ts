@@ -50,9 +50,6 @@ import { ToxicityService } from '../../../../../../shared/services/AI/toxicity.s
   styleUrl: './post-modal.component.scss',
 })
 export class PostModalComponent {
-  resetPost() {
-    throw new Error('Method not implemented.');
-  }
   modalOptions = [
     {
       optionName: 'Delete',
@@ -185,7 +182,7 @@ export class PostModalComponent {
     return new Promise((_, reject) => {
       this.subscriptions.add(
         this.postRequests.likePost(postId).subscribe({
-          next: () => {},
+          next: () => { },
           error: (error) => {
             console.log(error);
             reject(error);
@@ -342,13 +339,34 @@ export class PostModalComponent {
     );
   }
 
+  startEditPost() {
+    this.mainState.openedPost.update((prevPost) => ({
+      ...prevPost,
+      isEditing: true,
+    }));
+
+    this.editPostFormGroup.patchValue({
+      title: this.title(),
+      text: this.text(),
+      tags: this.tags(),
+    });
+  }
+
+  cancelEditMode() {
+    this.mainState.openedPost.update((prevPost) => ({
+      ...prevPost,
+      isEditing: false,
+    }));
+  }
+
+  //TODO : fixing prepopulating 
   async onSubmitEdit(): Promise<void> {
     const isTitleToxic = await this.toxicityService.checkToxicText(
       this.editPostFormGroup.get('title')!.value
     );
 
     if (isTitleToxic) {
-      this.resetPost();
+      this.cancelEditMode();
       return;
     }
 
@@ -357,19 +375,18 @@ export class PostModalComponent {
     );
 
     if (isTextToxic) {
-      this.resetPost();
+      this.cancelEditMode();
       return;
     }
 
     const formData = this.editPostFormGroup?.value;
 
+    console.log(formData);
+
     this.subscriptions.add(
       this.postRequests.editPost(this.postId(), formData).subscribe({
         next: (response) => {
-          this.mainState.openedPost.update((prevPost) => ({
-            ...prevPost,
-            isEditing: false,
-          }));
+          this.cancelEditMode();
 
           // this.mainState.addNewPostToFeed(response.fetchedNewPost);
         },

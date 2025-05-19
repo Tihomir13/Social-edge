@@ -63,7 +63,11 @@ export class PostsRequestsService {
   }
 
   editPost(postId: string, formData: FormData): Observable<any> {
-    return this.http.patch(`${api}/posts/edit/${postId}`, formData, {
+
+    console.log(postId, formData);
+    
+
+    return this.http.patch(`${api}/posts/edit${postId}`, formData, {
       headers: this.utility.headers,
     });
   }
