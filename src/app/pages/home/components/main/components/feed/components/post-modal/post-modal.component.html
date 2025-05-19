@@ -170,19 +170,21 @@
             type="textarea"
             rows="3"
             class="form-control textarea mb-3"
+            formControlName="title"
           >
           </textarea>
           } @else {
           <div class="title-container">
             <h5 class="title">
-              {{ title() }}
+              {{ this.mainState.openedPost().title }}
             </h5>
           </div>
-          } } @if(text()) { @if(mainState.openedPost().isEditing) {
+          } } @if(this.mainState.openedPost().text) { @if(mainState.openedPost().isEditing) {
           <textarea
             type="textarea"
             rows="10"
             class="form-control textarea mb-3"
+             formControlName="text"
           >
           </textarea>
           } @else {
@@ -193,13 +195,13 @@
               [class.expanded]="!isCollapsed"
             >
               {{
-                isCollapsed && text().length > 75
-                  ? (text() | slice : 0 : 75) + "..."
-                  : text()
+                isCollapsed && this.mainState.openedPost().text.length > 75
+                  ? (this.mainState.openedPost().text | slice : 0 : 75) + "..."
+                  : this.mainState.openedPost().text
               }}
             </p>
 
-            @if (text().length > 100) {
+            @if (this.mainState.openedPost().title.length > 100) {
             <span (click)="toggleReadMore()" class="read-more">
               {{ isCollapsed ? "more" : "less" }}
             </span>

@@ -182,7 +182,7 @@ export class PostModalComponent {
     return new Promise((_, reject) => {
       this.subscriptions.add(
         this.postRequests.likePost(postId).subscribe({
-          next: () => { },
+          next: () => {},
           error: (error) => {
             console.log(error);
             reject(error);
@@ -359,7 +359,7 @@ export class PostModalComponent {
     }));
   }
 
-  //TODO : fixing prepopulating 
+  //TODO : fixing prepopulating
   async onSubmitEdit(): Promise<void> {
     const isTitleToxic = await this.toxicityService.checkToxicText(
       this.editPostFormGroup.get('title')!.value
@@ -379,6 +379,15 @@ export class PostModalComponent {
       return;
     }
 
+    for (const tag of this.tagsArr.controls) {
+      const isTagToxic = await this.toxicityService.checkToxicText(tag.value);
+
+      if (isTagToxic) {
+        this.cancelEditMode();
+        return;
+      }
+    }
+
     const formData = this.editPostFormGroup?.value;
 
     console.log(formData);
@@ -389,6 +398,28 @@ export class PostModalComponent {
           this.cancelEditMode();
 
           // this.mainState.addNewPostToFeed(response.fetchedNewPost);
+
+          this.mainState.openedPost.update((prevPost) => ({
+            ...prevPost,
+            title: formData.title,
+            text: formData.text,
+            tags: formData.tags,
+          }));
+
+          this.mainState.posts.update((posts) =>
+            posts.map((post) => {
+              if (post._id === this.postId()) {
+                return {
+                  ...post,
+                  title: formData.title,
+                  text: formData.text,
+                  tags: formData.tags,
+                };
+              } else {
+                return post;
+              }
+            })
+          );
         },
         error: (error) => {
           console.error('Error saving post', error);
