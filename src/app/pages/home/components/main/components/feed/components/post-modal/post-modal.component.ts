@@ -182,7 +182,25 @@ export class PostModalComponent {
     return new Promise((_, reject) => {
       this.subscriptions.add(
         this.postRequests.likePost(postId).subscribe({
-          next: () => {},
+          next: () => {
+            console.log(this.isLikedByCurrUser$());
+
+            console.log(this.mainState.posts());
+            this.mainState.posts.update((posts) =>
+              posts.map((post) => {
+                if (post._id === this.postId()) {
+                  return {
+                    ...post,
+                    isLiked: !this.isLikedByCurrUser$(),
+                  };
+                } else {
+                  return post;
+                }
+                
+              })
+            );
+            console.log(this.mainState.posts());
+          },
           error: (error) => {
             console.log(error);
             reject(error);
