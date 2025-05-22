@@ -64,10 +64,28 @@ export class CommentComponent {
 
   async commentLikeDislike(): Promise<void> {
     try {
-
       await this.postRequests
         .likeComment(this.postId()!, this.commentId()!)
         .toPromise();
+
+      this.mainState.posts.update((posts) =>
+        posts.map((post) => {
+          if (post._id !== this.postId()) return post;
+          return {
+            ...post,
+            comments: post.comments.map((comment: any) => {
+              if (comment.id === this.commentId()) {
+                return {
+                  ...comment,
+                  isLiked: this.isLiked,
+                  totalLikes: this.totalLikes,
+                };
+              }
+              return comment;
+            }),
+          };
+        })
+      );
     } catch (error) {
       console.error(error);
     }

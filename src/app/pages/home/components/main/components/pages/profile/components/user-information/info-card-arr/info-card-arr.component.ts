@@ -1,7 +1,6 @@
 import { Component, inject, input } from '@angular/core';
 
 import { ProfileStateService } from '../../../services/profile-state.service';
-import { ShortenMonthPipe } from '../../../../../../../../../shared/pipes/shorten-month.pipe';
 
 @Component({
   selector: 'app-info-card-arr',
