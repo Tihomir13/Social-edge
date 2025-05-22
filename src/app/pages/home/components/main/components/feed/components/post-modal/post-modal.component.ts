@@ -189,14 +189,17 @@ export class PostModalComponent {
             this.mainState.posts.update((posts) =>
               posts.map((post) => {
                 if (post._id === this.postId()) {
+                  const wasLiked = post.isLiked;
                   return {
                     ...post,
-                    isLiked: !this.isLikedByCurrUser$(),
+                    isLiked: !wasLiked,
+                    totalLikes: wasLiked
+                      ? post.totalLikes - 1
+                      : post.totalLikes + 1,
                   };
                 } else {
                   return post;
                 }
-                
               })
             );
             console.log(this.mainState.posts());

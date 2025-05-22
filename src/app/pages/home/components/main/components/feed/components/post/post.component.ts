@@ -40,7 +40,7 @@ import { TimeAgoPipe } from '../../../../../../../../shared/pipes/time-ago.pipe'
     OptionsMenuComponent,
     CustomModalComponent,
     ShareModalComponent,
-    TimeAgoPipe
+    TimeAgoPipe,
   ],
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss',
@@ -101,8 +101,13 @@ export class PostComponent implements OnInit, OnDestroy {
   utilityService = inject(UtilitySessionService);
   formBuilder = inject(FormBuilder);
 
-  ngOnInit(): void {
+  ngOnChanges() {
+    this.totalLikes = this.totalLikes$();
     this.isLiked = this.isLikedByCurrUser$();
+  }
+
+  ngOnInit(): void {
+    // this.isLiked = this.isLikedByCurrUser$();
     this.totalLikes = this.totalLikes$();
 
     this.commentFormGroup = new GenerateCommentForm(

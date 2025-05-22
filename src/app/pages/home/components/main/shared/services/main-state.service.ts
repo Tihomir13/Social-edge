@@ -36,6 +36,14 @@ export class MainStateService {
     this.posts.set(posts);
   }
 
+  updatePost(postId: string, updatedPost: any) {
+    this.posts.update((currentPosts) =>
+      currentPosts.map((post) =>
+        post._id === postId ? { ...post, ...updatedPost } : post
+      )
+    );
+  }
+
   setFriends(friends: any): void {
     this.friends.set(friends);
   }
