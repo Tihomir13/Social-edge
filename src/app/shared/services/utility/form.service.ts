@@ -17,11 +17,11 @@ export class FormService {
     selectedYear?: number
   ): FormGroup {
     return this.formBuilder.group({
+      username: this.formBuilder.control('', [Validators.required]),
       name: this.formBuilder.group({
         firstName: this.formBuilder.control('', [Validators .required]),
         lastName: this.formBuilder.control('', [Validators.required]),
       }),
-      username: this.formBuilder.control('', [Validators.required]),
       birthday: this.formBuilder.group({
         day: this.formBuilder.control(selectedDay, [Validators.required]),
         month: this.formBuilder.control(selectedMonth, [Validators.required]),
