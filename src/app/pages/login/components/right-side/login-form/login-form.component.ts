@@ -5,8 +5,9 @@ import { Router, RouterModule } from '@angular/router';
 import { LoginRequestsService } from '../../../services/login-requests.service';
 import { LoginFormService } from '../../../services/login-form.service';
 import { LoadingSpinnerComponent } from '../../../../../shared/components/loading-spinner/loading-spinner.component';
-import { StoragesService } from '../../../../home/shared/services/storages.service';
+
 import { UtilitySessionService } from '../../../../../shared/services/utility/utility.service';
+import { size } from '../../../../../shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-login-form',
@@ -20,13 +21,14 @@ export class LoginFormComponent implements OnInit {
   isLoading: boolean = false;
   isErrorMsgShowed = false;
   errorMsg: string = '';
+  size = size;
 
   loginForm!: FormGroup;
 
   formService = inject(LoginFormService);
   reqService = inject(LoginRequestsService);
   router = inject(Router);
-  storage = inject(StoragesService);
+  storage = inject(UtilitySessionService);
   utilitySessionStorage = inject(UtilitySessionService);
 
   ngOnInit(): void {

@@ -18,6 +18,7 @@ import { FriendListComponent } from './pages/home/components/main/components/fri
 import { mobileGuard } from './shared/guards/mobile.guard';
 import { PeopleComponent } from './pages/home/components/main/components/pages/people/people.component';
 import { BlankComponent } from './pages/blank/blank.component';
+import { ProfileSettingsComponent } from './pages/home/components/main/components/pages/profile-settings/profile-settings.component';
 
 export const routes: Routes = [
   {
@@ -68,6 +69,7 @@ export const routes: Routes = [
       },
       { path: 'people', component: PeopleComponent },
       { path: 'search', component: SearchComponent },
+      { path: 'profile-settings', component: ProfileSettingsComponent },
       {
         path: 'friends',
         component: FriendListComponent,

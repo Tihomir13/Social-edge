@@ -108,7 +108,7 @@ export class ProfileComponent implements OnInit {
   }
 
   options(): void {
-    // this.router.navigate(['/']);
+    this.router.navigate(['/profile-settings']);
     // this.utilitySession.resetSession();
   }
 

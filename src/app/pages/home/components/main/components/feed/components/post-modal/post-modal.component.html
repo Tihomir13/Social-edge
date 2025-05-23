@@ -1,63 +1,74 @@
-<div class="container-fluid px-0">
+<div class="container-fluid position-relative px-0">
   <div class="row m-0">
     <div class="post-modal-container px-0 d-flex">
       @if(images().length > 0) {
       <div class="images-container">
         @if(isOnMobile) {
-          
+        <div
+          class="header p-2 d-flex align-items-center justify-content-between"
+        >
+          <div
+            class="return-arrow-container d-flex justify-content-center align-items-center"
+            (click)="this.mainState.closePost()"
+          >
+            <img
+              width="25px"
+              height="25px"
+              src="assets/icons/chevron-left-grey.svg"
+              alt="return arrow"
+            />
+          </div>
 
-          <div class="header p-2 d-flex align-items-center justify-content-between">
-            <div class="return-arrow-container d-flex justify-content-center align-items-center" (click)="this.mainState.closePost();">
-              <img width="25px" height="25px" src="assets/icons/chevron-left-grey.svg" alt="return arrow">
+          <div class="d-flex gap-10px">
+            <div
+              class="profile-icon-container"
+              (click)="navigateToAuthorProfile()"
+            >
+              <img
+                width="55"
+                height="55"
+                class="profile-image"
+                [src]="
+                  authorProfileImg()
+                    ? authorProfileImg().src
+                    : mainState.defaultProfileImg
+                "
+                alt=""
+              />
             </div>
 
-            <div class="d-flex gap-10px">
-              <div
-                class="profile-icon-container"
-                (click)="navigateToAuthorProfile()"
-              >
-                <img
-                  width="55"
-                  height="55"
-                  class="profile-image"
-                  [src]="
-                    authorProfileImg()
-                      ? authorProfileImg().src
-                      : mainState.defaultProfileImg
-                  "
-                  alt=""
-                />
-              </div>
-
+            <div class="d-flex flex-column">
               <span
                 class="username-container"
                 (click)="navigateToAuthorProfile()"
               >
                 {{ username() }}
               </span>
-            </div>
 
-            <div class="options-container">
-              <img
-                class="icon"
-                src="assets/icons/more.svg"
-                alt=""
-                (click)="toggleOptionsMenu()"
-              />
-
-              @if(isOptionsClicked) {
-              <app-options-menu
-                class="post-options-menu"
-                (deletePost)="isDeletionModalOpened = true"
-                [isAuthor]="
-                  this.utilityService.userInfo.username === username()
-                "
-              />
-              }
+              <span>
+                {{ date() | timeAgo }}
+              </span>
             </div>
           </div>
-        }
-        @for (image of images(); track $index) {
+
+          <!-- <div class="options-container">
+            <img
+              class="icon"
+              src="assets/icons/more.svg"
+              alt=""
+              (click)="toggleOptionsMenu()"
+            />
+
+            @if(isOptionsClicked) {
+            <app-options-menu
+              class="post-options-menu"
+              (deletePost)="isDeletionModalOpened = true"
+              [isAuthor]="this.utilityService.userInfo.username === username()"
+            />
+            }
+          </div> -->
+        </div>
+        } @for (image of images(); track $index) {
         <div
           class="image-wrapper"
           [class.active]="currentImageIndex === $index"
@@ -105,7 +116,7 @@
         class="right-side d-flex flex-column justify-content-between"
         [class.w-100]="images().length === 0"
       >
-        <div>
+        <form class="scrollable-content" [formGroup]="editPostFormGroup" (ngSubmit)="onSubmitEdit()">
           @if(!isOnMobile) {
           <div class="header d-flex align-items-center justify-content-between">
             <div class="d-flex gap-10px">
@@ -146,6 +157,7 @@
               <app-options-menu
                 class="post-options-menu"
                 (deletePost)="isDeletionModalOpened = true"
+                (editPost)="startEditPost()"
                 [isAuthor]="
                   this.utilityService.userInfo.username === username()
                 "
@@ -153,13 +165,29 @@
               }
             </div>
           </div>
-          } @if(title()) {
+          } @if(title()) { @if(mainState.openedPost().isEditing) {
+          <textarea
+            type="textarea"
+            rows="3"
+            class="form-control textarea mb-3"
+            formControlName="title"
+          >
+          </textarea>
+          } @else {
           <div class="title-container">
             <h5 class="title">
-              {{ title() }}
+              {{ this.mainState.openedPost().title }}
             </h5>
           </div>
-          } @if(text()) {
+          } } @if(this.mainState.openedPost().text) { @if(mainState.openedPost().isEditing) {
+          <textarea
+            type="textarea"
+            rows="10"
+            class="form-control textarea mb-3"
+             formControlName="text"
+          >
+          </textarea>
+          } @else {
           <div class="text-container">
             <p
               class="text"
@@ -167,26 +195,74 @@
               [class.expanded]="!isCollapsed"
             >
               {{
-                isCollapsed && text().length > 75
-                  ? (text() | slice : 0 : 75) + "..."
-                  : text()
+                isCollapsed && this.mainState.openedPost().text.length > 75
+                  ? (this.mainState.openedPost().text | slice : 0 : 75) + "..."
+                  : this.mainState.openedPost().text
               }}
             </p>
 
-            @if (text().length > 100) {
+            @if (this.mainState.openedPost().title.length > 100) {
             <span (click)="toggleReadMore()" class="read-more">
               {{ isCollapsed ? "more" : "less" }}
             </span>
             }
           </div>
-          } @if(tags().length > 0) {
+          } } @if(tags().length > 0) { @if (mainState.openedPost().isEditing) {
+          <div class="tags-container-edit d-flex" formArrayName="tags">
+            <div class="add-tag-container d-flex">
+              <input
+                #newTag
+                class="form-control"
+                type="text"
+                placeholder="add a tag"
+              />
+              <button
+                type="button"
+                class="add-tag-btn"
+                (click)="onAddTag(newTag.value); newTag.value = ''"
+              >
+                <img
+                  class="add-tag-img"
+                  src="./assets/icons/plus.svg"
+                  alt="add tag icon"
+                />
+              </button>
+            </div>
+
+            @for (tag of tagsArr.value; track $index) {
+            <span
+              class="tag-edit d-flex align-items-center justify-content-center"
+              (click)="onRemoveTag($index)"
+              >{{ tag }}
+
+              <span class="delete-icon fs-3">✖</span>
+            </span>
+            }
+          </div>
+          } @else {
           <div class="tags-container">
             @for (tag of tags(); track $index) {
             <span class="tag"> {{ tag }}</span>
             }
           </div>
-          }
+          } }
 
+
+          @if(mainState.openedPost().isEditing) {
+            <div class="btn-container d-flex justify-content-between mt-5">
+              <button type="button" class="btn btn-cancel" (click)="cancelEditMode()">
+                Cancel
+              </button>
+              
+              <button
+              type="submit"
+              class="btn"
+              >
+              Save
+            </button>
+          </div>
+          }
+          
           <div
             class="interactions-container d-flex justify-content-between mb-1"
           >
@@ -200,11 +276,6 @@
                       : 'assets/icons/sparkle.png'
                   "
                   (click)="toggleLike()"
-                />
-                <img
-                  class="interaction-icon"
-                  src="assets/icons/comment-black.svg"
-                  alt=""
                 />
                 <img
                   class="interaction-icon"
@@ -234,7 +305,7 @@
 
           <div class="comments-container">
             @for (comment of comments(); track $index) {
-              <app-comment
+            <app-comment
               [postId]="postId()"
               [commentId]="comment._id"
               [username]="comment.author.username"
@@ -244,9 +315,9 @@
               [initialTotalLikes]="comment.totalLikes"
               [date]="comment.createdAt"
             ></app-comment>
-            } @if (totalCommentsCount() > 2) {
+            } @if (totalCommentsCount() < comments().length) {
             <div
-              class="view-more-btn mt-3 d-flex justify-content-center align-items-center"
+              class="view-more-btn my-3 mb-md-0 d-flex justify-content-center align-items-center"
               (click)="showMoreComments()"
             >
               <span
@@ -256,8 +327,9 @@
             </div>
             }
           </div>
-        </div>
+        </form>
 
+        <!-- Add comment Form -->
         <div class="add-comment-container d-flex gap-10px">
           <div class="profile-icon-container">
             <img
@@ -307,21 +379,18 @@
       </div>
     </div>
   </div>
-</div>
 
-@if(isDeletionModalOpened) {
-<div class="modal-overlay">
-  <div class="modal-container">
-    <app-custom-modal
-      (clickedOption)="onChoseOptionProfile($event)"
-      [title]="'You are about to delete current post'"
-      [options]="modalOptions"
-    ></app-custom-modal>
+  @if(isDeletionModalOpened) {
+  <div class="modal-overlay">
+    <div class="modal-container">
+      <app-custom-modal
+        (clickedOption)="onChoseOptionProfile($event)"
+        [title]="'You are about to delete current post'"
+        [options]="modalOptions"
+      ></app-custom-modal>
+    </div>
   </div>
-</div>
-}
-
-@if(isShareModalOpened) {
+  } @if(isShareModalOpened) {
   <div class="modal-overlay">
     <div class="modal-container">
       <app-share-modal
@@ -332,4 +401,4 @@
     </div>
   </div>
   }
-  
+</div>

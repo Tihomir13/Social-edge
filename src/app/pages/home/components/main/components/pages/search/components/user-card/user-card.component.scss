@@ -37,11 +37,12 @@
   }
 
   .request-btn {
+    border-color: red;
     background-color: transparent;
-    border-color: styles.$primary-purple;
-    color: styles.$primary-purple;
+    color: red;
 
     &:hover {
+      background-color: red;
       color: white;
     }
   }

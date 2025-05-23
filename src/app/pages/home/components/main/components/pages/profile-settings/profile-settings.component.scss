@@ -1,0 +1,115 @@
+@use "../../../../../../../../styles.scss" as *;
+
+h1 {
+  margin-bottom: 44px;
+}
+
+select {
+  cursor: pointer;
+  outline: none;
+}
+
+.edit-profile-container {
+  max-width: 1000px;
+  margin: 0px auto;
+
+  margin-bottom: 100px;
+
+  .form {
+    max-width: 542px;
+    width: 100%;
+
+    .username-input-container {
+      max-width: 260px;
+      width: 100%;
+    }
+
+    .form-control {
+      height: 55px;
+      border-radius: $border-radius;
+
+      &:focus {
+        outline: none;
+        box-shadow: none;
+      }
+    }
+
+    .semi-width-control {
+      max-width: 260px;
+      width: 100%;
+    }
+
+    .full-width-control {
+      max-width: 542px;
+      width: 100%;
+    }
+
+    .dropdown {
+      width: 80px;
+      height: 55px;
+      border-radius: $border-radius;
+      text-align: center;
+      border-color: $light-gray;
+    }
+
+    .btn {
+      max-width: 260px;
+      height: 55px;
+      border-radius: $border-radius;
+      width: 100%;
+
+      color: rgb(255, 255, 255);
+      background-color: $primary-purple;
+      box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+      transition: 0.3s;
+
+      &:hover {
+        background-color: $dark-purple;
+      }
+    }
+
+    .has-acc-text {
+      font-weight: bold;
+      text-decoration: none;
+      color: $primary-purple;
+    }
+
+    .invalid-message {
+      color: rgb(220, 0, 0);
+    }
+
+    .success-message {
+      color: rgb(255, 255, 255);
+      border-radius: $border-radius;
+      padding: 11px
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .edit-profile-container {
+    padding: 20px 0px 20px 0px;
+    height: auto;
+
+    .form {
+      max-width: 360px;
+      width: 100%;
+
+      .username-input-container,
+      .semi-width-control,
+      .full-width-control {
+        max-width: 360px;
+        width: 100%;
+      }
+
+      .dropdown {
+        width: 113.33px;
+      }
+
+      .btn {
+        max-width: 360px;
+        width: 100%;
+      }
+    }
+  }
+}
