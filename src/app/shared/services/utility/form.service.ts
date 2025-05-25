@@ -11,33 +11,37 @@ export class FormService {
 
   formBuilder = inject(FormBuilder);
 
-  createEditProfileFormGroup(
-    selectedDay?: number,
-    selectedMonth?: number,
-    selectedYear?: number
-  ): FormGroup {
+  createEditProfileFormGroup(): FormGroup {
     return this.formBuilder.group({
       username: this.formBuilder.control('', [Validators.required]),
       name: this.formBuilder.group({
-        firstName: this.formBuilder.control('', [Validators .required]),
+        firstName: this.formBuilder.control('', [Validators.required]),
         lastName: this.formBuilder.control('', [Validators.required]),
       }),
       birthday: this.formBuilder.group({
-        day: this.formBuilder.control(selectedDay, [Validators.required]),
-        month: this.formBuilder.control(selectedMonth, [Validators.required]),
-        year: this.formBuilder.control(selectedYear, [Validators.required]),
+        day: this.formBuilder.control(1, [Validators.required]),
+        month: this.formBuilder.control(0, [Validators.required]),
+        year: this.formBuilder.control(2000, [Validators.required]),
       }),
       email: this.formBuilder.control('', [
         Validators.required,
         Validators.email,
       ]),
+    });
+  }
+
+  createPasswordChangeFormGroup(): FormGroup {
+    return this.formBuilder.group({
       passwords: this.formBuilder.group(
         {
-          password: this.formBuilder.control('', [
+          oldPassword: this.formBuilder.control('', [Validators.required]),
+          newPassword: this.formBuilder.control('', [
             Validators.required,
             Validators.minLength(8),
           ]),
-          confirmPassword: this.formBuilder.control('', [Validators.required]),
+          confirmNewPassword: this.formBuilder.control('', [
+            Validators.required,
+          ]),
         },
         { validators: passwordMatchValidator() }
       ),

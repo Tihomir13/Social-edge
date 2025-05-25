@@ -115,6 +115,10 @@ export class ProfileRequestsService {
     );
   }
 
+  getProfileSettings(): Observable<any> {
+    return this.http.get(`${api}/profiles/profile-settings`, this.headers);
+  }
+
   getProfileImage(): Observable<any> {
     return this.http.get(`${api}/profiles/profile-image`, this.headers);
   }

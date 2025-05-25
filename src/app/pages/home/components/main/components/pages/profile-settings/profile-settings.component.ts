@@ -1,22 +1,31 @@
 import { Component, inject } from '@angular/core';
 import { ShortenMonthPipe } from '../../../../../../../shared/pipes/shorten-month.pipe';
-import { AbstractControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  AbstractControl,
+  FormGroup,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { FormService } from '../../../../../../../shared/services/utility/form.service';
+import { Subscription } from 'rxjs';
+import { ProfileRequestsService } from '../profile/services/profile-requests.service';
+import { Router } from '@angular/router';
+
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faLock } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-profile-settings',
-  imports: [ShortenMonthPipe, ReactiveFormsModule],
+  imports: [ShortenMonthPipe, ReactiveFormsModule, FontAwesomeModule],
   templateUrl: './profile-settings.component.html',
   styleUrl: './profile-settings.component.scss',
 })
 export class ProfileSettingsComponent {
-  formService = inject(FormService);
+  lockIcon = faLock;
 
   editProfileFormGroup!: FormGroup;
-  onSubmit() {
-    throw new Error('Method not implemented.');
-  }
   date: Date = new Date();
+  subscriptions: Subscription = new Subscription();
+
   months: string[] = [
     'January',
     'February',
@@ -46,33 +55,45 @@ export class ProfileSettingsComponent {
   isDateValid = true;
   isUserRegistered = false;
 
-    get firstNameControl(): AbstractControl | null {
-      return this.editProfileFormGroup.get('name.firstName');
-    }
-  
-    get lastNameControl(): AbstractControl | null {
-      return this.editProfileFormGroup.get('name.lastName');
-    }
-  
-    get birthdayGroup(): AbstractControl | null {
-      return this.editProfileFormGroup.get('birthday');
-    }
-  
-    get emailControl(): AbstractControl | null {
-      return this.editProfileFormGroup.get('email');
-    }
-  
-    get passwordGroupControl(): AbstractControl | null {
-      return this.editProfileFormGroup.get('passwords');
-    }
-  
-    get passwordControl(): AbstractControl | null {
-      return this.editProfileFormGroup.get('passwords.password');
-    }
-  
-    get confirmPasswordControl(): AbstractControl | null {
-      return this.editProfileFormGroup.get('passwords.confirmPassword');
-    }
+  get firstNameControl(): AbstractControl | null {
+    return this.editProfileFormGroup.get('name.firstName');
+  }
+
+  get lastNameControl(): AbstractControl | null {
+    return this.editProfileFormGroup.get('name.lastName');
+  }
+
+  get birthdayGroup(): AbstractControl | null {
+    return this.editProfileFormGroup.get('birthday');
+  }
+
+  // get selectedDay(): number {
+  //   return this.birthdayGroup?.value.day;
+  // }
+
+  // get selectedMonth(): number {
+  //   return this.birthdayGroup?.value.month;
+  // }
+
+  // get selectedYear(): number {
+  //   return this.birthdayGroup?.value.month;
+  // }
+
+  get emailControl(): AbstractControl | null {
+    return this.editProfileFormGroup.get('email');
+  }
+
+  get passwordGroupControl(): AbstractControl | null {
+    return this.editProfileFormGroup.get('passwords');
+  }
+
+  get passwordControl(): AbstractControl | null {
+    return this.editProfileFormGroup.get('passwords.password');
+  }
+
+  get confirmPasswordControl(): AbstractControl | null {
+    return this.editProfileFormGroup.get('passwords.confirmPassword');
+  }
 
   get isEmailValid(): boolean | undefined {
     return (
@@ -82,8 +103,19 @@ export class ProfileSettingsComponent {
     );
   }
 
+  formService = inject(FormService);
+  profileRequestsService = inject(ProfileRequestsService);
+  router = inject(Router);
+
+  ngOnChanges(): void {
+    this.adjustSelectedDay();
+  }
+
   ngOnInit(): void {
     this.editProfileFormGroup = this.formService.createEditProfileFormGroup();
+    this.getProfileSettings();
+
+    console.log(this.editProfileFormGroup.get('birthday')?.value);
   }
 
   getDaysInMonth(): number[] {
@@ -126,5 +158,46 @@ export class ProfileSettingsComponent {
       today.getMonth() === month &&
       today.getFullYear() === year
     );
+  }
+
+  getProfileSettings() {
+    this.subscriptions.add(
+      this.profileRequestsService.getProfileSettings().subscribe({
+        next: (response) => {
+          console.log(response);
+
+          this.editProfileFormGroup.patchValue({
+            username: response.profileSettings.username,
+            name: {
+              firstName: response.profileSettings.name.firstName,
+              lastName: response.profileSettings.name.lastName,
+            },
+            email: response.profileSettings.email,
+            birthday: {
+              day: response.profileSettings.birthday.day,
+              month: response.profileSettings.birthday.month,
+              year: response.profileSettings.birthday.year,
+            },
+          });
+
+          this.selectedDay = response.profileSettings.birthday.day;
+          this.selectedMonth = response.profileSettings.birthday.month;
+          this.selectedYear = response.profileSettings.birthday.year;
+
+          console.log(this.editProfileFormGroup.get('birthday')?.value);
+        },
+        error: (error) => {
+          console.error('Error fetching profile settings:', error);
+        },
+      })
+    );
+  }
+
+  navigateToSecurity() {
+    this.router.navigate(['/settings/security']);
+  }
+
+  onSubmit() {
+    throw new Error('Method not implemented.');
   }
 }

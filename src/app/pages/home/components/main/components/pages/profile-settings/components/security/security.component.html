@@ -1,0 +1,49 @@
+<div class="edit-profile-container">
+  <h1 class="px-2 my-3">Security settings</h1>
+
+  <div class="back fs-5" (click)="navigateBack()">
+      <fa-icon [icon]="backwardIcon"></fa-icon> Back
+  </div>
+
+  <div class="row mt-5">
+    <form class="form">
+      <label class="text-secondary" for="passwords">Change password</label>
+      <div
+        id="passwords"
+        class="d-flex flex-column gap-3"
+        formGroupName="passwords"
+      >
+        <input
+          class="form-control"
+          type="password"
+          placeholder="Old password*"
+          autocomplete="new-password"
+          formControlName="password"
+        />
+
+        <input
+          class="form-control"
+          type="password"
+          placeholder="Password*"
+          autocomplete="new-password"
+          formControlName="password"
+        />
+
+        <input
+          class="form-control"
+          type="password"
+          placeholder="Confirm password*"
+          autocomplete="new-password"
+          formControlName="confirmPassword"
+        />
+
+        <!-- @if (isConfirmPassValid) {
+            <div class="invalid-message mb-22px">
+              Invalid Password. Please enter password with 8 characters and include
+              at least one uppercase letter, one number, and one special character
+            </div>
+            } -->
+      </div>
+    </form>
+  </div>
+</div>
