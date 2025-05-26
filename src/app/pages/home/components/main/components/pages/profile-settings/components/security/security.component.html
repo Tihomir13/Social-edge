@@ -2,11 +2,11 @@
   <h1 class="px-2 my-3">Security settings</h1>
 
   <div class="back fs-5" (click)="navigateBack()">
-      <fa-icon [icon]="backwardIcon"></fa-icon> Back
+    <fa-icon [icon]="backwardIcon"></fa-icon> Back
   </div>
 
   <div class="row mt-5">
-    <form class="form">
+    <form class="form" (ngSubmit)="onSubmit()" [formGroup]="passwordFormGroup">
       <label class="text-secondary" for="passwords">Change password</label>
       <div
         id="passwords"
@@ -17,16 +17,16 @@
           class="form-control"
           type="password"
           placeholder="Old password*"
-          autocomplete="new-password"
-          formControlName="password"
+          autocomplete="current-password"
+          formControlName="oldPassword"
         />
 
         <input
           class="form-control"
           type="password"
-          placeholder="Password*"
+          placeholder="New password*"
           autocomplete="new-password"
-          formControlName="password"
+          formControlName="newPassword"
         />
 
         <input
@@ -34,15 +34,18 @@
           type="password"
           placeholder="Confirm password*"
           autocomplete="new-password"
-          formControlName="confirmPassword"
+          formControlName="confirmNewPassword"
         />
 
-        <!-- @if (isConfirmPassValid) {
-            <div class="invalid-message mb-22px">
-              Invalid Password. Please enter password with 8 characters and include
-              at least one uppercase letter, one number, and one special character
-            </div>
-            } -->
+        @if (!isPasswordValid) {
+        <div class="invalid-message mb-22px">
+          Invalid Password. Min 8 characters and include at least one uppercase
+          letter, one number, and one special character
+        </div>
+        }
+        <div>
+          <button type="submit" class="btn">Save</button>
+        </div>
       </div>
     </form>
   </div>

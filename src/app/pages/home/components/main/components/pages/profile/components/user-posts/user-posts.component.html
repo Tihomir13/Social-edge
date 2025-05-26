@@ -4,7 +4,7 @@
       <app-loading-spinner classes="text-dark" [size]="enumLoadingSpinnerSize.large"></app-loading-spinner> 
     </div>
   }
-  @else { 
+  @else {
     @for (post of posts(); track $index) {
       <app-post
       [username]="post.author.username"
@@ -21,6 +21,12 @@
       [totalLikes$]="post.totalLikes"
       [isLikedByCurrUser$]="post.isLiked"
       />
+    }
+
+    @if(posts()!.length === 0) {
+      <div class="text-center mt-5">
+        <h4 class="text-secondary">No posts yet</h4>
+      </div>
     }
   }
 </div>

@@ -23,6 +23,8 @@ export class MainStateService {
   notifications = signal<any[]>([]);
   userProfileImg = signal<any>(this.defaultProfileImg);
 
+  settingsOriginalInfo = signal<any>(null);
+
   isLoading = signal({
     posts: true,
     friends: true,
@@ -93,7 +95,7 @@ export class MainStateService {
         if (post._id === postId) {
           return {
             ...post,
-            comments: [newComment, ...(post.comments || []) ],
+            comments: [newComment, ...(post.comments || [])],
             commentsCount: post.commentsCount + 1,
           };
         } else {

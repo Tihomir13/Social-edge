@@ -17,9 +17,9 @@
           formControlName="username"
         />
 
-        <!-- @if (isUsernameExists) {
+        @if (isUsernameExists) {
         <div class="invalid-message mb-22px">Username is already taken!</div>
-        } -->
+        }
       </div>
 
       <div>
@@ -79,12 +79,11 @@
           </select>
         </div>
 
-        <!-- @if (!isDateValid) {
+        @if (!isDateValid) {
           <div class="invalid-message">The date is not valid!</div>
           } @if (isUserYounger) {
           <div class="invalid-message">You are too young!</div>
           }
-        </div> -->
       </div>
 
       <div>
@@ -98,19 +97,19 @@
         />
       </div>
 
-      <!-- @if (isEmailValid) {
+      @if (isEmailValid) {
       <div class="invalid-message mb-22px">Please enter a valid email!</div>
       } @if (isEmailExists) {
       <div class="invalid-message mb-22px">Email is already used!</div>
-      } -->
+      }
 
-      <button class="btn">Save Changes</button>
+      <button type="submit" class="btn">Save Changes</button>
 
-      <!-- @if(isUserRegistered) {
+      @if(isUserRegistered) {
       <div class="success-message bg-success mb-22px">
-        You registered successfully, please check your email.
+        Please check your email for confirmation
       </div>
-      } -->
+      }
       <div
         class="d-flex flex-column justify-content-start align-items-start mt-3"
       >
