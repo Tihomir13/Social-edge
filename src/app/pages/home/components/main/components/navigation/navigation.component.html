@@ -14,8 +14,12 @@
         <div class="selected-option-dash"></div>
         }
 
-        <img class="navigation-icon" [src]="item.icon" [alt]="item.label" />
-        <span class="label">{{ item.label }}</span>
+        <div class='d-flex align-items-center gap-1'>
+          <div class='icon-container d-flex align-items-center justify-content-center'>
+            <fa-icon class='fs-4' [icon]="item.icon"></fa-icon>
+          </div>
+          <span class="ms-2 label">{{ item.label }}</span>
+        </div>
       </li>
       }
     </ul>
