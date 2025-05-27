@@ -62,6 +62,16 @@ export class PostsRequestsService {
     });
   }
 
+  editPost(postId: string, formData: FormData): Observable<any> {
+
+    console.log(postId, formData);
+    
+
+    return this.http.patch(`${api}/posts/edit${postId}`, formData, {
+      headers: this.utility.headers,
+    });
+  }
+
   deletePost(postId: string): Observable<any> {
     return this.http.delete(`${api}/posts/delete${postId}`, {
       headers: this.utility.headers,

@@ -21,11 +21,12 @@ import { maxImageSize } from '../../../../../../../shared/constants/settings';
 import { MainStateService } from '../../../shared/services/main-state.service';
 import { NotificationsService } from '../../../../header/components/notifications-window/services/notifications.service';
 import { NsfwService } from '../../../../../shared/services/AI/nsfw.service';
-
+import { LoadingSpinnerComponent } from '../../../../../../../shared/components/loading-spinner/loading-spinner.component';
+import { size } from '../../../../../../../shared/components/loading-spinner/loading-spinner.component';
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [RouterOutlet, CustomModalComponent],
+  imports: [RouterOutlet, CustomModalComponent, LoadingSpinnerComponent],
   providers: [ProfileRequestsService],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
@@ -34,6 +35,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   fullName = '';
   userInfo: any;
   username: string | null = '';
+
+  enumLoadingSpinnerSize = size;
 
   profileImage = '';
   bannerImage = '';
@@ -45,10 +48,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
   isFriend!: boolean;
   isRequested!: boolean;
   isRequestedByRecipient!: boolean;
+  friendsCounter: number = 0;
 
   isModalProfilePhotoOpened = false;
   isModalBannerPhotoOpened = false;
   isModalRemoveFriendOpened = false;
+
+  isLoadingProfile = true;
 
   modalPhotoOptions = [
     {
@@ -123,7 +129,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
           this.isUserHasProfileImage(response.userData.profileImage);
           this.isUserHasBannerImage(response.userData.bannerImage);
 
-          console.log(response);
+          this.friendsCounter = response.userData.friends
+          this.isLoadingProfile = false;
         },
         error: (error) => {
           console.log(error);

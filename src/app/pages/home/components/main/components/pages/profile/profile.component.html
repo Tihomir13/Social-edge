@@ -1,4 +1,10 @@
 <div class="profile-container mb-4">
+  @if(isLoadingProfile) {
+    <div class="mt-5 text-center">
+      <app-loading-spinner classes="text-dark" [size]="enumLoadingSpinnerSize.large"></app-loading-spinner> 
+    </div>
+  }
+  @else {
   <div class="banner-container">
     <img class="banner-image" [src]="bannerImage" alt="Banner image"  (click)="openModalBannerPhotoChange()" />
     <img class="edit-image" src="assets/icons/profile-page/edit-image.svg" alt="Banner image" (click)="openModalBannerPhotoChange()" />
@@ -79,6 +85,10 @@
           {{ "@" + username }}
         </span>
       </h1>
+
+      <span class="text-center fs-5">
+        {{ "friends: " + friendsCounter }}
+      </span>
     </div>
 
     @if(!state.isProfileOwner() && !isFriend && !isRequested && !isRequestedByRecipient) {
@@ -113,10 +123,13 @@
       </div>
     }
   </div>
+  }
 </div>
 
 <div class="content">
-  <router-outlet></router-outlet>
+  <div [class.d-none]="isLoadingProfile">
+    <router-outlet></router-outlet>
+  </div>
 </div>
 
 @if (isModalProfilePhotoOpened) {

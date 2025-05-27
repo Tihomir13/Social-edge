@@ -115,11 +115,29 @@ export class ProfileRequestsService {
     );
   }
 
+  getProfileSettings(): Observable<any> {
+    return this.http.get(`${api}/profiles/profile-settings`, this.headers);
+  }
+
   getProfileImage(): Observable<any> {
     return this.http.get(`${api}/profiles/profile-image`, this.headers);
   }
 
   getSuggestedProfiles(): Observable<any> {
     return this.http.get(`${api}/profiles/suggested-people`, this.headers);
+  }
+
+  editProfileSettings(formData: any): Observable<any> {
+    return this.http.patch(
+      `${api}/profiles/profile-settings`,
+      formData,
+      this.headers
+    );
+  }
+
+  changePassword(newData: any): Observable<any> {
+    return this.http.patch(`${api}/profiles/change-password`, newData, {
+      headers: this.utility.headers,
+    });
   }
 }

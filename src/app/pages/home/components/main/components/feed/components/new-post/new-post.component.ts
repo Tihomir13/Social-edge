@@ -22,7 +22,10 @@ import { NewPostRequestsService } from './services/new-post-requests.service';
 import { NewPostFormServiceService } from '../../../../../../shared/services/new-post-form-service.service';
 import { MainStateService } from '../../../../shared/services/main-state.service';
 import { CustomModalComponent } from '../../../../../../../../shared/components/custom-modal/custom-modal.component';
-import { LoadingSpinnerComponent } from '../../../../../../../../shared/components/loading-spinner/loading-spinner.component';
+import {
+  LoadingSpinnerComponent,
+  size,
+} from '../../../../../../../../shared/components/loading-spinner/loading-spinner.component';
 
 import { PostModel } from '../post/model/post.model';
 import { ToxicityService } from '../../../../../../shared/services/AI/toxicity.service';
@@ -48,6 +51,8 @@ export class NewPostComponent implements OnDestroy {
     return this.newPostFormService.newPostFormGroup()?.get('tags') as FormArray;
   }
 
+  loadingSize = size;
+
   isSubmitting: boolean = false;
   isImageLoading: boolean = false;
 
@@ -71,7 +76,7 @@ export class NewPostComponent implements OnDestroy {
 
   newPostFormService = inject(NewPostFormServiceService);
   toxicityService = inject(ToxicityService);
-    private nsfwService = inject(NsfwService);
+  private nsfwService = inject(NsfwService);
 
   subscriptions = new Subscription();
 
@@ -300,7 +305,14 @@ export class NewPostComponent implements OnDestroy {
 
     this.isSubmitting = true;
 
-    console.log(this.newPostFormService.newPostFormGroup().get('text')!.value);
+    const isTitleToxic = await this.toxicityService.checkToxicText(
+      this.newPostFormService.newPostFormGroup().get('title')!.value
+    );
+
+    if (isTitleToxic) {
+      this.resetPost();
+      return;
+    }
 
     const isTextToxic = await this.toxicityService.checkToxicText(
       this.newPostFormService.newPostFormGroup().get('text')!.value
@@ -309,6 +321,15 @@ export class NewPostComponent implements OnDestroy {
     if (isTextToxic) {
       this.resetPost();
       return;
+    }
+
+    for (const tag of this.tags.controls) {
+      const isTagToxic = await this.toxicityService.checkToxicText(tag.value);
+
+      if (isTagToxic) {
+        this.resetPost();
+        return;
+      }
     }
 
     const formData = this.newPostFormService.newPostFormGroup()?.value;

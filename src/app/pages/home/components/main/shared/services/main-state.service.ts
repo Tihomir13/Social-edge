@@ -23,6 +23,8 @@ export class MainStateService {
   notifications = signal<any[]>([]);
   userProfileImg = signal<any>(this.defaultProfileImg);
 
+  settingsOriginalInfo = signal<any>(null);
+
   isLoading = signal({
     posts: true,
     friends: true,
@@ -34,6 +36,14 @@ export class MainStateService {
 
   setPosts(posts: any): void {
     this.posts.set(posts);
+  }
+
+  updatePost(postId: string, updatedPost: any) {
+    this.posts.update((currentPosts) =>
+      currentPosts.map((post) =>
+        post._id === postId ? { ...post, ...updatedPost } : post
+      )
+    );
   }
 
   setFriends(friends: any): void {
@@ -79,13 +89,14 @@ export class MainStateService {
     this.posts.update((posts) => [newPost, ...posts]);
   }
 
-  addNewCommentToPost(postId: any, comment: any): void {
+  addNewCommentToPost(postId: any, newComment: any): void {
     this.posts.update((posts) =>
       posts.map((post) => {
         if (post._id === postId) {
           return {
             ...post,
-            comments: [...(post.comments || []), comment],
+            comments: [newComment, ...(post.comments || [])],
+            commentsCount: post.commentsCount + 1,
           };
         } else {
           return post;
@@ -97,7 +108,7 @@ export class MainStateService {
       this.openedPost.update((post) => {
         return {
           ...post,
-          comments: [...(post.comments || []), comment],
+          comments: [newComment, ...(post.comments || [])],
         };
       });
     }

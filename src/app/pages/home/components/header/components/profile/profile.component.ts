@@ -108,7 +108,9 @@ export class ProfileComponent implements OnInit {
   }
 
   options(): void {
-    // this.router.navigate(['/']);
+    this.renderer.removeClass(this.profileMenu.nativeElement, 'open');
+    this.renderer.removeClass(this.arrowImg.nativeElement, 'rotated');
+    this.router.navigate(['/settings']);
     // this.utilitySession.resetSession();
   }
 
