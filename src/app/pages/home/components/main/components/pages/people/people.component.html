@@ -1,6 +1,12 @@
 <div class="people-container">
   <h1 class="px-2 my-3">Suggested Profiles</h1>
 
+  @if(people().length === 0) {
+    <div class="text-center mt-5">
+      <h3 class="text-secondary">No profiles found</h3>
+    </div>
+  }
+
   <div class="flex-wrap d-flex gap-4">
     @for (user of people(); track $index) {
     <app-user-big-card [user]="user" class="mt-3" 
