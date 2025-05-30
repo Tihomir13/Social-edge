@@ -127,6 +127,10 @@ export class ProfileRequestsService {
     return this.http.get(`${api}/profiles/suggested-people`, this.headers);
   }
 
+  getUserFriends(username: any): Observable<any> {
+    return this.http.get(`${api}/profiles/${username}/friends`, this.headers);
+  }
+
   editProfileSettings(formData: any): Observable<any> {
     return this.http.patch(
       `${api}/profiles/profile-settings`,

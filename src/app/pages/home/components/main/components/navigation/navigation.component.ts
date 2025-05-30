@@ -3,22 +3,28 @@ import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
 import { UtilitySessionService } from '../../../../../../shared/services/utility/utility.service';
+
 import { filter, Subscription } from 'rxjs';
 
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faHouseChimney, faUserGroup, faUser, faComments, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 @Component({
   selector: 'app-navigation',
-  imports: [NgClass],
+  imports: [NgClass, FontAwesomeModule],
   templateUrl: './navigation.component.html',
   styleUrl: './navigation.component.scss',
 })
 export class NavigationComponent implements OnInit, OnDestroy {
+
+  homePageIcon = faHouseChimney;
+
   navItems = [
-    { label: 'Feed', icon: 'assets/icons/navigation/homepage.svg' },
-    { label: 'People', icon: 'assets/icons/navigation/people.svg' },
-    { label: 'Profile', icon: 'assets/icons/navigation/profile.svg' },
-    { label: 'Chat', icon: 'assets/icons/navigation/chat.svg' },
+    { label: 'Feed', icon: faHouseChimney },
+    { label: 'People', icon: faUserGroup },
+    { label: 'Profile', icon: faUser },
+    { label: 'Chat', icon: faComments },
   ];
-  selectedOption: undefined | { label: string; icon: string } = undefined;
+  selectedOption: undefined | { label: string; icon: IconDefinition } = undefined;
   subscriptions = new Subscription();
   mainRoute: string = '';
   segments: string[] = [];
@@ -60,7 +66,6 @@ export class NavigationComponent implements OnInit, OnDestroy {
         this.selectedOption = this.navItems[0];
         break;
       case 'people':
-        this.router.navigate([]);
         this.selectedOption = this.navItems[1];
         this.router.navigate(['people']);
         break;

@@ -18,6 +18,6 @@ export class FriendListRequestsService {
   };
 
   getAllFriends(username: string): Observable<any> {
-    return this.http.get(`${api}/profiles/${username}/friends`, this.headers);
+    return this.http.get(`${api}/profiles/${username}/friends-chat`, this.headers);
   }
 }

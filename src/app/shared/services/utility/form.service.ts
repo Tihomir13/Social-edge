@@ -13,7 +13,7 @@ export class FormService {
 
   createEditProfileFormGroup(): FormGroup {
     return this.formBuilder.group({
-      username: this.formBuilder.control('', [Validators.required]),
+      // username: this.formBuilder.control('', [Validators.required]),
       name: this.formBuilder.group({
         firstName: this.formBuilder.control('', [Validators.required]),
         lastName: this.formBuilder.control('', [Validators.required]),
