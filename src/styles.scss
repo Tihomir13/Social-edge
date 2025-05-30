@@ -82,6 +82,10 @@ $border-radius: 11px;
   color: rgba(0, 0, 0, 0.3);
 }
 
+[data-bs-theme="light"] {
+  --bs-body-bg: rgb(242, 244, 247) !important; /* Задава фона за light режима */
+}
+
 .modal-overlay {
   position: fixed;
   top: 0;
