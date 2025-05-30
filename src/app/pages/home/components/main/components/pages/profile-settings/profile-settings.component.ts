@@ -13,10 +13,11 @@ import { Router } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
 import { MainStateService } from '../../../shared/services/main-state.service';
+import { DarkModeToggleBtnComponent } from '../../../../../../../shared/components/dark-mode-toggle-btn/dark-mode-toggle-btn.component';
 
 @Component({
   selector: 'app-profile-settings',
-  imports: [ShortenMonthPipe, ReactiveFormsModule, FontAwesomeModule],
+  imports: [ShortenMonthPipe, ReactiveFormsModule, FontAwesomeModule, DarkModeToggleBtnComponent],
   templateUrl: './profile-settings.component.html',
   styleUrl: './profile-settings.component.scss',
 })
