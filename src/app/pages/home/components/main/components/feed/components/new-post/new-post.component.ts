@@ -305,22 +305,33 @@ export class NewPostComponent implements OnDestroy {
 
     this.isSubmitting = true;
 
-    const isTitleToxic = await this.toxicityService.checkToxicText(
-      this.newPostFormService.newPostFormGroup().get('title')!.value
-    );
+    setTimeout(() => {
+      if(this.isSubmitting) {
+        this.isSubmitting = false;
+      }
+    },30000);
+    
+    if (this.newPostFormService.newPostFormGroup().get('title')?.value !== null) {
+      const isTitleToxic = await this.toxicityService.checkToxicText(
+        this.newPostFormService.newPostFormGroup().get('title')!.value
+      );
 
-    if (isTitleToxic) {
-      this.resetPost();
-      return;
+      if (isTitleToxic) {
+        this.resetPost();
+        return;
+      }
     }
+    
 
-    const isTextToxic = await this.toxicityService.checkToxicText(
-      this.newPostFormService.newPostFormGroup().get('text')!.value
-    );
+    if (this.newPostFormService.newPostFormGroup().get('text')?.value !== null) {
+      const isTextToxic = await this.toxicityService.checkToxicText(
+        this.newPostFormService.newPostFormGroup().get('text')!.value
+      );
 
-    if (isTextToxic) {
-      this.resetPost();
-      return;
+      if (isTextToxic) {
+        this.resetPost();
+        return;
+      }
     }
 
     for (const tag of this.tags.controls) {
