@@ -144,4 +144,8 @@ export class ProfileRequestsService {
       headers: this.utility.headers,
     });
   }
+
+  sendDeletionEmail(): Observable<any> {
+    return this.http.get(`${api}/profiles/send-deletion-email`, this.headers);
+  }
 }
