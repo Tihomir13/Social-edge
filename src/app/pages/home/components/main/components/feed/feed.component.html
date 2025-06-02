@@ -20,4 +20,10 @@
     [isLikedByCurrUser$]="post.isLiked"
   />
   }
+
+  @if (isLoadingPosts) {
+    <div class='w-100 text-center'>
+      <app-loading-spinner classes="text-black"/>
+    </div>
+  }
 </div>

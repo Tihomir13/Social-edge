@@ -38,6 +38,12 @@ export class MainStateService {
     this.posts.set(posts);
   }
 
+  updatePosts(newPosts: any): void {
+    this.posts.update((currentPosts) => {
+      return [...currentPosts, ...newPosts]
+    })
+  }
+
   updatePost(postId: string, updatedPost: any) {
     this.posts.update((currentPosts) =>
       currentPosts.map((post) =>

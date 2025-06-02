@@ -17,14 +17,19 @@ export class PostsRequestsService {
     headers: this.utility.headers,
   };
 
-  getPosts(): Observable<any> {
-    return this.http.get(`${api}/posts`, this.headers);
+  getPosts(cursor: string | null, limit: number): Observable<any> {
+    const params: any = { limit };
+    if (cursor) params.cursor = cursor;
+    return this.http.get(`${api}/posts`, {
+      params,
+      headers: this.utility.headers,
+    });
   }
-
+  
   getPostById(postId: string): Observable<any> {
     return this.http.get(`${api}/posts/${postId}`, this.headers);
   }
-  
+
   likePost(postId: string): Observable<any> {
     const body = {
       id: postId,
@@ -65,7 +70,7 @@ export class PostsRequestsService {
   editPost(postId: string, formData: FormData): Observable<any> {
 
     console.log(postId, formData);
-    
+
 
     return this.http.patch(`${api}/posts/edit${postId}`, formData, {
       headers: this.utility.headers,
