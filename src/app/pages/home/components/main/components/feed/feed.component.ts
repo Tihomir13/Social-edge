@@ -79,30 +79,6 @@ export class FeedComponent implements OnInit {
     );
   }
 
-
-
-
-  // onScroll(): void {
-  //   const container = this.feed.nativeElement;
-
-  //   console.log('Scroll event detected', container);
-  //   console.log('Container scrollHeight:', container.scrollHeight);
-
-
-  //   const isAtBottom =
-  //     container.scrollHeight ===
-  //     Math.round(container.scrollBottom * -1) + container.clientHeight;
-
-
-  //   if (isAtBottom && this.nextCursor) {
-  //     console.log('Scrolled to bottom, loading more posts...');
-
-
-  //     this.getPosts();
-  //   }
-
-  // }
-
   onShowMoreComments(post: { postId: string; pageNum: number }): void {
 
   }
