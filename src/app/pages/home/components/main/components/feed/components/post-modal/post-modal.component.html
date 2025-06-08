@@ -132,25 +132,27 @@
               </span>
             </div>
 
-            <div class="options-container">
-              <img
-                class="icon"
-                src="assets/icons/more.svg"
-                alt=""
-                (click)="toggleOptionsMenu()"
-              />
+            @if(this.utilityService.userInfo.username === username()) {
+              <div class="options-container">
+                <img
+                  class="icon"
+                  src="assets/icons/more.svg"
+                  alt=""
+                  (click)="toggleOptionsMenu()"
+                />
 
-              @if(isOptionsClicked) {
-              <app-options-menu
-                class="post-options-menu"
-                (deletePost)="isDeletionModalOpened = true"
-                (editPost)="startEditPost()"
-                [isAuthor]="
-                  this.utilityService.userInfo.username === username()
-                "
-              />
+                @if(isOptionsClicked) {
+                <app-options-menu
+                  class="post-options-menu"
+                  (deletePost)="isDeletionModalOpened = true"
+                  (editPost)="startEditPost()"
+                  [isAuthor]="
+                    this.utilityService.userInfo.username === username()
+                  "
+                />
               }
-            </div>
+              </div>
+            }
           </div>
           } @if(title()) { @if(mainState.openedPost().isEditing) {
           <textarea
