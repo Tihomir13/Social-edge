@@ -204,7 +204,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.profileImage = this.mainState.defaultProfileImg;
     } else {
       this.profileImage = profileImage.src;
-      this.mainState.setProfileImage(this.profileImage);
+      // this.mainState.setProfileImage(this.profileImage);
       console.log(this.profileImage);
     }
   }

@@ -25,7 +25,6 @@ import { NavigationComponent } from './components/navigation/navigation.componen
 })
 export class MainComponent implements OnInit {
   state = inject(MainStateService);
-  currProfileUserChat: any;
 
   constructor() {
     effect(() => {
@@ -38,7 +37,7 @@ export class MainComponent implements OnInit {
       this.state.currChatProfileUser.update((currUser) =>
         newFriends.find((friend) => currUser!.username === friend.username) || null
       );
-      
+
       // this.currProfileUserChat = newFriends.find(
       //   (friend) => this.currProfileUserChat.username === friend.username
       // );
@@ -64,9 +63,9 @@ export class MainComponent implements OnInit {
   }
 
   onProfileClick(username: string): void {
-    this.currProfileUserChat = this.state
+    this.state.currChatProfileUser.set(this.state
       .currentChatHeads()
-      .find((chatHead) => chatHead.username === username);
+      .find((chatHead) => chatHead.username == username));
 
     this.state.setChat(true);
   }

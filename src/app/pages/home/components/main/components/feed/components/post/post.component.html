@@ -30,23 +30,25 @@
       </div>
     </div>
 
-    <div class="options-container">
-      <img
-        class="options-icon"
-        src="assets/icons/more.svg"
-        alt=""
-        (click)="toggleOptionsMenu()"
-      />
+    @if(this.utilityService.userInfo.username === username()) {
+      <div class="options-container">
+        <img
+          class="options-icon"
+          src="assets/icons/more.svg"
+          alt=""
+          (click)="toggleOptionsMenu()"
+        />
 
-      @if(isOptionsClicked) {
-      <app-options-menu
-        class="post-options-menu"
-        (deletePost)="isDeletionModalOpened = true"
-        (editPost)="onEditPost()"
-        [isAuthor]="this.utilityService.userInfo.username === username()"
-      />
-      }
-    </div>
+        @if(isOptionsClicked) {
+        <app-options-menu
+          class="post-options-menu"
+          (deletePost)="isDeletionModalOpened = true"
+          (editPost)="onEditPost()"
+          [isAuthor]="this.utilityService.userInfo.username === username()"
+        />
+        }
+      </div>
+    }
   </div>
 
   @if(title()) {

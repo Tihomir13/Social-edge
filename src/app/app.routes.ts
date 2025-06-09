@@ -20,6 +20,7 @@ import { PeopleComponent } from './pages/home/components/main/components/pages/p
 import { BlankComponent } from './pages/blank/blank.component';
 import { ProfileSettingsComponent } from './pages/home/components/main/components/pages/profile-settings/profile-settings.component';
 import { SecurityComponent } from './pages/home/components/main/components/pages/profile-settings/components/security/security.component';
+import { DeleteAccountComponent } from './pages/delete-account/delete-account.component';
 
 export const routes: Routes = [
   {
@@ -38,6 +39,10 @@ export const routes: Routes = [
   {
     path: 'forgotten-password',
     component: ForgottenPasswordComponent,
+  },
+    {
+    path: 'delete-account',
+    component: DeleteAccountComponent,
   },
   {
     path: 'reset-password',

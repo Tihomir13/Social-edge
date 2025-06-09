@@ -20,4 +20,17 @@
     [isLikedByCurrUser$]="post.isLiked"
   />
   }
+
+  @if (isLoadingPosts) {
+    <div class='w-100 text-center'>
+      <app-loading-spinner classes="text-black"/>
+    </div>
+  }
+
+  @if(this.mainState.posts()!.length === 0) {
+    <div class="text-center mt-5">
+      <h4 class="text-secondary">No posts yet. But 
+        you can add some people</h4>
+    </div>
+  }
 </div>

@@ -14,10 +14,17 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
 import { MainStateService } from '../../../shared/services/main-state.service';
 import { DarkModeToggleBtnComponent } from '../../../../../../../shared/components/dark-mode-toggle-btn/dark-mode-toggle-btn.component';
+import { CustomModalComponent } from '../../../../../../../shared/components/custom-modal/custom-modal.component';
 
 @Component({
   selector: 'app-profile-settings',
-  imports: [ShortenMonthPipe, ReactiveFormsModule, FontAwesomeModule, DarkModeToggleBtnComponent],
+  imports: [
+    ShortenMonthPipe,
+    ReactiveFormsModule,
+    FontAwesomeModule,
+    DarkModeToggleBtnComponent,
+    CustomModalComponent,
+  ],
   templateUrl: './profile-settings.component.html',
   styleUrl: './profile-settings.component.scss',
 })
@@ -27,6 +34,17 @@ export class ProfileSettingsComponent {
   editProfileFormGroup!: FormGroup;
   date: Date = new Date();
   subscriptions: Subscription = new Subscription();
+
+  modalOptions = [
+    {
+      optionName: 'Delete',
+      optionColor: 'red',
+    },
+    {
+      optionName: 'Cancel',
+      optionColor: 'white',
+    },
+  ];
 
   months: string[] = [
     'January',
@@ -56,6 +74,8 @@ export class ProfileSettingsComponent {
   isUserYounger = false;
   isDateValid = true;
   isUserRegistered = false;
+
+  isDeletionModalOpened = false;
 
   get firstNameControl(): AbstractControl | null {
     return this.editProfileFormGroup.get('name.firstName');
@@ -232,6 +252,21 @@ export class ProfileSettingsComponent {
     return (
       name1.firstName !== name2.firstName || name1.lastName !== name2.lastName
     );
+  }
+
+  onChoseOptionProfile(modalOption: string): void {
+    if (modalOption === 'Delete') {
+      this.subscriptions.add(
+        this.profileRequestsService.sendDeletionEmail().subscribe({
+          next: (response) => {
+            
+          },
+          error: (error) => {},
+        })
+      );
+    }
+
+    this.isDeletionModalOpened = false;
   }
 
   onSubmit(): void {

@@ -1,11 +1,10 @@
 <div class="container-fluid position-relative px-0">
   <div class="row m-0">
     <div class="post-modal-container px-0 d-flex">
-      @if(images().length > 0) {
-      <div class="images-container">
+      <div class='left-side d-flex flex-column justify-content-between'>
         @if(isOnMobile) {
-        <div
-          class="header p-2 d-flex align-items-center justify-content-between"
+      <div
+          class="header p-2 d-flex align-items-center"
         >
           <div
             class="return-arrow-container d-flex justify-content-center align-items-center"
@@ -19,7 +18,7 @@
             />
           </div>
 
-          <div class="d-flex gap-10px">
+          <div class="d-flex gap-10px m-auto">
             <div
               class="profile-icon-container"
               (click)="navigateToAuthorProfile()"
@@ -50,24 +49,11 @@
               </span>
             </div>
           </div>
-
-          <!-- <div class="options-container">
-            <img
-              class="icon"
-              src="assets/icons/more.svg"
-              alt=""
-              (click)="toggleOptionsMenu()"
-            />
-
-            @if(isOptionsClicked) {
-            <app-options-menu
-              class="post-options-menu"
-              (deletePost)="isDeletionModalOpened = true"
-              [isAuthor]="this.utilityService.userInfo.username === username()"
-            />
-            }
-          </div> -->
-        </div>
+        </div>         
+        }
+      @if(images().length > 0) {
+      <div class="images-container">
+        @if(isOnMobile) {
         } @for (image of images(); track $index) {
         <div
           class="image-wrapper"
@@ -111,6 +97,7 @@
         }
       </div>
       }
+      </div>
 
       <div
         class="right-side d-flex flex-column justify-content-between"
@@ -145,25 +132,27 @@
               </span>
             </div>
 
-            <div class="options-container">
-              <img
-                class="icon"
-                src="assets/icons/more.svg"
-                alt=""
-                (click)="toggleOptionsMenu()"
-              />
+            @if(this.utilityService.userInfo.username === username()) {
+              <div class="options-container">
+                <img
+                  class="icon"
+                  src="assets/icons/more.svg"
+                  alt=""
+                  (click)="toggleOptionsMenu()"
+                />
 
-              @if(isOptionsClicked) {
-              <app-options-menu
-                class="post-options-menu"
-                (deletePost)="isDeletionModalOpened = true"
-                (editPost)="startEditPost()"
-                [isAuthor]="
-                  this.utilityService.userInfo.username === username()
-                "
-              />
+                @if(isOptionsClicked) {
+                <app-options-menu
+                  class="post-options-menu"
+                  (deletePost)="isDeletionModalOpened = true"
+                  (editPost)="startEditPost()"
+                  [isAuthor]="
+                    this.utilityService.userInfo.username === username()
+                  "
+                />
               }
-            </div>
+              </div>
+            }
           </div>
           } @if(title()) { @if(mainState.openedPost().isEditing) {
           <textarea

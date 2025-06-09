@@ -169,7 +169,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.isUsernameExists = false;
     this.isEmailExists = false;
     this.isUserYounger = false;
-    this.isDateValid = false;
+    this.isDateValid = true;
   }
 
   onSubmit(): void {

@@ -52,6 +52,7 @@
   .profile-menu {
     position: absolute;
     top: 15px;
+    left: 1px;
     max-width: 248px;
     max-height: 0px;
     height: 300%;
@@ -59,7 +60,7 @@
     background-color: styles.$post-light-color;
     border-radius: 0px 0px styles.$border-radius styles.$border-radius;
     transition: all 0.3s ease-out;
-    border: 1px solid styles.$primary-purple;
+    // border: 1px solid styles.$primary-purple;
     pointer-events: none;
 
     .list-unstyled {
@@ -90,6 +91,7 @@
       max-height: 400px;
       opacity: 1;
       pointer-events: all;
+      border: 1px solid styles.$primary-purple;
 
       .option {
         height: 50px;
@@ -118,7 +120,9 @@
     }
 
     .profile-menu {
-      display: none !important;
+      top: 40px;
+      width: 68px;
+      // display: none !important;
     }
   }
 }

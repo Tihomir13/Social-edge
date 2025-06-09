@@ -21,8 +21,22 @@ export class ProfileRequestsService {
     return this.http.get(`${api}/profiles/${username}`, this.headers);
   }
 
-  getUserPosts(username: string): Observable<any> {
-    return this.http.get(`${api}/profiles/${username}/posts`, this.headers);
+  getUserPosts(username: string, cursor: string | null, limit: number): Observable<any> {
+    const params: any = { limit };
+    if (cursor) params.cursor = cursor;
+    return this.http.get(`${api}/profiles/${username}/posts`, {
+      params,
+      headers: this.utility.headers,
+    });
+  }
+
+  getPosts(cursor: string | null, limit: number): Observable<any> {
+    const params: any = { limit };
+    if (cursor) params.cursor = cursor;
+    return this.http.get(`${api}/posts`, {
+      params,
+      headers: this.utility.headers,
+    });
   }
 
   getUserInfo(username: string): Observable<any> {
@@ -143,5 +157,9 @@ export class ProfileRequestsService {
     return this.http.patch(`${api}/profiles/change-password`, newData, {
       headers: this.utility.headers,
     });
+  }
+
+  sendDeletionEmail(): Observable<any> {
+    return this.http.get(`${api}/profiles/send-deletion-email`, this.headers);
   }
 }
