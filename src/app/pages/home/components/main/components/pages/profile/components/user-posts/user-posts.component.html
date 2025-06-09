@@ -1,10 +1,4 @@
 <div class="user-posts-container">
-  @if(isLoadingPosts) {
-    <div class="mt-5 text-center">
-      <app-loading-spinner classes="text-dark" [size]="enumLoadingSpinnerSize.large"></app-loading-spinner> 
-    </div>
-  }
-  @else {
     @for (post of posts(); track $index) {
       <app-post
       [username]="post.author.username"
@@ -23,10 +17,15 @@
       />
     }
 
+    @if(isLoadingPosts) {
+      <div class="mt-5 text-center">
+        <app-loading-spinner classes="text-dark" [size]="enumLoadingSpinnerSize.large"></app-loading-spinner> 
+      </div>
+    }
+
     @if(posts()!.length === 0) {
       <div class="text-center mt-5">
         <h4 class="text-secondary">No posts yet</h4>
       </div>
     }
-  }
 </div>
