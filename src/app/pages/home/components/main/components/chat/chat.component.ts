@@ -100,6 +100,10 @@ export class ChatComponent implements OnInit {
 
   onCloseChat(): void {
     this.mainState.setChat(false);
+
+    this.mainState.currentChatHeads.update(chatHeads => {
+      return chatHeads.filter(chatHead => chatHead.username !== this.currChatUser()!.username);
+    });
   }
 
   sendMessage(message: string | void): void {
