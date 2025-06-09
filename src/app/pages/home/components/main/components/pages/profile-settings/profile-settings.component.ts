@@ -15,7 +15,6 @@ import { faLock } from '@fortawesome/free-solid-svg-icons';
 import { MainStateService } from '../../../shared/services/main-state.service';
 import { DarkModeToggleBtnComponent } from '../../../../../../../shared/components/dark-mode-toggle-btn/dark-mode-toggle-btn.component';
 import { CustomModalComponent } from '../../../../../../../shared/components/custom-modal/custom-modal.component';
-import { response } from 'express';
 
 @Component({
   selector: 'app-profile-settings',

@@ -1,19 +1,21 @@
 <div class="user-posts-container">
     @for (post of posts(); track $index) {
       <app-post
-      [username]="post.author.username"
-      [authorProfileImg]="post.author.profileImage"
-      [images]="post.images"
-      [likes]="post.likes"
-      [title]="post.title"
-      [text]="post.text"
-      [tags]="post.tags"
-      [postId]="post._id"
-      [comments]="post.comments"
-      [currUserImg]="mainState.userProfileImg()"
-      [totalCommentsCount]="post.commentsCount"
-      [totalLikes$]="post.totalLikes"
-      [isLikedByCurrUser$]="post.isLiked"
+        [username]="post.author.username"
+        [authorProfileImg]="post.author.profileImage"
+        [images]="post.images"
+        [likes]="post.likes"
+        [title]="post.title"
+        [text]="post.text"
+        [date]="post.createdAt"
+        [status]="post.status"
+        [tags]="post.tags"
+        [postId]="post._id"
+        [comments]="post.comments"
+        [currUserImg]="mainState.userProfileImg()"
+        [totalCommentsCount]="post.commentsCount"
+        [totalLikes$]="post.totalLikes"
+        [isLikedByCurrUser$]="post.isLiked"
       />
     }
 
@@ -23,7 +25,7 @@
       </div>
     }
 
-    @if(posts()!.length === 0) {
+    @if(posts().length === 0) {
       <div class="text-center mt-5">
         <h4 class="text-secondary">No posts yet</h4>
       </div>
