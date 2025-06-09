@@ -79,9 +79,9 @@ export class FeedComponent implements OnInit {
     );
   }
 
-  onShowMoreComments(post: { postId: string; pageNum: number }): void {
+  // onShowMoreComments(post: { postId: string; pageNum: number }): void {
 
-  }
+  // }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
