@@ -32,6 +32,8 @@ export class MainStateService {
     profileImage: true,
   });
 
+  isSearchingForPeople = signal(false)
+
   openedPost = signal<any>(null);
 
   setPosts(posts: any): void {

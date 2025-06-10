@@ -7,11 +7,12 @@ import { Router } from '@angular/router';
 import { UtilitySessionService } from '../../../../../../../shared/services/utility/utility.service';
 import { Subscription } from 'rxjs';
 import { ProfileRequestsService } from '../profile/services/profile-requests.service';
+import { LoadingSpinnerComponent } from '../../../../../../../shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-search',
   standalone: true,
-  imports: [UserCardComponent],
+  imports: [UserCardComponent, LoadingSpinnerComponent],
   templateUrl: './search.component.html',
   styleUrl: './search.component.scss',
 })
@@ -21,6 +22,8 @@ export class SearchComponent {
   router = inject(Router);
   profileRequestService = inject(ProfileRequestsService);
   subscriptions = new Subscription();
+
+  isLoadingProfiles = false;
 
   onClickProfile(username: string): void {
     console.log(username);
