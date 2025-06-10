@@ -4,10 +4,11 @@ import { UserBigCardComponent } from './components/user-big-card/user-big-card.c
 import { ProfileRequestsService } from '../profile/services/profile-requests.service';
 
 import { Subscription } from 'rxjs';
+import { LoadingSpinnerComponent, size } from '../../../../../../../shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-people',
-  imports: [UserBigCardComponent],
+  imports: [UserBigCardComponent, LoadingSpinnerComponent],
   templateUrl: './people.component.html',
   styleUrl: './people.component.scss',
 })
@@ -16,23 +17,34 @@ export class PeopleComponent {
 
   people = signal<any>([]);
 
+  enumLoadingSpinnerSize = size;
+
+  isLoadingProfiles = false;
+
   private profileRequestService = inject(ProfileRequestsService);
 
   ngOnInit(): void {
+    this.isLoadingProfiles = true
+
     this.subscriptions.add(
       this.profileRequestService.getSuggestedProfiles().subscribe({
         next: (response) => {
           console.log(response);
           this.people.set(response.users);
+          this.isLoadingProfiles = false;
         },
         error: (error) => {
           console.log(error);
+          this.isLoadingProfiles = false;
         },
+        complete: () => {
+          console.log('Suggested profiles fetched successfully');
+        }
       })
     );
   }
 
-   onAddFriend(username: string): void {
+  onAddFriend(username: string): void {
     this.subscriptions.add(
       this.profileRequestService.addNewFriend(username).subscribe({
         next: (response) => {

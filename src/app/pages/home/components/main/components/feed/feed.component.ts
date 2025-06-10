@@ -71,6 +71,8 @@ export class FeedComponent implements OnInit {
         },
         error: (error) => {
           console.log(error);
+
+          this.isLoadingPosts = false;
         },
         complete: () => {
           this.mainState.setLoadingState('posts')
