@@ -19,11 +19,13 @@ import { Subscription } from 'rxjs';
 
 import { MessagesRequestService } from './services/messages-request.service';
 import { LoadingSpinnerComponent } from '../../../../../../shared/components/loading-spinner/loading-spinner.component';
+import { TimeAgoPipe } from '../../../../../../shared/pipes/time-ago.pipe';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [InputFieldComponent, LoadingSpinnerComponent],
+  imports: [InputFieldComponent, LoadingSpinnerComponent, DatePipe, TimeAgoPipe],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss',
 })
@@ -49,7 +51,7 @@ export class ChatComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(this.currChatUser());
-    
+
     this.mainSocketService.onNewMessage().subscribe((message) => {
       console.log('Получено съобщение:', message);
       this.messages.update(messages => [message, ...messages]);
@@ -58,6 +60,13 @@ export class ChatComponent implements OnInit {
 
   ngOnChanges(): void {
     this.getMessages();
+  }
+
+  isOlderThanAWeek(dateStr: string): boolean {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    return diff > 7 * 24 * 60 * 60 * 1000;
   }
 
   navigateToProfile(): void {
