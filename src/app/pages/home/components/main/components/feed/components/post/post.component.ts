@@ -9,7 +9,7 @@ import {
   Renderer2,
   ViewChild,
 } from '@angular/core';
-import { NgClass, SlicePipe } from '@angular/common';
+import { DatePipe, NgClass, SlicePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
@@ -25,6 +25,8 @@ import { AutoResizeTextareaDirective } from '../../../../../../../../shared/dire
 import { OptionsMenuComponent } from './components/options-menu/options-menu.component';
 import { PostMethodsService } from './services/post-methods.service';
 import { CustomModalComponent } from '../../../../../../../../shared/components/custom-modal/custom-modal.component';
+import { ShareModalComponent } from '../../../../../../../../shared/components/share-modal/share-modal.component';
+import { TimeAgoPipe } from '../../../../../../../../shared/pipes/time-ago.pipe';
 
 @Component({
   selector: 'app-post',
@@ -36,7 +38,9 @@ import { CustomModalComponent } from '../../../../../../../../shared/components/
     AutoResizeTextareaDirective,
     NgClass,
     OptionsMenuComponent,
-    CustomModalComponent
+    CustomModalComponent,
+    ShareModalComponent,
+    TimeAgoPipe,
   ],
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss',
@@ -58,6 +62,7 @@ export class PostComponent implements OnInit, OnDestroy {
 
   isCommentsClicked: boolean = true;
   isDeletionModalOpened: boolean = false;
+  isShareModalOpened: boolean = false;
   isCollapsed = true;
   isOptionsClicked = false;
 
@@ -69,6 +74,8 @@ export class PostComponent implements OnInit, OnDestroy {
   title = input<string>('');
   text = input<string>('');
   tags = input<string[]>([]);
+  date = input<Date | string>(new Date());
+  status = input<string>();
   likes = input<string[]>([]);
   images = input<imagePostModel[]>([]);
   comments = input<any[]>([]);
@@ -94,8 +101,13 @@ export class PostComponent implements OnInit, OnDestroy {
   utilityService = inject(UtilitySessionService);
   formBuilder = inject(FormBuilder);
 
-  ngOnInit(): void {
+  ngOnChanges() {
+    this.totalLikes = this.totalLikes$();
     this.isLiked = this.isLikedByCurrUser$();
+  }
+
+  ngOnInit(): void {
+    // this.isLiked = this.isLikedByCurrUser$();
     this.totalLikes = this.totalLikes$();
 
     this.commentFormGroup = new GenerateCommentForm(
@@ -136,7 +148,7 @@ export class PostComponent implements OnInit, OnDestroy {
     // Use debounceTime to handle the like action
     this.subscriptions.add(
       timer(5000)
-        .pipe(debounceTime(5000))
+        .pipe(debounceTime(2000))
         .subscribe(() => {
           this.postLikeDislike(currPostId);
         })
@@ -159,7 +171,11 @@ export class PostComponent implements OnInit, OnDestroy {
         this.postRequests.commentPost(comment, this.postId()).subscribe({
           next: (response) => {
             this.commentFormGroup.reset();
-            this.mainState.addNewCommentToPost(this.postId(), response.formattedComment);
+            this.mainState.addNewCommentToPost(
+              this.postId(),
+              response.formattedComment
+            );
+            console.log(response);
           },
           error: (error) => {
             console.log(error);
@@ -169,12 +185,21 @@ export class PostComponent implements OnInit, OnDestroy {
     }
   }
 
-  openPostModal(): void {
-    this.mainState.setOpenedPost(this.postId());
-  }
-
-  showMoreComments(): void {
-    this.openPostModal();
+  openPostModal(editMode = false): void {
+    this.subscriptions.add(
+      this.postRequests.getPostById(this.postId()).subscribe({
+        next: (response) => {
+          let post = { ...response.post, isEditing: false };
+          if (editMode) {
+            post = { ...response.post, isEditing: true };
+          }
+          this.mainState.setOpenedPost(post, true);
+        },
+        error: (error) => {
+          console.log(error);
+        },
+      })
+    );
   }
 
   onCancelComment(): void {
@@ -183,14 +208,18 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   addListenerToOptionsMenu(): void {
-    this.unlistenOptionsMenu = this.render.listen('document', 'click', (event: Event) => {
-      const target = event.target as HTMLElement;
+    this.unlistenOptionsMenu = this.render.listen(
+      'document',
+      'click',
+      (event: Event) => {
+        const target = event.target as HTMLElement;
 
-      if (!target.closest('.options-container')) {
-        this.isOptionsClicked = false;
-        this.unlistenOptionsMenu();
+        if (!target.closest('.options-container')) {
+          this.isOptionsClicked = false;
+          this.unlistenOptionsMenu();
+        }
       }
-    });
+    );
   }
 
   toggleOptionsMenu(): void {
@@ -203,14 +232,24 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   deletePost(): void {
-    this.subscriptions.add(this.postRequests.deletePost(this.postId()).subscribe({
-      next: (response) => {
-        this.mainState.deletePost(this.postId());
-      },
-      error: (error) => {
-        console.log(error);
-      }
-    }))
+    this.subscriptions.add(
+      this.postRequests.deletePost(this.postId()).subscribe({
+        next: (response) => {
+          this.mainState.deletePost(this.postId());
+        },
+        error: (error) => {
+          console.log(error);
+        },
+      })
+    );
+  }
+
+  onEditPost(): void {
+    this.openPostModal(true);
+  }
+
+  showShareModal() {
+    this.isShareModalOpened = true;
   }
 
   onChoseOptionProfile(modalOption: string): void {
@@ -219,6 +258,7 @@ export class PostComponent implements OnInit, OnDestroy {
     }
 
     this.isDeletionModalOpened = false;
+    this.isShareModalOpened = false;
   }
 
   ngOnDestroy(): void {

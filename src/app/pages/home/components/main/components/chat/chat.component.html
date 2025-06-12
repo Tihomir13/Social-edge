@@ -5,11 +5,11 @@
                 <div class="profile-content-container d-flex align-items-center" (click)="navigateToProfile()">
                     <img 
                     class="profile-image" 
-                    [src]="currChatUser().profileImage ? currChatUser().profileImage.src :mainState.defaultProfileImg" 
+                    [src]="currChatUser()!.profileImage ? currChatUser()!.profileImage!.src :mainState.defaultProfileImg" 
                     width="40" height="40" 
                     alt="profile image">
 
-                    @if (currChatUser().isOnline) {
+                    @if (currChatUser()!.isOnline) {
                         <span class="status-icon bg-success"></span>
                     }
                     @else {
@@ -17,7 +17,7 @@
                     }
 
                     <span>
-                        {{currChatUser().username}}
+                        {{currChatUser()!.username}}
                     </span>
                 </div>
 
@@ -45,28 +45,46 @@
             <div #chat class="main" (scroll)="onScroll()">
 
                 @for (message of messages(); track $index) {
-                    @if(message.sender !== currChatUser().username) {
+                    @if(message.sender !== currChatUser()!.username) {
                         @if(message.text === 'sparkle&:') {
                             <span class='message-sender mb-2 sparkle-container'>
                                 <img width="40px" height="40px" src="assets/icons/sparkle-colored.png" alt="sparkle icon">
                             </span>
                         }@else{
-                            <span class='message-container message-sender mb-2'>
-                                <span class="message">{{message.text}}</span>
-                            </span>
+                            <div class='d-flex flex-row-reverse align-items-center justify-content-between'>
+                                <span class='message-container message-sender mb-2'>
+                                    <span class="message">{{message.text}}</span>
+                                </span>
+                                
+                                @if(!isOlderThanAWeek(message.createdAt)) {
+                                    <span class='text-secondary'>{{message.createdAt | timeAgo}}</span>
+                                }
+                            </div>
                         }
                     }
 
-                    @if(message.sender === currChatUser().username) {
+                    @if(message.sender === currChatUser()!.username) {
                         @if(message.text === 'sparkle&:') {
                             <span class='message-receiver mb-2 sparkle-container'>
                                     <img width="40px" height="40px" src="assets/icons/sparkle-colored.png" alt="sparkle icon">
                             </span>
                         }@else{
-                            <span class='message-container message-receiver mb-2'>
-                                <span class="message">{{message.text}}</span>
-                            </span>
+                            <div class='d-flex align-items-center justify-content-between'>
+                                <span class='message-container message-receiver mb-2'>
+                                    <span class="message">{{message.text}}</span>
+                                </span>
+
+                                @if(!isOlderThanAWeek(message.createdAt)) {
+                                    <span class='text-secondary'>{{message.createdAt | timeAgo}}</span>
+                                }
+                            </div>
                         }
+                    }
+
+                    @if(isOlderThanAWeek(message.createdAt)) {
+                        <span class='text-center text-secondary'>
+                            {{message.createdAt | date: 'EEE, MMM d, yy'}}
+                        </span>
                     }
                 }
             </div>

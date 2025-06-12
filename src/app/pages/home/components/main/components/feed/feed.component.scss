@@ -5,11 +5,13 @@
 .feed-container {
   max-width: 460px;
   margin: 50px auto;
+  margin-bottom: 200px;
 }
 
 @media screen and (max-width: 768px) {
   .feed-container {
     margin: 0px auto;
     max-width: none;
+    margin-bottom: 100px;
   }
 }

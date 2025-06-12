@@ -1,16 +1,16 @@
-@import "../../../../../../../../../styles.scss";
+@use "../../../../../../../../../styles.scss" as styles;
 
 $square-width: 110px;
 
 .new-post-container {
   // box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 1px 4px;
-  border-radius: $border-radius;
-  background-color: $light-plus-purple;
+  border-radius: styles.$border-radius;
+  background-color: styles.$light-plus-purple;
   margin-bottom: 35px;
 
   .new-post-title {
-    border-radius: $border-radius $border-radius 0px 0px;
+    border-radius: styles.$border-radius styles.$border-radius 0px 0px;
     padding: 10px;
 
     .profile-image {
@@ -50,29 +50,45 @@ $square-width: 110px;
       }
     }
 
+    .status-container {
+      position: relative;
+
+      @include styles.mobile {
+        position: static;
+      }
+    }
+
     .status-picker-component {
       position: absolute;
-      border: 1px solid $light-gray;
+      border: 1px solid styles.$light-gray;
       border-radius: 11px;
       box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
       z-index: 1000;
 
       width: 480px;
+
       top: 47px;
       left: 50%;
       transform: translate(-50%);
+
+      @include styles.mobile {
+        border-radius: 0px;
+        top: 48px;
+        left: 0px;
+        width: 100svw;
+      }
     }
   }
 
   .new-post-content {
-    border-radius: 0px 0px $border-radius $border-radius;
+    border-radius: 0px 0px styles.$border-radius styles.$border-radius;
     padding: 0px 10px 10px 10px;
 
     .text-container {
       margin-bottom: 10px;
 
       .text {
-        border-radius: $border-radius;
+        border-radius: styles.$border-radius;
         resize: none;
         border: none;
 
@@ -91,7 +107,7 @@ $square-width: 110px;
         .form-control {
           max-width: 200px;
           height: 45px;
-          border-radius: $border-radius 0px 0px $border-radius;
+          border-radius: styles.$border-radius 0px 0px styles.$border-radius;
 
           &:focus {
             outline: none;
@@ -104,7 +120,7 @@ $square-width: 110px;
           height: 45px;
           border: none;
           background-color: rgb(217, 91, 255);
-          border-radius: 0px $border-radius $border-radius 0px;
+          border-radius: 0px styles.$border-radius styles.$border-radius 0px;
           margin-right: 5px;
         }
       }
@@ -115,9 +131,9 @@ $square-width: 110px;
         padding: 5px 15px;
         color: rgb(255, 255, 255);
         // background-color: rgba(249, 39, 249, 1);
-        // background-color: $light-plus-purple;
+        // background-color: styles.$light-plus-purple;
         background-color: rgb(217, 91, 255);
-        border-radius: $border-radius;
+        border-radius: styles.$border-radius;
         display: inline-flex;
         align-items: center;
         transition: transform 0.3s ease;
@@ -166,9 +182,9 @@ $square-width: 110px;
         }
 
         .photo {
-          border: 1px solid $light-gray;
+          border: 1px solid styles.$light-gray;
           object-fit: contain;
-          border-radius: $border-radius;
+          border-radius: styles.$border-radius;
           width: $square-width;
           aspect-ratio: 1/1;
           transition: transform 0.3s ease;
@@ -179,7 +195,7 @@ $square-width: 110px;
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-          color: $light-purple;
+          color: styles.$light-purple;
           display: none;
         }
       }
@@ -187,7 +203,7 @@ $square-width: 110px;
       .add-photo-btn {
         width: $square-width;
         aspect-ratio: 1/1;
-        border-radius: $border-radius;
+        border-radius: styles.$border-radius;
       }
     }
 
@@ -200,12 +216,12 @@ $square-width: 110px;
       cursor: pointer;
       transition: transform 0.3s ease;
       background-color: transparent;
-      border-radius: $border-radius;
+      border-radius: styles.$border-radius;
       border: 2px dashed rgb(150, 150, 150);
 
       &:hover {
         transform: scale(1.05);
-        background-color: rgba($light-gray, 0.25);
+        background-color: rgba(styles.$light-gray, 0.25);
       }
 
       .plus-icon {
@@ -218,7 +234,7 @@ $square-width: 110px;
 
     .btn {
       height: 45px;
-      background-color: $primary-purple;
+      background-color: styles.$primary-purple;
       color: rgb(255, 255, 255);
       border-radius: 11px;
       box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
@@ -226,7 +242,7 @@ $square-width: 110px;
       min-width: 76.81px;
 
       &:hover {
-        background-color: $light-purple;
+        background-color: styles.$light-purple;
       }
     }
 
@@ -268,10 +284,34 @@ $square-width: 110px;
 
     .new-post-title {
       .status-picker-component {
-        width: 280px;
-        top: 47px;
-        left: 50px;
+        border-radius: 0px 0px 11px 11px;
+        position: absolute;
+        right: 0px;
+        transform: none;
+        top: 115px;
       }
     }
   }
+}
+
+@keyframes scaleAnimation {
+  0% {
+    transform: scale(0) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.1) rotate(-2deg);
+  }
+  50% {
+    transform: scale(1.15) rotate(2deg);
+  }
+  75% {
+    transform: scale(1.1) rotate(-2deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+.tag {
+  animation: scaleAnimation 0.7s ease-in forwards;
 }

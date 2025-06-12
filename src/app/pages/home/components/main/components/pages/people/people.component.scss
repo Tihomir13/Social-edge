@@ -1,0 +1,20 @@
+@use "../../../../../../../../styles.scss" as styles;
+
+.people-container {
+  max-width: 600px;
+  margin: 50px auto;
+
+  margin-bottom: 100px;
+}
+
+@media screen and (max-width: 768px) {
+  .flex-wrap {
+    padding: 0px 40px;
+    gap: 10px;
+    justify-content: space-between;
+  }
+
+  .search-container {
+    margin: 0px auto;
+  }
+}

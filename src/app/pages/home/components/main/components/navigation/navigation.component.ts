@@ -3,21 +3,28 @@ import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
 import { UtilitySessionService } from '../../../../../../shared/services/utility/utility.service';
+
 import { filter, Subscription } from 'rxjs';
 
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faHouseChimney, faUserGroup, faUser, faComments, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 @Component({
   selector: 'app-navigation',
-  imports: [NgClass],
+  imports: [NgClass, FontAwesomeModule],
   templateUrl: './navigation.component.html',
   styleUrl: './navigation.component.scss',
 })
 export class NavigationComponent implements OnInit, OnDestroy {
+
+  homePageIcon = faHouseChimney;
+
   navItems = [
-    { label: 'Feed', icon: 'assets/icons/navigation/homepage.svg' },
-    { label: 'People', icon: 'assets/icons/navigation/people.svg' },
-    { label: 'Profile', icon: 'assets/icons/navigation/profile.svg' },
+    { label: 'Feed', icon: faHouseChimney },
+    { label: 'People', icon: faUserGroup },
+    { label: 'Profile', icon: faUser },
+    { label: 'Chat', icon: faComments },
   ];
-  selectedOption: undefined | { label: string; icon: string } = undefined;
+  selectedOption: undefined | { label: string; icon: IconDefinition } = undefined;
   subscriptions = new Subscription();
   mainRoute: string = '';
   segments: string[] = [];
@@ -31,7 +38,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this.segments = fullUrl.split('/');
     this.mainRoute = this.segments[1];
     this.markOption(this.mainRoute);
-  
+
     this.subscriptions.add(
       this.router.events
         .pipe(filter((event) => event instanceof NavigationEnd))
@@ -39,8 +46,13 @@ export class NavigationComponent implements OnInit, OnDestroy {
           const fullUrl = event.urlAfterRedirects;
           this.segments = fullUrl.split('/');
           this.mainRoute = this.segments[1];
-          this.markOption(this.mainRoute);
-          console.log(fullUrl);
+          console.log(this.mainRoute);
+
+          if (this.mainRoute === 'feed' || this.mainRoute === 'people' || this.mainRoute === 'profile' || this.mainRoute === 'chat')
+            this.markOption(this.mainRoute);
+          else {
+            this.markOption('none');
+          }
         })
     );
   }
@@ -54,13 +66,17 @@ export class NavigationComponent implements OnInit, OnDestroy {
         this.selectedOption = this.navItems[0];
         break;
       case 'people':
-        this.router.navigate([]);
         this.selectedOption = this.navItems[1];
+        this.router.navigate(['people']);
         break;
       case 'profile':
         const username = this.utilitySession.userInfo.username;
         this.router.navigate(['profile', username, 'posts']);
         this.selectedOption = this.navItems[2];
+        break;
+      case 'chat':
+        this.router.navigate(['friends']);
+        this.selectedOption = this.navItems[3];
         break;
     }
   }
@@ -82,8 +98,13 @@ export class NavigationComponent implements OnInit, OnDestroy {
           this.selectedOption = undefined;
           break;
         }
-
         this.selectedOption = this.navItems[2];
+        break;
+      case 'friends':
+        this.selectedOption = this.navItems[3];
+        break;
+      default:
+        this.selectedOption = this.navItems[4];
         break;
     }
   }

@@ -65,6 +65,13 @@ $border-radius: 11px;
   gap: 22px;
 }
 
+.form-control {
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+}
+
 .border-radius {
   border-radius: $border-radius !important;
 }
@@ -73,6 +80,10 @@ $border-radius: 11px;
   margin-top: 20px;
   margin-bottom: 30px;
   color: rgba(0, 0, 0, 0.3);
+}
+
+[data-bs-theme="light"] {
+  --bs-body-bg: rgb(242, 244, 247) !important; /* Задава фона за light режима */
 }
 
 .modal-overlay {
@@ -103,6 +114,10 @@ $border-radius: 11px;
     max-width: 1100px;
     width: 100%;
     z-index: 1001;
+    
+    &.without-image {
+      max-width: 500px;
+    }
 
     @include mobile {
       max-height: none;

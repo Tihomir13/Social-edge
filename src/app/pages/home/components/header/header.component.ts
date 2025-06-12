@@ -9,7 +9,7 @@ import { SearchRequestsService } from './components/search-bar/services/search-r
 import { MainStateService } from '../main/shared/services/main-state.service';
 import { NotificationsWindowComponent } from './components/notifications-window/notifications-window.component';
 import { NotificationsService } from './components/notifications-window/services/notifications.service';
-import { ProfileRequestsService } from '../main/components/profile/services/profile-requests.service';
+import { ProfileRequestsService } from '../main/components/pages/profile/services/profile-requests.service';
 import { MainSocketService } from '../../../../shared/services/websocket/main-socket.service';
 
 @Component({
@@ -70,6 +70,8 @@ export class HeaderComponent {
   onSearch(value: any): void {
     this.router.navigate(['search'], { queryParams: { query: value } });
 
+    this.mainState.isSearchingForPeople.set(true);
+
     this.subscriptions.add(
       this.requestSearchService.getSearchedProfiles(value).subscribe({
         next: (response) => {
@@ -79,13 +81,14 @@ export class HeaderComponent {
             }
             return user;
           });
-          console.log(users);
 
           this.mainState.setSearchedUsers(users);
+          this.mainState.isSearchingForPeople.set(false);
         },
         error: (error) => {
           console.log(error);
           this.mainState.setSearchedUsers([]);
+          this.mainState.isSearchingForPeople.set(false);
         },
       })
     );

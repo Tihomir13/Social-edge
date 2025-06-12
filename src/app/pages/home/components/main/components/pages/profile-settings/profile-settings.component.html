@@ -1,0 +1,146 @@
+<div class="edit-profile-container">
+  <h1 class="px-2 my-3">Edit Profile</h1>
+
+  <div class="row">
+    <form
+      class="form d-flex flex-column gap-3 w-100 flex-column justify-content-center"
+      [formGroup]="editProfileFormGroup"
+      (ngSubmit)="onSubmit()"
+    >
+      <!-- <div>
+        <label class="text-secondary" for="username">Change username</label>
+        <input
+        id="username"
+        class="form-control semi-width-control"
+        type="text"
+        placeholder="Username"
+        formControlName="username"
+        />
+        
+        @if (isUsernameExists) {
+          <div class="invalid-message mb-22px">Username is already taken!</div>
+          }
+        </div> -->
+
+      <div>
+        <label class="text-secondary" for="full-name">Change name</label>
+        <div
+          id="full-name"
+          class="d-flex flex-md-row flex-column gap-22px"
+          formGroupName="name"
+        >
+          <input
+            class="form-control semi-width-control"
+            type="text"
+            placeholder="First name*"
+            formControlName="firstName"
+          />
+
+          <input
+            class="form-control semi-width-control"
+            type="text"
+            placeholder="Last name*"
+            formControlName="lastName"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label class="text-secondary" for="birthday">Change birthday</label>
+        <div id="birthday" class="d-flex gap-10px" formGroupName="birthday">
+          <select class="dropdown" id="day" name="day" formControlName="day">
+            @for (day of getDaysInMonth(); track $index) {
+            <option [value]="day">{{ day }}</option>
+            }
+          </select>
+
+          <select
+            class="dropdown"
+            id="month"
+            name="month"
+            (change)="onMonthChange()"
+            formControlName="month"
+          >
+            @for (month of months; track $index) {
+            <option [value]="$index">{{ month | shortenMonth }}</option>
+            }
+          </select>
+
+          <select
+            class="dropdown"
+            id="year"
+            name="year"
+            (change)="onYearChange()"
+            formControlName="year"
+          >
+            @for (year of years; track $index) {
+            <option [value]="year">{{ year }}</option>
+            }
+          </select>
+        </div>
+
+        @if (!isDateValid) {
+        <div class="invalid-message">The date is not valid!</div>
+        } @if (isUserYounger) {
+        <div class="invalid-message">You are too young!</div>
+        }
+      </div>
+
+      <div>
+        <label class="text-secondary" for="email">Change email</label>
+        <input
+          id="email"
+          class="form-control full-width-control"
+          type="email"
+          placeholder="Email address*"
+          formControlName="email"
+        />
+      </div>
+
+      @if (isEmailValid) {
+      <div class="invalid-message mb-22px">Please enter a valid email!</div>
+      } @if (isEmailExists) {
+      <div class="invalid-message mb-22px">Email is already used!</div>
+      }
+
+      <button type="submit" class="btn">Save Changes</button>
+
+      @if(isUserRegistered) {
+      <div class="success-message bg-success mb-22px">
+        Please check your email for confirmation
+      </div>
+      }
+      <div
+        class="d-flex flex-column justify-content-start align-items-start mt-3"
+      >
+        <button
+          class="btn btn-outline"
+          type="button"
+          (click)="navigateToSecurity()"
+        >
+          <fa-icon [icon]="lockIcon"></fa-icon> BackSecurity
+        </button>
+      </div>
+    </form>
+
+    <div class="mt-5 d-flex w-100 gap-3 align-items-center">
+      <app-dark-mode-toggle-btn /> <span>Toggle Dark Mode (Experimental)</span>
+    </div>
+
+    <div class="mt-5 w-100 text-center">
+      <button class="btn mt-5 text-danger" (click)="isDeletionModalOpened = true" >Delete Account</button>
+    </div>
+  </div>
+</div>
+
+@if(isDeletionModalOpened) {
+<div class="modal-overlay">
+  <div class="modal-container">
+    <app-custom-modal
+      (clickedOption)="onChoseOptionProfile($event)"
+      [title]="'Are you sure you want to delete your account?'"
+      [options]="modalOptions"
+    ></app-custom-modal>
+  </div>
+</div>
+}

@@ -1,0 +1,22 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="modal-container p-0">
+      @if (title()) {
+      <h4 class="title-container m-0">
+        {{ title() }}
+      </h4>
+      }
+
+      <div class="link-container fs-6 fw-bold text-light">
+        <input
+          class="w-75 form-control"
+          [disabled]="true"
+          type="text"
+          [value]="link"
+        />
+
+        <button class="btn btn-primary" (click)="copyText()">{{!isCopied ? 'Copy' : 'Copied'}}</button>
+      </div>
+    </div>
+  </div>
+</div>

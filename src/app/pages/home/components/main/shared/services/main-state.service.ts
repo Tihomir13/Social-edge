@@ -1,10 +1,12 @@
 import { Injectable, signal } from '@angular/core';
+import { ChatUserModel } from '../../components/chat/interfaces';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MainStateService {
   defaultProfileImg = 'assets/images/default-images/profile-image.png';
+  defaultBannerImg = 'assets/images/default-images/banner-image.png';
 
   posts = signal<any[]>([]);
   friends = signal<
@@ -16,9 +18,12 @@ export class MainStateService {
   >([]);
   currentChatHeads = signal<any[]>([]);
   isChatActive = signal<boolean>(false);
+  currChatProfileUser = signal<null | ChatUserModel>(null);
   searchedUsers = signal<any[]>([]);
   notifications = signal<any[]>([]);
   userProfileImg = signal<any>(this.defaultProfileImg);
+
+  settingsOriginalInfo = signal<any>(null);
 
   isLoading = signal({
     posts: true,
@@ -27,10 +32,26 @@ export class MainStateService {
     profileImage: true,
   });
 
+  isSearchingForPeople = signal(false)
+
   openedPost = signal<any>(null);
 
   setPosts(posts: any): void {
     this.posts.set(posts);
+  }
+
+  updatePosts(newPosts: any): void {
+    this.posts.update((currentPosts) => {
+      return [...currentPosts, ...newPosts]
+    })
+  }
+
+  updatePost(postId: string, updatedPost: any) {
+    this.posts.update((currentPosts) =>
+      currentPosts.map((post) =>
+        post._id === postId ? { ...post, ...updatedPost } : post
+      )
+    );
   }
 
   setFriends(friends: any): void {
@@ -53,11 +74,19 @@ export class MainStateService {
     this.userProfileImg.set(image);
   }
 
-  setOpenedPost(postId: any): void {
+  setOpenedPreFetchPost(postId: any): void {
     if (postId) {
       this.openedPost.set(this.posts().find((post) => post._id === postId));
     }
-    console.log(this.openedPost());
+  }
+
+  setOpenedPost(post: any, isModal: boolean): void {
+    const openedPost = {
+      ...post,
+      isModal,
+    };
+
+    this.openedPost.set(openedPost);
   }
 
   closePost(): void {
@@ -68,15 +97,14 @@ export class MainStateService {
     this.posts.update((posts) => [newPost, ...posts]);
   }
 
-  addNewCommentToPost(postId: any, comment: any): void {
-    console.log(comment);
-
+  addNewCommentToPost(postId: any, newComment: any): void {
     this.posts.update((posts) =>
       posts.map((post) => {
         if (post._id === postId) {
           return {
             ...post,
-            comments: [...(post.comments || []), comment],
+            comments: [newComment, ...(post.comments || [])],
+            commentsCount: post.commentsCount + 1,
           };
         } else {
           return post;
@@ -84,12 +112,14 @@ export class MainStateService {
       })
     );
 
-    this.openedPost.update((post) => {
-      return {
-        ...post,
-        comments: [...(post.comments || []), comment],
-      };
-    });
+    if (this.openedPost()) {
+      this.openedPost.update((post) => {
+        return {
+          ...post,
+          comments: [newComment, ...(post.comments || [])],
+        };
+      });
+    }
   }
 
   deletePost(postId: string): void {
@@ -106,4 +136,38 @@ export class MainStateService {
       [key]: false,
     }));
   }
+
+  // updateCommentLikeState(postId: string, commentId: string) {
+  //   // Променяме постовете и използваме set, за да зададем нова стойност на posts
+  //   const updatedPosts = this.posts().map((post) => {
+  //     if (post._id === postId) {
+  //       return {
+  //         ...post,
+  //         comments: post.comments.map((comment: any) =>
+  //           comment._id === commentId
+  //             ? { ...comment, isLiked: !comment.isLiked }
+  //             : comment
+  //         ),
+  //       };
+  //     }
+  //     return post;
+  //   });
+
+  //   // Задаваме новото състояние на feed-а с set
+  //   this.posts.set(updatedPosts);
+
+  //   // Проверяваме ако постът е отворен в modal-а
+  //   const openedPost = this.openedPost();
+  //   if (openedPost && openedPost._id === postId) {
+  //     // Обновяваме коментара и в modal-а с set
+  //     this.openedPost.set({
+  //       ...openedPost,
+  //       comments: openedPost.comments.map((comment: any) =>
+  //         comment._id === commentId
+  //           ? { ...comment, isLiked: !comment.isLiked }
+  //           : comment
+  //       ),
+  //     });
+  //   }
+  // }
 }

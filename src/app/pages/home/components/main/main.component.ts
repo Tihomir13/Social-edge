@@ -25,19 +25,22 @@ import { NavigationComponent } from './components/navigation/navigation.componen
 })
 export class MainComponent implements OnInit {
   state = inject(MainStateService);
-  currProfileUserChat: any;
 
   constructor() {
     effect(() => {
       const newFriends = this.state.friends();
 
-      if (!this.currProfileUserChat || !newFriends) {
+      if (!this.state.currChatProfileUser() || !newFriends) {
         return;
       }
 
-      this.currProfileUserChat = newFriends.find(
-        (friend) => this.currProfileUserChat.username === friend.username
+      this.state.currChatProfileUser.update((currUser) =>
+        newFriends.find((friend) => currUser!.username === friend.username) || null
       );
+
+      // this.currProfileUserChat = newFriends.find(
+      //   (friend) => this.currProfileUserChat.username === friend.username
+      // );
     });
   }
 
@@ -46,7 +49,7 @@ export class MainComponent implements OnInit {
   }
 
   onMinimizeChat(user: any): void {
-    if(this.state.currentChatHeads().includes(user)) {
+    if (this.state.currentChatHeads().includes(user)) {
       return;
     }
 
@@ -60,16 +63,9 @@ export class MainComponent implements OnInit {
   }
 
   onProfileClick(username: string): void {
-    this.currProfileUserChat = this.state
-    .currentChatHeads()
-    .find((chatHead) => chatHead.username === username);
-
-    this.state.setChat(true);
-  }
-
-  onUserProfileClick(user: any): void {
-    this.currProfileUserChat = user;
-    console.log(user);
+    this.state.currChatProfileUser.set(this.state
+      .currentChatHeads()
+      .find((chatHead) => chatHead.username == username));
 
     this.state.setChat(true);
   }

@@ -89,13 +89,18 @@ export class FriendListComponent {
   }
 
   onSearch(value: string): void {
-    this.currentFriends?.update((currFriends) => {
-      return currFriends?.filter((friend) => friend.username.includes(value));
+    const searchedValueInLowerCase = value.toLowerCase();
+
+    this.currentFriends?.update(() => {
+      return this.mainState.friends()?.filter((friend) => 
+        friend.username.toLowerCase()
+        .includes(searchedValueInLowerCase));
     });
   }
 
   onUserProfileClick(friend: any): void {
-    this.open.emit(friend);
+    this.mainState.currChatProfileUser.set(friend);
+    this.mainState.setChat(true);
   }
 
   ngOnDestroy() {

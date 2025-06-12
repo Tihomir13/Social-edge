@@ -1,7 +1,37 @@
 <app-header />
 <app-main />
 
-@if(mainState.isLoading().friends || mainState.isLoading().posts ||
-mainState.isLoading().notifications || mainState.isLoading().profileImage) {
+@if((mainState.isLoading().posts || mainState.isLoading().profileImage) && currentRoute === 'feed') {
 <app-initial-loading-spinner />
+} 
+
+@if((mainState.isLoading().friends || mainState.isLoading().profileImage) && currentRoute === 'friends') {
+  <app-initial-loading-spinner />
+}
+
+@if (mainState.openedPost() && mainState.openedPost().isModal) {
+<div class="modal-overlay">
+  <div
+    class="post-modal-container" [class.without-image]="mainState.openedPost()?.images.length === 0"
+    [class.fixed-width]="mainState.openedPost().images.length === 0"
+  >
+    <app-post-modal
+      [username]="mainState.openedPost().author.username"
+      [authorProfileImg]="mainState.openedPost().author.profileImage"
+      [images]="mainState.openedPost().images"
+      [likes]="mainState.openedPost().likes"
+      [title]="mainState.openedPost().title"
+      [text]="mainState.openedPost().text"
+      [tags]="mainState.openedPost().tags"
+      [postId]="mainState.openedPost()._id"
+      [initialComments]="mainState.openedPost().comments"
+      [currUserImg]="mainState.userProfileImg()"
+      [initialTotalCommentsCount]="mainState.openedPost().commentsCount"
+      [totalLikes$]="mainState.openedPost().totalLikes"
+      [isLikedByCurrUser$]="mainState.openedPost().isLiked"
+      [createdAt]="mainState.openedPost().createdAt"
+      [isClickOutsideOn]="true"
+    />
+  </div>
+</div>
 }

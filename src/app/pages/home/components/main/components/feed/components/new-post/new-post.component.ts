@@ -13,20 +13,23 @@ import { FormArray, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 import { Subscription } from 'rxjs';
 
-import * as nsfwjs from 'nsfwjs';
 import { UtilityService } from '../../../../../../../../shared/services/utility/array-utility.service';
 import { StatusPickerComponent } from './status-picker/status-picker.component';
 import { statuses } from '../../../../../../../../shared/constants/arrays';
 import { maxImageSize } from '../../../../../../../../shared/constants/settings';
-import { ModalService } from '../../../../../../shared/services/modal.service';
 import { NewPostStateService } from './services/new-post-state.service';
 import { NewPostRequestsService } from './services/new-post-requests.service';
 import { NewPostFormServiceService } from '../../../../../../shared/services/new-post-form-service.service';
 import { MainStateService } from '../../../../shared/services/main-state.service';
 import { CustomModalComponent } from '../../../../../../../../shared/components/custom-modal/custom-modal.component';
-import { LoadingSpinnerComponent } from '../../../../../../../../shared/components/loading-spinner/loading-spinner.component';
+import {
+  LoadingSpinnerComponent,
+  size,
+} from '../../../../../../../../shared/components/loading-spinner/loading-spinner.component';
 
 import { PostModel } from '../post/model/post.model';
+import { ToxicityService } from '../../../../../../shared/services/AI/toxicity.service';
+import { NsfwService } from '../../../../../../shared/services/AI/nsfw.service';
 
 @Component({
   selector: 'app-new-post',
@@ -37,7 +40,7 @@ import { PostModel } from '../post/model/post.model';
     NgClass,
     NgStyle,
     CustomModalComponent,
-    LoadingSpinnerComponent
+    LoadingSpinnerComponent,
   ],
   providers: [UtilityService, NewPostRequestsService],
   templateUrl: './new-post.component.html',
@@ -47,6 +50,8 @@ export class NewPostComponent implements OnDestroy {
   get tags(): FormArray {
     return this.newPostFormService.newPostFormGroup()?.get('tags') as FormArray;
   }
+
+  loadingSize = size;
 
   isSubmitting: boolean = false;
   isImageLoading: boolean = false;
@@ -70,6 +75,8 @@ export class NewPostComponent implements OnDestroy {
   isDeletionModalOpened: boolean = false;
 
   newPostFormService = inject(NewPostFormServiceService);
+  toxicityService = inject(ToxicityService);
+  private nsfwService = inject(NsfwService);
 
   subscriptions = new Subscription();
 
@@ -134,9 +141,9 @@ export class NewPostComponent implements OnDestroy {
       }
 
       this.isImageLoading = true;
-      const nsfwCheck = await this.checkNsfw(file);
+      const nsfwCheck = await this.nsfwService.checkNsfw(file);
       this.isImageLoading = false;
-      
+
       if (!nsfwCheck) {
         this.newPostState.errorMsgPhoto =
           'NSFW content detected. Please, upload appropriate images.';
@@ -175,25 +182,6 @@ export class NewPostComponent implements OnDestroy {
   isValidFileSize(file: File): boolean {
     const maxFileSize = maxImageSize * 1024 * 1024;
     return file.size <= maxFileSize;
-  }
-
-  async checkNsfw(file: File): Promise<boolean> {
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = async () => {
-        const image = new Image();
-        image.src = reader.result as string;
-        image.onload = async () => {
-          const model = await nsfwjs.load('InceptionV3');
-          const predictions = await model.classify(image);
-          const nsfwResult = predictions.find(
-            (p) => p.className === 'Porn' || p.className === 'Hentai'
-          );
-          resolve(!(nsfwResult && nsfwResult.probability > 0.5));
-        };
-      };
-      reader.readAsDataURL(file);
-    });
   }
 
   async getPreviewUrl(file: File): Promise<string> {
@@ -307,32 +295,71 @@ export class NewPostComponent implements OnDestroy {
     }
   }
 
-  onSubmit(): void {
-    if (!this.newPostFormService.newPostFormGroup()?.valid || this.isSubmitting) {
+  async onSubmit(): Promise<void> {
+    if (
+      !this.newPostFormService.newPostFormGroup()?.valid ||
+      this.isSubmitting
+    ) {
       return;
     }
-  
+
     this.isSubmitting = true;
-  
+
+    setTimeout(() => {
+      if(this.isSubmitting) {
+        this.isSubmitting = false;
+      }
+    },30000);
+    
+    if (this.newPostFormService.newPostFormGroup().get('title')?.value !== null) {
+      const isTitleToxic = await this.toxicityService.checkToxicText(
+        this.newPostFormService.newPostFormGroup().get('title')!.value
+      );
+
+      if (isTitleToxic) {
+        this.resetPost();
+        return;
+      }
+    }
+    
+
+    if (this.newPostFormService.newPostFormGroup().get('text')?.value !== null) {
+      const isTextToxic = await this.toxicityService.checkToxicText(
+        this.newPostFormService.newPostFormGroup().get('text')!.value
+      );
+
+      if (isTextToxic) {
+        this.resetPost();
+        return;
+      }
+    }
+
+    for (const tag of this.tags.controls) {
+      const isTagToxic = await this.toxicityService.checkToxicText(tag.value);
+
+      if (isTagToxic) {
+        this.resetPost();
+        return;
+      }
+    }
+
     const formData = this.newPostFormService.newPostFormGroup()?.value;
-  
+
     this.subscriptions.add(
       this.newPostRequests.savePost(formData).subscribe({
-        next: (response: { messages?: string, fetchedNewPost?: PostModel}) => {
+        next: (response: { messages?: string; fetchedNewPost?: PostModel }) => {
           this.clearFormArrays();
           this.newPostFormService.newPostFormGroup()?.reset();
           this.newPostState.isCreatingNewPost = false;
-          this.newPostState.resetUI();
-          this.resetPost();
 
-          this.mainState.addNewPostToFeed(response.fetchedNewPost)
+          this.mainState.addNewPostToFeed(response.fetchedNewPost);
         },
         error: (error) => {
           console.error('Error saving post', error);
         },
         complete: () => {
-          this.isSubmitting = false;
-        }
+          this.resetPost();
+        },
       })
     );
   }
@@ -361,6 +388,8 @@ export class NewPostComponent implements OnDestroy {
     this.newPostFormService.newPostFormGroup().reset();
     this.newPostState.toggleNewPost(false);
     this.newPostState.removeGlobalClickListener();
+    this.newPostState.resetUI();
+    this.isSubmitting = false;
   }
 
   ngOnDestroy(): void {

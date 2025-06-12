@@ -37,7 +37,7 @@
       [ngClass]="{ 'd-none': this.newPostState.isCreatingNewPost }"
     />
 
-    <div class="status-container position-relative">
+    <div class="status-container">
       @if(this.newPostState.currentStatus === ''){
       <img
         class="add-status-icon"
@@ -146,14 +146,12 @@
 
       <button type="submit" class="btn" [class.btn-loading]='isSubmitting'>
         @if (isSubmitting) {
-          <app-loading-spinner [size]="'small'"/>
+          <app-loading-spinner [size]="loadingSize.small"/>
         }
         @else {
           Post
         }
       </button>
-
-      
     </div>
   </div>
   }

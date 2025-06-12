@@ -3,3 +3,10 @@ export interface messageModel {
   receiver: string;
   text: string;
 }
+
+export interface ChatUserModel {
+  username: string;
+  profileImage: { src: string; contentType: string } | null;
+  isOnline: boolean;
+}
+

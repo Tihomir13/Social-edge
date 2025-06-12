@@ -14,21 +14,24 @@ import { Router } from '@angular/router';
 import { MainStateService } from '../../shared/services/main-state.service';
 import { InputFieldComponent } from './components/input-field/input-field.component';
 import { MainSocketService } from '../../../../../../shared/services/websocket/main-socket.service';
-import { messageModel } from './interfaces';
+
 import { Subscription } from 'rxjs';
+
 import { MessagesRequestService } from './services/messages-request.service';
 import { LoadingSpinnerComponent } from '../../../../../../shared/components/loading-spinner/loading-spinner.component';
+import { TimeAgoPipe } from '../../../../../../shared/pipes/time-ago.pipe';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [InputFieldComponent, LoadingSpinnerComponent],
+  imports: [InputFieldComponent, LoadingSpinnerComponent, DatePipe, TimeAgoPipe],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss',
 })
 export class ChatComponent implements OnInit {
   currChatUser = input<any>();
-  minimizeChat = output();
+  minimizeChat = output<any>();
 
   isLoadingMessages: boolean = false;
 
@@ -47,6 +50,8 @@ export class ChatComponent implements OnInit {
   messages = signal<any>([])
 
   ngOnInit(): void {
+    console.log(this.currChatUser());
+
     this.mainSocketService.onNewMessage().subscribe((message) => {
       console.log('Получено съобщение:', message);
       this.messages.update(messages => [message, ...messages]);
@@ -57,8 +62,15 @@ export class ChatComponent implements OnInit {
     this.getMessages();
   }
 
+  isOlderThanAWeek(dateStr: string): boolean {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    return diff > 7 * 24 * 60 * 60 * 1000;
+  }
+
   navigateToProfile(): void {
-    this.router.navigate(['profile', this.currChatUser().username]);
+    this.router.navigate(['profile', this.currChatUser()!.username]);
   }
 
   onScroll(): void {
@@ -97,12 +109,16 @@ export class ChatComponent implements OnInit {
 
   onCloseChat(): void {
     this.mainState.setChat(false);
+
+    this.mainState.currentChatHeads.update(chatHeads => {
+      return chatHeads.filter(chatHead => chatHead.username !== this.currChatUser()!.username);
+    });
   }
 
   sendMessage(message: string | void): void {
     console.log(this.currChatUser());
 
-    this.mainSocketService.sendMessage(this.currChatUser().username, message!);
+    this.mainSocketService.sendMessage(this.currChatUser()!.username, message!);
   }
 
   getMessages(): void {

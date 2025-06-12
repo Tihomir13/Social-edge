@@ -70,8 +70,13 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  navToProfilePage(): void {
-    this.router.navigate(['profile', this.username, 'posts']);
+  onProfileImageClick(): void {
+    if (window.innerWidth <= 768) {
+      this.toggleArrow();
+    }
+    else {
+      this.router.navigate(['profile', this.username, 'posts']);
+    }
   }
 
   listenClickOutsideOfMenu(): void {
@@ -95,11 +100,11 @@ export class ProfileComponent implements OnInit {
     );
   }
 
-  onImageClick(): void {
-    if (this.isImageClickable) {
-      this.navToProfilePage();
-    }
-  }
+  // onImageClick(): void {
+  //   if (this.isImageClickable) {
+  //     this.navToProfilePage();
+  //   }
+  // }
 
   logout(): void {
     this.utilitySession.resetSession();
@@ -108,7 +113,9 @@ export class ProfileComponent implements OnInit {
   }
 
   options(): void {
-    // this.router.navigate(['/']);
+    this.renderer.removeClass(this.profileMenu.nativeElement, 'open');
+    this.renderer.removeClass(this.arrowImg.nativeElement, 'rotated');
+    this.router.navigate(['/settings']);
     // this.utilitySession.resetSession();
   }
 

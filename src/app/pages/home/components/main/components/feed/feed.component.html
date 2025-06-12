@@ -9,6 +9,8 @@
     [likes]="post.likes"
     [title]="post.title"
     [text]="post.text"
+    [date]="post.createdAt"
+    [status]="post.status"
     [tags]="post.tags"
     [postId]="post._id"
     [comments]="post.comments"
@@ -18,28 +20,17 @@
     [isLikedByCurrUser$]="post.isLiked"
   />
   }
-</div>
 
-@if (mainState.openedPost()) {
-<div class="modal-overlay">
-  <div class="post-modal-container" 
-  [class.fixed-width]='mainState.openedPost().images.length === 0'>
-    <app-post-modal
-      [username]="mainState.openedPost().author.username"
-      [authorProfileImg]="mainState.openedPost().author.profileImage"
-      [images]="mainState.openedPost().images"
-      [likes]="mainState.openedPost().likes"
-      [title]="mainState.openedPost().title"
-      [text]="mainState.openedPost().text"
-      [tags]="mainState.openedPost().tags"
-      [postId]="mainState.openedPost()._id"
-      [comments]="mainState.openedPost().comments"
-      [currUserImg]="mainState.userProfileImg()"
-      [totalCommentsCount]="mainState.openedPost().commentsCount"
-      [totalLikes$]="mainState.openedPost().totalLikes"
-      [isLikedByCurrUser$]="mainState.openedPost().isLiked"
-      [createdAt]="mainState.openedPost().createdAt"
-    />
-  </div>
+  @if (isLoadingPosts) {
+    <div class='w-100 text-center'>
+      <app-loading-spinner classes="text-black"/>
+    </div>
+  }
+
+  @if(this.mainState.posts()!.length === 0 && !isLoadingPosts) {
+    <div class="text-center mt-5">
+      <h4 class="text-secondary">No posts yet. But 
+        you can add some people</h4>
+    </div>
+  }
 </div>
-}

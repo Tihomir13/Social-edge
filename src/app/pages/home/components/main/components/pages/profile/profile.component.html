@@ -1,0 +1,159 @@
+<div class="profile-container mb-4">
+  @if(isLoadingProfile) {
+    <div class="mt-5 text-center">
+      <app-loading-spinner classes="text-dark" [size]="enumLoadingSpinnerSize.large"></app-loading-spinner> 
+    </div>
+  }
+  @else {
+  <div class="banner-container">
+    <img class="banner-image" [src]="bannerImage" alt="Banner image"  (click)="openModalBannerPhotoChange()" />
+    <img class="edit-image" src="assets/icons/profile-page/edit-image.svg" alt="Banner image" (click)="openModalBannerPhotoChange()" />
+  </div>
+
+  <div
+    class="profile-options-container row flex-md-row flex-column align-items-center m-auto"
+  >
+    <div
+      class="interaction-options-container col-md-4 col-12 order-md-1 order-3 d-flex justify-content-center"
+    >
+      <div
+        class="options-container"
+        [class.selected]="isSelectedPosts"
+        (click)="navigateToUserPosts()"
+      >
+        <img
+          class="image"
+          src="assets/icons/profile-page/posts.svg"
+          alt="Profile info icon"
+        />
+      </div>
+      <div
+        class="options-container"
+        [class.selected]="isSelectedInfo"
+        (click)="navigateToUserInfo()"
+      >
+        <img
+          class="image"
+          src="assets/icons/profile-page/profile-info.svg"
+          alt="Profile info icon"
+        />
+      </div>
+      <div
+        class="options-container"
+        [class.selected]="isSelectedFriends"
+        (click)="navigateToUserFriends()"
+      >
+        <img
+          class="image"
+          src="assets/icons/profile-page/friends.svg"
+          alt="Friends icon"
+        />
+      </div>
+      <!-- <div
+        class="options-container"
+        [class.selected]="isSelectedPhotos"
+        (click)="navigateToUserPhotos()"
+      >
+        <img
+          class="image"
+          src="assets/icons/profile-page/images.svg"
+          alt="Images icon"
+        />
+      </div> -->
+    </div>
+
+    <div
+      class="profile-general-container col-md-4 col-12 order-md-2 order-1 gap-3 d-flex flex-column justify-content-center p-0"
+    >
+      <div class="d-flex justify-content-center align-items-center profile-image-container p-0">
+        <img
+          width="300"
+          height="300"
+          class="profile-image"
+          [src]="state.isProfileOwner()? this.mainState.userProfileImg(): profileImage"
+          alt="Profile icon"
+          (click)="openModalProfilePhotoChange()"
+        />
+      </div>
+
+      <h1 class="fs-2 text-center">
+        <span>
+          {{ fullName }}
+        </span>
+
+        <span class="fs-4">
+          {{ "@" + username }}
+        </span>
+      </h1>
+
+      <span class="text-center fs-5">
+        {{ "friends: " + friendsCounter }}
+      </span>
+    </div>
+
+    @if(!state.isProfileOwner() && !isFriend && !isRequested && !isRequestedByRecipient) {
+    <div
+      class="add-btn-container col-md-4 col-12 order-md-3 order-2 d-flex justify-content-center"
+    >
+      <button class="btn" (click)="onAddFriend()">Add friend</button>
+    </div>
+    }
+
+    @if(!state.isProfileOwner() && isRequested) {
+      <div
+        class="remove-btn-container col-md-4 col-12 order-md-3 order-2 d-flex justify-content-center"
+      >
+        <button class="btn request" (click)="onRemoveFriendRequest()">Remove request</button>
+      </div>
+    }
+
+    @if(isFriend) {
+      <div
+        class="remove-btn-container col-md-4 col-12 order-md-3 order-2 d-flex justify-content-center"
+      >
+        <button class="btn" (click)="openModalRemoveFriend()">Remove friend</button>
+      </div>
+    }
+
+    @if(!state.isProfileOwner() && !isFriend && isRequestedByRecipient) {
+      <div
+        class="add-btn-container col-md-4 col-12 order-md-3 order-2 d-flex justify-content-center"
+      >
+        <button class="btn request" (click)="acceptFriendRequest()">Accept</button>
+      </div>
+    }
+  </div>
+  }
+</div>
+
+<div class="content">
+  <div [class.d-none]="isLoadingProfile">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+
+@if (isModalProfilePhotoOpened) {
+  <div class="modal-overlay">
+    <div class="modal-container">
+      <app-custom-modal (clickedOption)="onChoseOptionProfile($event)" [title]="'Choose Profile Photo'" [options]="modalPhotoOptions"></app-custom-modal>
+      <input class="d-none" type="file" #fileInput (change)="onAddFileProfile($event)" />
+    </div>
+  </div>
+}
+
+@if(isModalBannerPhotoOpened) {
+  <div class="modal-overlay">
+    <div class="modal-container">
+      <app-custom-modal (clickedOption)="onChoseOptionBanner($event)" [title]="'Choose Banner Photo'" [options]="modalPhotoOptions"></app-custom-modal>
+      <input class="d-none" type="file" #fileInput (change)="onAddFileBanner($event)" />
+    </div>
+  </div>
+}
+
+@if(isModalRemoveFriendOpened) {
+  <div class="modal-overlay">
+    <div class="modal-container">
+      <app-custom-modal (clickedOption)="onChoseOptionRemoveFriend($event)" [title]="'Are you sure you want to remove?'" [options]="modalRemoveFriendOptions"></app-custom-modal>
+    </div>
+  </div>
+}

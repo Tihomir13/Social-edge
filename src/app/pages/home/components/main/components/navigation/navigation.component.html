@@ -1,18 +1,25 @@
-<nav class="navigation-container mt-5">
-  <div class="row">
-    <ul class="list-unstyled d-flex justify-content-around flex-md-column gap-md-2 ">
+<nav class="navigation-container mt-md-5">
+  <div class="row mx-0 p-0">
+    <ul
+      class="list-unstyled d-flex justify-content-around flex-md-column gap-md-2 m-0"
+    >
       @for (item of navItems; track $index) {
       <li
         class="option"
         [ngClass]="{ 'selected-option': selectedOption === item }"
         (click)="selectOption(item.label)"
+        [class.d-md-none]="item.label === 'Chat'"
       >
         @if(selectedOption === item) {
         <div class="selected-option-dash"></div>
         }
 
-        <img [src]="item.icon" [alt]="item.label" />
-        <span class="label">{{ item.label }}</span>
+        <div class='d-flex align-items-center gap-1'>
+          <div class='icon-container d-flex align-items-center justify-content-center'>
+            <fa-icon class='fs-4' [icon]="item.icon"></fa-icon>
+          </div>
+          <span class="ms-2 label">{{ item.label }}</span>
+        </div>
       </li>
       }
     </ul>

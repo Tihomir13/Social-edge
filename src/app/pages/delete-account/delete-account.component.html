@@ -1,0 +1,26 @@
+<div class="container-fluid">
+  <div class="row">
+    <div
+      class="content-container content-container col-12 d-flex flex-column align-items-center justify-content-center gap-3 p-0"
+    >
+      <h1 class="fs-1 text-center text-danger">Account Deleted</h1>
+
+      <div class="form d-flex justify-content-center">
+        @if (isSuccessful) {
+        <p class="mb-4 fs-5">
+          Your account has been successfully deleted.<br />
+          We're sorry to see you go! <span class="fs-2">😭</span>
+        </p>
+        }
+
+        <button
+          [routerLink]="['/login']"
+          type="button"
+          class="btn btn-to-login"
+        >
+          Go back to Login
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

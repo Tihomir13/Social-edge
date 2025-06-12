@@ -6,6 +6,9 @@ import { LoginRequestsService } from '../../../services/login-requests.service';
 import { LoginFormService } from '../../../services/login-form.service';
 import { LoadingSpinnerComponent } from '../../../../../shared/components/loading-spinner/loading-spinner.component';
 
+import { UtilitySessionService } from '../../../../../shared/services/utility/utility.service';
+import { size } from '../../../../../shared/components/loading-spinner/loading-spinner.component';
+
 @Component({
   selector: 'app-login-form',
   standalone: true,
@@ -18,12 +21,15 @@ export class LoginFormComponent implements OnInit {
   isLoading: boolean = false;
   isErrorMsgShowed = false;
   errorMsg: string = '';
+  size = size;
 
   loginForm!: FormGroup;
 
   formService = inject(LoginFormService);
   reqService = inject(LoginRequestsService);
   router = inject(Router);
+  storage = inject(UtilitySessionService);
+  utilitySessionStorage = inject(UtilitySessionService);
 
   ngOnInit(): void {
     this.loginForm = this.formService.createLoginForm();
@@ -36,8 +42,12 @@ export class LoginFormComponent implements OnInit {
       this.reqService.loginUser(this.loginForm.value).subscribe({
         next: (response) => {
           console.log('User logged successfully', response);
-          sessionStorage.setItem('token', response.token);
-          sessionStorage.setItem('userInfo', JSON.stringify(response.userInfo));
+          
+          this.storage.setToken(response.token);
+          this.storage.setUserInfo(response.userInfo);
+
+          this.utilitySessionStorage.setToken(response.token);
+          this.utilitySessionStorage.setUserInfo(response.userInfo);
 
           this.router.navigate(['feed']);
           this.isErrorMsgShowed = false;

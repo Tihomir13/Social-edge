@@ -3,6 +3,8 @@ import { Component, inject, input } from '@angular/core';
 
 import { TimeAgoPipe } from '../../../../../../../../../../shared/pipes/time-ago.pipe';
 import { MainStateService } from '../../../../../../shared/services/main-state.service';
+import { Subscription, timer } from 'rxjs';
+import { PostsRequestsService } from '../../services/posts-requests.service';
 
 @Component({
   selector: 'app-comment',
@@ -11,46 +13,81 @@ import { MainStateService } from '../../../../../../shared/services/main-state.s
   styleUrl: './comment.component.scss',
 })
 export class CommentComponent {
+  postId = input<string>();
+  commentId = input<string>();
+
   authorProfileImage = input<any>();
   text = input<string>();
   username = input<string>();
-  likes = input(0);
   date = input(new Date());
-  totalLikes$ = input<number>();
-  isLikedByCurrUser$ = input<boolean>();
+  initialTotalLikes = input<number>(0);
+  initialIsLiked = input<boolean>();
   createdAt = input();
   isLiked: boolean | undefined;
   totalLikes: number | undefined;
-  
+
+  postRequests = inject(PostsRequestsService);
+
+  likeTimer: Subscription | null = null;
+
   isCollapsed = true;
 
   mainState = inject(MainStateService);
 
   ngOnInit(): void {
-    this.isLiked = this.isLikedByCurrUser$();
-    this.totalLikes = this.totalLikes$();
+    this.isLiked = this.initialIsLiked();
+    this.totalLikes = this.initialTotalLikes();
   }
 
   toggleReadMore(): void {
     this.isCollapsed = !this.isCollapsed;
   }
 
-  // toggleLike(): void {
-  //     // Променяме UI веднага
-  //     this.isLiked = !this.isLiked;
-  //     this.totalLikes! += this.isLiked ? 1 : -1;
-  
-  //     const currPostId = this.postId();
-  
-  //     // Ако има активен таймер за този пост – анулираме го
-  //     if (this.likeTimer) {
-  //       this.likeTimer.unsubscribe();
-  //     }
-  
-  //     // Стартираме нов таймер
-  //     this.likeTimer = timer(5000).subscribe(() => {
-  //       this.postLikeDislike(currPostId);
-  //       this.likeTimer = null; // След изпращане на заявка нулираме таймера
-  //     });
-  //   }
+  toggleLike(): void {
+    // Променяме UI веднага
+    this.isLiked = !this.isLiked;
+    this.totalLikes! += this.isLiked ? 1 : -1;
+
+    // Ако има активен таймер за този пост – анулираме го
+    if (this.likeTimer) {
+      this.likeTimer.unsubscribe();
+    }
+
+    // this.mainState.updateCommentLikeState(this.postId()!, this.commentId()!);
+
+    // Стартираме нов таймер
+    this.likeTimer = timer(5000).subscribe(() => {
+      this.commentLikeDislike();
+      this.likeTimer = null;
+    });
+  }
+
+  async commentLikeDislike(): Promise<void> {
+    try {
+      await this.postRequests
+        .likeComment(this.postId()!, this.commentId()!)
+        .toPromise();
+
+      this.mainState.posts.update((posts) =>
+        posts.map((post) => {
+          if (post._id !== this.postId()) return post;
+          return {
+            ...post,
+            comments: post.comments.map((comment: any) => {
+              if (comment.id === this.commentId()) {
+                return {
+                  ...comment,
+                  isLiked: this.isLiked,
+                  totalLikes: this.totalLikes,
+                };
+              }
+              return comment;
+            }),
+          };
+        })
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  }
 }

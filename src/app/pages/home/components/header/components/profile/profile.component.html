@@ -10,7 +10,7 @@
       width="45"
       height="45"
       alt="profile image"
-      (click)="navToProfilePage()"
+      (click)="onProfileImageClick()"
     />
 
     <div class="d-none d-md-flex flex-column">
@@ -29,7 +29,7 @@
 
   <div #profileMenu class="profile-menu d-flex align-items-end justify-content-center">
     <ul class="list-unstyled d-flex flex-column justify-content-center align-items-center">
-      <li class="option d-flex justify-content-center align-items-center" (click)="options()">Options</li>
+      <li class="option d-flex justify-content-center align-items-center" (click)="options()">Settings</li>
       <li class="option last-option d-flex justify-content-center align-items-center" (click)="logout()">Logout</li>
     </ul>
   </div>
