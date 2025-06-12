@@ -36,36 +36,35 @@ export class LoginFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.loginForm.valid) {
-      this.isLoading = true;
-
-      this.reqService.loginUser(this.loginForm.value).subscribe({
-        next: (response) => {
-          console.log('User logged successfully', response);
-          
-          this.storage.setToken(response.token);
-          this.storage.setUserInfo(response.userInfo);
-
-          this.utilitySessionStorage.setToken(response.token);
-          this.utilitySessionStorage.setUserInfo(response.userInfo);
-
-          this.router.navigate(['feed']);
-          this.isErrorMsgShowed = false;
-        },
-        error: (error) => {
-          console.error('Login failed', error);
-          this.errorMsg = error.error.message;
-
-          if (!this.errorMsg) {
-            return;
-          }
-
-          this.isErrorMsgShowed = true;
-        },
-        complete: () => {
-          this.isLoading = false;
-        },
-      });
+    if (!this.loginForm.valid) {
+      return;
     }
+    this.isLoading = true;
+
+    this.reqService.loginUser(this.loginForm.value).subscribe({
+      next: (response) => {
+        console.log('User logged successfully', response);
+
+        this.storage.setToken(response.token);
+        this.storage.setUserInfo(response.userInfo);
+
+        this.utilitySessionStorage.setToken(response.token);
+        this.utilitySessionStorage.setUserInfo(response.userInfo);
+
+        this.router.navigate(['feed']);
+        this.isLoading = false;
+        this.isErrorMsgShowed = false;
+      },
+      error: (error) => {
+        console.error('Login failed', error);
+        this.errorMsg = error.error.message;
+
+        if (!this.errorMsg) {
+          return;
+        }
+        this.isLoading = false;
+        this.isErrorMsgShowed = true;
+      },
+    });
   }
 }
