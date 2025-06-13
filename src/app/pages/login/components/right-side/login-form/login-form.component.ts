@@ -59,11 +59,12 @@ export class LoginFormComponent implements OnInit {
         console.error('Login failed', error);
         this.errorMsg = error.error.message;
 
-        if (!this.errorMsg) {
-          return;
-        }
         this.isLoading = false;
         this.isErrorMsgShowed = true;
+
+        // if (!this.errorMsg) {
+        //   return;
+        // }
       },
     });
   }
