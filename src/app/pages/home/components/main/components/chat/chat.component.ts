@@ -56,6 +56,13 @@ export class ChatComponent implements OnInit {
       console.log('Получено съобщение:', message);
       this.messages.update(messages => [message, ...messages]);
     });
+
+    this.mainState.friends.update((friends) => friends.map(friend => {
+      if (friend.username === this.currChatUser().username) {
+        return { ...friend, hasNewMessage: false };
+      }
+      return friend;
+    }))
   }
 
   ngOnChanges(): void {
@@ -81,7 +88,7 @@ export class ChatComponent implements OnInit {
 
   onScroll(): void {
     console.log(this.isOnTop(), this.nextCursor, !this.isLoadingMessages);
-    
+
     if (this.isOnTop() && this.nextCursor && !this.isLoadingMessages) {
       this.isLoadingMessages = true;
       this.msgRequestService

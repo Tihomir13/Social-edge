@@ -56,12 +56,16 @@ export class MainComponent implements OnInit {
 
       const senderUsername = message.sender
 
+      console.log(this.mainState.friends());
+      
       this.mainState.friends.update((friends) => friends.map(friend => {
         if (friend.username === senderUsername) {
-          return { ...friend, hasnewMessage: true };
+          return { ...friend, hasNewMessage: true };
         }
         return friend;
       }))
+
+      console.log(this.mainState.friends());
     });
   }
 
