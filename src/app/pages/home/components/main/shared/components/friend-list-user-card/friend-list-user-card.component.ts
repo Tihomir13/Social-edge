@@ -10,5 +10,6 @@ import { Component, input } from '@angular/core';
 export class FriendListUserCardComponent {
   username = input<string>();
   isOnline = input<boolean>();
+  newMessage = input<boolean>();
   profileImage = input();
 }

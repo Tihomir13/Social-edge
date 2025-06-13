@@ -70,6 +70,8 @@ export class HeaderComponent {
   onSearch(value: any): void {
     this.router.navigate(['search'], { queryParams: { query: value } });
 
+    this.mainState.isSearchingForPeople.set(true);
+
     this.subscriptions.add(
       this.requestSearchService.getSearchedProfiles(value).subscribe({
         next: (response) => {
@@ -79,13 +81,14 @@ export class HeaderComponent {
             }
             return user;
           });
-          console.log(users);
 
           this.mainState.setSearchedUsers(users);
+          this.mainState.isSearchingForPeople.set(false);
         },
         error: (error) => {
           console.log(error);
           this.mainState.setSearchedUsers([]);
+          this.mainState.isSearchingForPeople.set(false);
         },
       })
     );

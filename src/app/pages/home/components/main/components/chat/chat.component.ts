@@ -19,11 +19,13 @@ import { Subscription } from 'rxjs';
 
 import { MessagesRequestService } from './services/messages-request.service';
 import { LoadingSpinnerComponent } from '../../../../../../shared/components/loading-spinner/loading-spinner.component';
+import { TimeAgoPipe } from '../../../../../../shared/pipes/time-ago.pipe';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [InputFieldComponent, LoadingSpinnerComponent],
+  imports: [InputFieldComponent, LoadingSpinnerComponent, DatePipe, TimeAgoPipe],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss',
 })
@@ -49,29 +51,45 @@ export class ChatComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(this.currChatUser());
-    
+
     this.mainSocketService.onNewMessage().subscribe((message) => {
       console.log('Получено съобщение:', message);
       this.messages.update(messages => [message, ...messages]);
     });
+
+    this.mainState.friends.update((friends) => friends.map(friend => {
+      if (friend.username === this.currChatUser().username) {
+        return { ...friend, hasNewMessage: false };
+      }
+      return friend;
+    }))
   }
 
   ngOnChanges(): void {
     this.getMessages();
   }
 
+  isOlderThanAWeek(dateStr: string): boolean {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    return diff > 7 * 24 * 60 * 60 * 1000;
+  }
+
   navigateToProfile(): void {
     this.router.navigate(['profile', this.currChatUser()!.username]);
   }
 
-  onScroll(): void {
+  isOnTop(): boolean {
     const container = this.chat.nativeElement;
 
-    const isAtTop =
-      container.scrollHeight ===
-      Math.round(container.scrollTop * -1) + container.clientHeight;
+    return container.scrollHeight === container.scrollTop * -1 + container.clientHeight + 1;
+  }
 
-    if (isAtTop && this.nextCursor) {
+  onScroll(): void {
+    console.log(this.isOnTop(), this.nextCursor, !this.isLoadingMessages);
+
+    if (this.isOnTop() && this.nextCursor && !this.isLoadingMessages) {
       this.isLoadingMessages = true;
       this.msgRequestService
         .getMessages(this.currChatUser(), this.nextCursor, 20)

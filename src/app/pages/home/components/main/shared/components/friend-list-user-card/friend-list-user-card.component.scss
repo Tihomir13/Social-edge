@@ -1,6 +1,7 @@
 @import "../../../../../../../../styles.scss";
 
 .user-card {
+  position: relative;
   gap: 11px;
   padding: 7px;
   border-radius: 11px;
@@ -23,6 +24,15 @@
     position: absolute;
     right: -1px;
     top: 32px;
+    border-radius: 50%;
+    border: 2px solid $primary-background;
+  }
+
+  .new-notification-icon {
+    padding: 6px;
+    position: absolute;
+    right: 30px;
+    top: 22.5px;
     border-radius: 50%;
     border: 2px solid $primary-background;
   }

@@ -1,5 +1,5 @@
 <div class="search-container">
-  <h1 class="px-2 my-3">People</h1>
+  <h1 class="px-2 my-3">Search people</h1>
 
   <div
     class="profile-cards-container d-flex flex-column gap-2 px-2 px-md-0 gap-md-4"
@@ -18,4 +18,16 @@
     />
     }
   </div>
+
+  @if (mainState.isSearchingForPeople()) {
+    <div class='w-100 text-center'>
+      <app-loading-spinner classes="text-black"/>
+    </div>
+  }
+
+  @if(this.mainState.searchedUsers().length === 0 && !mainState.isSearchingForPeople()) {
+    <div class="text-center mt-5">
+      <h4 class="text-secondary">No users found</h4>
+    </div>
+  }
 </div>

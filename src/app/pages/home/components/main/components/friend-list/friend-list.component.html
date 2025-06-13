@@ -1,9 +1,9 @@
 <div class="content">
   <div class="row">
-    <div class="header pt-3">
+    <div class="header pt-3 d-flex flex-column align-items-center">
       <h4 class="text-center">Friends</h4>
 
-      <div class="search-bar-container">
+      <div class="search-bar-container w-100">
         <app-search-bar class="search-bar" (searchedText)="onSearch($event)" />
       </div>
     </div>
@@ -15,7 +15,8 @@
         <app-friend-list-user-card 
         [username]="friend.username" 
         [isOnline]="friend.isOnline" 
-        [profileImage]="friend.profileImage ? friend.profileImage.src : mainState.defaultProfileImg" 
+        [profileImage]="friend.profileImage ? friend.profileImage.src : mainState.defaultProfileImg"
+        [newMessage]='friend.hasNewMessage'
         (click)="onUserProfileClick(friend)"/>
       }
     </div>

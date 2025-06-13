@@ -33,6 +33,7 @@ export class FriendListComponent {
       username: string;
       isOnline: boolean;
       profileImage: { src: string; contentType: string };
+      hasNewMessage: boolean;
     }[]
   >([]);
 
@@ -49,7 +50,11 @@ export class FriendListComponent {
         this.friendRequest.getAllFriends(this.username).subscribe({
           next: (response) => {
             if (response.userFriends) {
+              // const multiplied = Array(20).fill(response.userFriends).flat();
+              // this.currentFriends.set(multiplied);
+
               this.mainState.setFriends(response.userFriends);
+
             }
           },
           error: (error) => {
@@ -92,9 +97,9 @@ export class FriendListComponent {
     const searchedValueInLowerCase = value.toLowerCase();
 
     this.currentFriends?.update(() => {
-      return this.mainState.friends()?.filter((friend) => 
+      return this.mainState.friends()?.filter((friend) =>
         friend.username.toLowerCase()
-        .includes(searchedValueInLowerCase));
+          .includes(searchedValueInLowerCase));
     });
   }
 

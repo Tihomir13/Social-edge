@@ -27,7 +27,7 @@
     </div>
   }
 
-  @if(this.mainState.posts()!.length === 0) {
+  @if(this.mainState.posts()!.length === 0 && !isLoadingPosts) {
     <div class="text-center mt-5">
       <h4 class="text-secondary">No posts yet. But 
         you can add some people</h4>

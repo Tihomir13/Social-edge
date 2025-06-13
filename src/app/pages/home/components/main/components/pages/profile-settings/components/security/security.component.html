@@ -1,46 +1,39 @@
 <div class="edit-profile-container">
   <h1 class="px-2 my-3">Security settings</h1>
 
-  <div class="back fs-5" (click)="navigateBack()">
+  <div class="px-2 back fs-5" (click)="navigateBack()">
     <fa-icon [icon]="backwardIcon"></fa-icon> Back
   </div>
 
   <div class="row mt-5">
     <form class="form" (ngSubmit)="onSubmit()" [formGroup]="passwordFormGroup">
       <label class="text-secondary" for="passwords">Change password</label>
-      <div
-        id="passwords"
-        class="d-flex flex-column gap-3"
-        formGroupName="passwords"
-      >
-        <input
-          class="form-control"
-          type="password"
-          placeholder="Old password*"
-          autocomplete="current-password"
-          formControlName="oldPassword"
-        />
+      <div id="passwords" class="d-flex flex-column gap-22px" formGroupName="passwords">
+        <input class="form-control" type="password" placeholder="Old password*" autocomplete="current-password"
+          formControlName="oldPassword" />
 
-        <input
-          class="form-control"
-          type="password"
-          placeholder="New password*"
-          autocomplete="new-password"
-          formControlName="newPassword"
-        />
+        @if(isOldPasswordWrong) {
+        <div class="invalid-message mb-22px">
+          Old password is not valid.
+        </div>
+        }
 
-        <input
-          class="form-control"
-          type="password"
-          placeholder="Confirm password*"
-          autocomplete="new-password"
-          formControlName="confirmNewPassword"
-        />
+        <input class="form-control" type="password" placeholder="New password*" autocomplete="new-password"
+          formControlName="newPassword" />
+
+        <input class="form-control" type="password" placeholder="Confirm password*" autocomplete="new-password"
+          formControlName="confirmNewPassword" />
 
         @if (!isPasswordValid) {
         <div class="invalid-message mb-22px">
           Invalid Password. Min 8 characters and include at least one uppercase
           letter, one number, and one special character
+        </div>
+        }
+
+        @if (isPasswordChangeSuccessfully) {
+        <div class="success-message bg-success mb-22px">
+          Password changed successfully.
         </div>
         }
         <div>

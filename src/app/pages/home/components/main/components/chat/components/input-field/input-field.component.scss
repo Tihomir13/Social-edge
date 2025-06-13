@@ -13,6 +13,10 @@
     outline: none;
     box-shadow: none;
   }
+
+  &::placeholder {
+    color: rgb(200, 200, 200);
+  }
 }
 
 .icon {
