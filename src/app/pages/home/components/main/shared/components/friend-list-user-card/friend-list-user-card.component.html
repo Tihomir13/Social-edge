@@ -10,8 +10,12 @@
         @else {
           <span class="status-icon bg-dark"></span>
         }
-      </div>
 
+      </div>
+      
+      @if(newMessage()) {
+        <span class="new-notification-icon bg-warning"></span>
+      }
       <span>{{ username() }}</span>
     </div>
   </div>

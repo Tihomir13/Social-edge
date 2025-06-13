@@ -33,6 +33,7 @@ export class FriendListComponent {
       username: string;
       isOnline: boolean;
       profileImage: { src: string; contentType: string };
+      hasNewMessage: boolean;
     }[]
   >([]);
 

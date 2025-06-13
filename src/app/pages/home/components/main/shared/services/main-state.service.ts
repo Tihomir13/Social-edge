@@ -10,10 +10,11 @@ export class MainStateService {
 
   posts = signal<any[]>([]);
   friends = signal<
-    {
+     {
       username: string;
       isOnline: boolean;
       profileImage: { src: string; contentType: string };
+      hasNewMessage: boolean;
     }[]
   >([]);
   currentChatHeads = signal<any[]>([]);
