@@ -73,14 +73,16 @@ export class ChatComponent implements OnInit {
     this.router.navigate(['profile', this.currChatUser()!.username]);
   }
 
-  onScroll(): void {
+  isOnTop(): boolean {
     const container = this.chat.nativeElement;
 
-    const isAtTop =
-      container.scrollHeight ===
-      Math.round(container.scrollTop * -1) + container.clientHeight;
+    return container.scrollHeight === container.scrollTop * -1 + container.clientHeight + 1;
+  }
 
-    if (isAtTop && this.nextCursor) {
+  onScroll(): void {
+    console.log(this.isOnTop(), this.nextCursor, !this.isLoadingMessages);
+    
+    if (this.isOnTop() && this.nextCursor && !this.isLoadingMessages) {
       this.isLoadingMessages = true;
       this.msgRequestService
         .getMessages(this.currChatUser(), this.nextCursor, 20)
