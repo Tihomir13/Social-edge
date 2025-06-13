@@ -7,6 +7,7 @@ import { MainStateService } from './shared/services/main-state.service';
 import { ChatComponent } from './components/chat/chat.component';
 import { PostsRequestsService } from './components/feed/components/post/services/posts-requests.service';
 import { NavigationComponent } from './components/navigation/navigation.component';
+import { MainSocketService } from '../../../../shared/services/websocket/main-socket.service';
 
 @Component({
   selector: 'app-main',
@@ -25,6 +26,9 @@ import { NavigationComponent } from './components/navigation/navigation.componen
 })
 export class MainComponent implements OnInit {
   state = inject(MainStateService);
+
+  mainSocketService = inject(MainSocketService)
+  mainState = inject(MainStateService)
 
   constructor() {
     effect(() => {
@@ -46,6 +50,19 @@ export class MainComponent implements OnInit {
 
   ngOnInit(): void {
     this.state.currentChatHeads = this.state.currentChatHeads;
+
+    this.mainSocketService.onNewMessage().subscribe((message) => {
+      console.log('Получено съобщение:', message);
+
+      const senderUsername = message.sender
+
+      this.mainState.friends.update((friends) => friends.map(friend => {
+        if (friend.username === senderUsername) {
+          return { ...friend, hasnewMessage: true };
+        }
+        return friend;
+      }))
+    });
   }
 
   onMinimizeChat(user: any): void {
