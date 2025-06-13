@@ -10,7 +10,7 @@ h1 {
 }
 
 .edit-profile-container {
-  max-width: 1000px;
+  max-width: 600px;
   margin: 0px auto;
 
   margin-bottom: 100px;
@@ -83,11 +83,10 @@ h1 {
 
 @media screen and (max-width: 768px) {
   .edit-profile-container {
-    padding: 20px 0px 20px 0px;
+    padding: 0px 20px 0px 20px;
     height: auto;
 
     .form {
-      max-width: 360px;
       width: 100%;
 
       .username-input-container,

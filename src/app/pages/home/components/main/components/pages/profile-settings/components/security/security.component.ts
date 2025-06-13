@@ -18,7 +18,9 @@ export class SecurityComponent {
   backwardIcon = faChevronLeft;
 
   isPasswordChangeSuccessfully = false;
-  isPasswordValid = true;
+  isPasswordValid: boolean = true;
+
+  isOldPasswordWrong = false;
 
   passwordFormGroup!: FormGroup;
   router = inject(Router);
@@ -35,6 +37,12 @@ export class SecurityComponent {
     this.passwordFormGroup = this.formService.createPasswordChangeFormGroup();
   }
 
+  resetErrors() {
+    this.isPasswordChangeSuccessfully = false;
+    this.isPasswordValid = true;
+    this.isOldPasswordWrong = false;
+  }
+
   onSubmit(): void {
     if (!this.passwordFormGroup.valid) {
       this.isPasswordValid = false;
@@ -47,7 +55,18 @@ export class SecurityComponent {
         .subscribe({
           next: (response) => {
             console.log('Password changed successfully:', response);
+            this.resetErrors();
+
             this.isPasswordChangeSuccessfully = true;
+          },
+          error: (error) => {
+            console.log(error.status);
+            
+            if (error.status === 401) {
+              this.isOldPasswordWrong = true;
+            }
+
+            this.isPasswordChangeSuccessfully = false;
           },
         })
     );
