@@ -340,6 +340,7 @@
               <textarea
                 class="form-control align-content-center"
                 [ngClass]="{ 'border-radius': comment.clientHeight > 57 }"
+                (keydown)="onKeyDown($event)"
                 #comment
                 type="text"
                 placeholder="Add a comment..."
@@ -353,7 +354,10 @@
 
             @if(comment.value.trim() !== '') {
             <div class="d-flex justify-content-end">
-              <button class="post-comment-btn" type="submit">Post</button>
+              <button 
+                class="post-comment-btn" 
+                type="submit"
+              >Post</button>
 
               <button
                 class="cancel-comment-btn"

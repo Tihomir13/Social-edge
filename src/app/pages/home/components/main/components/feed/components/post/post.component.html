@@ -221,6 +221,7 @@
             <textarea
               class="form-control align-content-center"
               [ngClass]="{ 'border-radius': comment.clientHeight > 57 }"
+              (keydown)="onKeyDown($event)"
               #comment
               type="text"
               placeholder="Add a comment..."
