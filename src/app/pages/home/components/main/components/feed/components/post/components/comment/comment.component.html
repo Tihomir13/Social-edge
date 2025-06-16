@@ -29,7 +29,7 @@
         
         @if(isMenuOpened) {
           <div class='options-menu-container position-absolute'>
-            <app-options-menu [isAuthor]="utilitySessionService.userInfo.username === username()"/>
+            <app-options-menu (editComment)="onEdit()"/>
           </div>
         }
       </div>
@@ -40,13 +40,39 @@
       [class.collapsed]="isCollapsed"
       [class.expanded]="!isCollapsed"
     >
-    {{ isCollapsed && text()!.length > 75 ? (text() | slice : 0 : 75) + "..." : text() }}
+    @if(currentText && !isEditing){
+      {{ isCollapsed && currentText!.length > 75 ? (currentText | slice : 0 : 75) + "..." : currentText }}
+    }
     </p>
-
-    @if (text()!.length > 100) {
+    @if (currentText!.length > 100) {
     <span (click)="toggleReadMore()" class="read-more">
       {{ isCollapsed ? "more" : "less" }}
     </span>
+    }
+
+    @if(currentText && isEditing) {
+      <form [formGroup]="editCommentFormGroup" (ngSubmit)="onSaveNewComment()">
+        <textarea
+            type="textarea"
+            rows="3"
+            class="form-control textarea mb-3"
+            formControlName="text"
+          >
+          </textarea>
+
+          <div class="btn-container d-flex justify-content-between mt-5">
+            <button type="button" class="btn btn-warning btn-cancel" (click)="cancelEditMode()">
+              Cancel
+            </button>
+            
+            <button
+            type="submit"
+            class="btn btn-primary"
+            >
+            Save
+          </button>
+        </div>
+      </form>
     }
 
     <div class="d-flex gap-3">

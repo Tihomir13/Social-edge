@@ -1,4 +1,4 @@
-import { Component, inject, input, output } from '@angular/core';
+import { Component, output } from '@angular/core';
 
 @Component({
   selector: 'app-options-menu',
@@ -7,43 +7,14 @@ import { Component, inject, input, output } from '@angular/core';
   styleUrl: './options-menu.component.scss',
 })
 export class OptionsMenuComponent {
-  isAuthor = input();
+  editComment = output();
+  deleteComment = output();
 
-  deletePost = output();
-  editPost = output();
+  toggleEdit() {
+    this.editComment.emit()
+  }
 
-  // mainState = inject(MainStateService)
-
-  // cancelEditMode() {
-  //   this.mainState.openedPost.update((prevPost) => ({
-  //     ...prevPost,
-  //     isEditing: false,
-  //   }));
-  // }
-
-  // toggleEdit() {
-  //   if (!this.mainState.openedPost()) {
-  //     this.editPost.emit();
-  //     return;
-  //   }
-
-  //   if (!this.mainState.openedPost() && !this.mainState.openedPost().isEditing) {
-  //     this.editPost.emit();
-  //     return;
-  //   }
-
-  //   if (this.mainState.openedPost() && !this.mainState.openedPost().isEditing) {
-  //     this.editPost.emit();
-  //     return;
-  //   }
-
-  //   if (this.mainState.openedPost() && this.mainState.openedPost().isEditing) {
-  //     this.cancelEditMode()
-  //     return;
-  //   }
-  // }
-
-  // onDeletePost(): void {
-  //   this.deletePost.emit();
-  // }
+  onDeleteComment(): void {
+    this.deleteComment.emit();
+  }
 }

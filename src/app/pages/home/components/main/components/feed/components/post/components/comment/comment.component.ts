@@ -9,10 +9,12 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
 import { OptionsMenuComponent } from './components/options-menu/options-menu.component';
 import { UtilitySessionService } from '../../../../../../../../../../shared/services/utility/utility.service';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ToxicityService } from '../../../../../../../../shared/services/AI/toxicity.service';
 
 @Component({
   selector: 'app-comment',
-  imports: [SlicePipe, TimeAgoPipe, FontAwesomeModule, OptionsMenuComponent],
+  imports: [SlicePipe, TimeAgoPipe, FontAwesomeModule, OptionsMenuComponent, ReactiveFormsModule],
   templateUrl: './comment.component.html',
   styleUrl: './comment.component.scss',
 })
@@ -22,6 +24,7 @@ export class CommentComponent {
 
   authorProfileImage = input<any>();
   text = input<string>();
+  currentText: string = "";
   username = input<string>();
   date = input(new Date());
   initialTotalLikes = input<number>(0);
@@ -30,6 +33,10 @@ export class CommentComponent {
   isLiked: boolean | undefined;
   totalLikes: number | undefined;
 
+  subscriptions = new Subscription();
+
+
+  isEditing = false;
   dotsIcon = faEllipsis;
   isMenuOpened = false;
   likeTimer: Subscription | null = null;
@@ -39,12 +46,22 @@ export class CommentComponent {
 
   postRequests = inject(PostsRequestsService);
   utilitySessionService = inject(UtilitySessionService);
+  toxicityService = inject(ToxicityService);
   mainState = inject(MainStateService);
   render = inject(Renderer2);
+  fb = inject(FormBuilder);
+
+  editCommentFormGroup!: FormGroup;
 
   ngOnInit(): void {
+    this.currentText = this.text() ?? "";
+
     this.isLiked = this.initialIsLiked();
     this.totalLikes = this.initialTotalLikes();
+
+    this.editCommentFormGroup = this.fb.group({
+      text: this.fb.control(this.text()),
+    });
   }
 
   toggleReadMore(): void {
@@ -79,6 +96,15 @@ export class CommentComponent {
     this.isMenuOpened = !this.isMenuOpened;
   }
 
+  onEdit(): void {
+    this.isMenuOpened = false;
+    this.isEditing = !this.isEditing;
+  }
+
+  cancelEditMode(): void {
+    this.isEditing = false;
+  }
+
   addListenerToOptionsMenu(): void {
     this.unlistenOptionsMenu = this.render.listen(
       'document',
@@ -92,6 +118,31 @@ export class CommentComponent {
         }
       }
     );
+  }
+
+  async onSaveNewComment(): Promise<void> {
+    if (this.editCommentFormGroup.value.text === this.text() && !this.editCommentFormGroup.valid) {
+      this.isEditing = false;
+      return;
+    }
+
+    const isToxicNewText = await this.toxicityService.checkToxicText(this.editCommentFormGroup.value.text)
+
+    if (isToxicNewText) {
+      this.isEditing = false;
+      return;
+    }
+
+    this.subscriptions.add(this.postRequests.editComment(this.postId()!, this.commentId()!, this.editCommentFormGroup.value.text).subscribe({
+      next: (response) => {
+        this.currentText = this.editCommentFormGroup.value.text;
+        this.isEditing = false;
+      },
+      error: (error) => {
+        console.log(error);
+        this.isEditing = false;
+      }
+    }))
   }
 
 

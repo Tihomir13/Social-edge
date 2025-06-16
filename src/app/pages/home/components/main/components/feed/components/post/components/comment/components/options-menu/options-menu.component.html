@@ -1,7 +1,7 @@
 <ul #postMenu class="post-menu list-unstyled d-flex flex-column justify-content-center align-items-center">
-    <li class="option first-option px-5 d-flex justify-content-center align-items-center">
+    <li class="option first-option px-5 d-flex justify-content-center align-items-center" (click)="toggleEdit()">
         Edit
     </li>
-    <li class="option delete-option px-5 d-flex justify-content-center align-items-center" >
+    <li class="option delete-option px-5 d-flex justify-content-center align-items-center" (click)="onDeleteComment()">
         Delete</li>
 </ul>
