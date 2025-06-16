@@ -84,8 +84,14 @@ export class PostsRequestsService {
     });
   }
 
+  deleteComment(postId: string, commentId: string): Observable<any> {
+    return this.http.delete(`${api}/posts/${postId}/comment/${commentId}`, {
+      headers: this.utility.headers,
+    });
+  }
+
   deletePost(postId: string): Observable<any> {
-    return this.http.delete(`${api}/posts/delete${postId}`, {
+    return this.http.delete(`${api}/posts/${postId}`, {
       headers: this.utility.headers,
     });
   }

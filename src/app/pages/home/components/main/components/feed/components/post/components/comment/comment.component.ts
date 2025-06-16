@@ -1,5 +1,5 @@
 import { SlicePipe } from '@angular/common';
-import { Component, inject, input, Renderer2 } from '@angular/core';
+import { Component, inject, input, output, Renderer2 } from '@angular/core';
 
 import { TimeAgoPipe } from '../../../../../../../../../../shared/pipes/time-ago.pipe';
 import { MainStateService } from '../../../../../../shared/services/main-state.service';
@@ -21,6 +21,8 @@ import { ToxicityService } from '../../../../../../../../shared/services/AI/toxi
 export class CommentComponent {
   postId = input<string>();
   commentId = input<string>();
+
+  deleteOutput = output<string>()
 
   authorProfileImage = input<any>();
   text = input<string>();
@@ -134,7 +136,7 @@ export class CommentComponent {
     }
 
     this.subscriptions.add(this.postRequests.editComment(this.postId()!, this.commentId()!, this.editCommentFormGroup.value.text).subscribe({
-      next: (response) => {
+      next: () => {
         this.currentText = this.editCommentFormGroup.value.text;
         this.isEditing = false;
       },
@@ -145,6 +147,40 @@ export class CommentComponent {
     }))
   }
 
+  onDeleteComment(): void {
+    this.isMenuOpened = false;
+
+    this.subscriptions.add(this.postRequests.deleteComment(this.postId()!, this.commentId()!).subscribe({
+      next: () => {
+        this.mainState.posts.update(posts =>
+          posts.map((post) => {
+            if (post._id === this.postId()) {
+              return {
+                ...post,
+                comments: post.comments.filter((comment: any) => comment._id !== this.commentId())
+              }
+            }
+            else return { ...post }
+          }
+          ))
+
+        this.deleteOutput.emit(this.commentId()!)
+
+        // if (this.mainState.openedPost()) {
+        //   this.mainState.openedPost.update(post => {
+        //     return {
+        //       ...post,
+        //       comments: post.comments.filter((comment: any) => comment._id !== this.commentId())
+        //     }
+        //   })
+        // }
+      },
+      error: (error) => {
+        console.log(error);
+        this.isEditing = false;
+      }
+    }))
+  }
 
   async commentLikeDislike(): Promise<void> {
     try {

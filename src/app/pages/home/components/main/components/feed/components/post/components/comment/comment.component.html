@@ -29,7 +29,7 @@
         
         @if(isMenuOpened) {
           <div class='options-menu-container position-absolute'>
-            <app-options-menu (editComment)="onEdit()"/>
+            <app-options-menu (editComment)="onEdit()" (deleteComment)="onDeleteComment()"/>
           </div>
         }
       </div>

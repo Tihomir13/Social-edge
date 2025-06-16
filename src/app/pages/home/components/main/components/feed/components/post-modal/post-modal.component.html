@@ -304,6 +304,8 @@
               [initialIsLiked]="comment.isLiked"
               [initialTotalLikes]="comment.totalLikes"
               [date]="comment.createdAt"
+              (deleteOutput)="onCommentDelete($event)"
+
             ></app-comment>
             } @if (totalCommentsCount() < comments().length) {
             <div

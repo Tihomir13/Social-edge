@@ -260,8 +260,12 @@ export class PostModalComponent {
     );
   }
 
+  onCommentDelete(commentId: string): void {
+    this.comments.update(comments => comments.filter((comment: any) => comment._id !== commentId))
+  }
+
   onComment(): void {
-    if(this.isLoadingComment) {
+    if (this.isLoadingComment) {
       return;
     }
 
