@@ -1,14 +1,18 @@
 import { SlicePipe } from '@angular/common';
-import { Component, inject, input } from '@angular/core';
+import { Component, inject, input, Renderer2 } from '@angular/core';
 
 import { TimeAgoPipe } from '../../../../../../../../../../shared/pipes/time-ago.pipe';
 import { MainStateService } from '../../../../../../shared/services/main-state.service';
 import { Subscription, timer } from 'rxjs';
 import { PostsRequestsService } from '../../services/posts-requests.service';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
+import { OptionsMenuComponent } from './components/options-menu/options-menu.component';
+import { UtilitySessionService } from '../../../../../../../../../../shared/services/utility/utility.service';
 
 @Component({
   selector: 'app-comment',
-  imports: [SlicePipe, TimeAgoPipe],
+  imports: [SlicePipe, TimeAgoPipe, FontAwesomeModule, OptionsMenuComponent],
   templateUrl: './comment.component.html',
   styleUrl: './comment.component.scss',
 })
@@ -26,13 +30,17 @@ export class CommentComponent {
   isLiked: boolean | undefined;
   totalLikes: number | undefined;
 
-  postRequests = inject(PostsRequestsService);
-
+  dotsIcon = faEllipsis;
+  isMenuOpened = false;
   likeTimer: Subscription | null = null;
-
   isCollapsed = true;
 
+  private unlistenOptionsMenu!: () => void;
+
+  postRequests = inject(PostsRequestsService);
+  utilitySessionService = inject(UtilitySessionService);
   mainState = inject(MainStateService);
+  render = inject(Renderer2);
 
   ngOnInit(): void {
     this.isLiked = this.initialIsLiked();
@@ -61,6 +69,31 @@ export class CommentComponent {
       this.likeTimer = null;
     });
   }
+
+  toggleCommentMenu(): void {
+    if (this.unlistenOptionsMenu) {
+      this.unlistenOptionsMenu();
+    }
+
+    this.addListenerToOptionsMenu();
+    this.isMenuOpened = !this.isMenuOpened;
+  }
+
+  addListenerToOptionsMenu(): void {
+    this.unlistenOptionsMenu = this.render.listen(
+      'document',
+      'click',
+      (event: Event) => {
+        const target = event.target as HTMLElement;
+
+        if (!target.closest('.options-container')) {
+          this.isMenuOpened = false;
+          this.unlistenOptionsMenu();
+        }
+      }
+    );
+  }
+
 
   async commentLikeDislike(): Promise<void> {
     try {
