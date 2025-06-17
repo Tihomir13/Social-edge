@@ -103,6 +103,8 @@ export class PostModalComponent {
   isCollapsed = true;
   subscriptions = new Subscription();
 
+  isLoadingComment = false;
+
   editPostFormGroup!: FormGroup;
 
   closeModal = output();
@@ -258,7 +260,17 @@ export class PostModalComponent {
     );
   }
 
+  onCommentDelete(commentId: string): void {
+    this.comments.update(comments => comments.filter((comment: any) => comment._id !== commentId))
+  }
+
   onComment(): void {
+    if (this.isLoadingComment) {
+      return;
+    }
+
+    this.isLoadingComment = true;
+
     const comment = this.commentFormGroup.value.comment.trim();
 
     if (this.commentFormGroup.valid) {
@@ -279,9 +291,12 @@ export class PostModalComponent {
             ]);
 
             this.totalCommentsCount.update((prevCount) => prevCount + 1);
+
+            this.isLoadingComment = false;
           },
           error: (error) => {
             console.log(error);
+            this.isLoadingComment = false;
           },
         })
       );
@@ -378,6 +393,13 @@ export class PostModalComponent {
       ...prevPost,
       isEditing: false,
     }));
+  }
+
+  onKeyDown(event: any): void {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      this.onComment();
+    }
   }
 
   //TODO : fixing prepopulating

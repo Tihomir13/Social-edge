@@ -1,5 +1,5 @@
 <div class="comment-container d-flex gap-3 mt-3">
-  <div class="d-flex flex-column align-items-center gap-2">
+  <div class="d-flex flex-column align-items-center gap-2 pt-3">
     <img
       class="profile-image"
       [src]="authorProfileImage() ? authorProfileImage().src : mainState.defaultProfileImg"
@@ -18,9 +18,21 @@
     />
   </div>
 
-  <div class="d-flex flex-column content">
-    <span>
+  <div class="d-flex flex-column content w-100">
+    <span class='d-flex justify-content-between align-items-center position-relative'>
       {{ username() }}
+
+      <div class='options-container'>
+        @if(utilitySessionService.userInfo.username === username()) {
+          <fa-icon class='options-dots fs-3' [icon]="dotsIcon" (click)="toggleCommentMenu()"></fa-icon>
+        }
+        
+        @if(isMenuOpened) {
+          <div class='options-menu-container position-absolute'>
+            <app-options-menu (editComment)="onEdit()" (deleteComment)="onDeleteComment()"/>
+          </div>
+        }
+      </div>
     </span>
 
     <p
@@ -28,13 +40,44 @@
       [class.collapsed]="isCollapsed"
       [class.expanded]="!isCollapsed"
     >
-    {{ isCollapsed && text()!.length > 75 ? (text() | slice : 0 : 75) + "..." : text() }}
+    @if(currentText && !isEditing){
+      {{ isCollapsed && currentText!.length > 75 ? (currentText | slice : 0 : 75) + "..." : currentText }}
+    }
     </p>
-
-    @if (text()!.length > 100) {
+    @if (currentText!.length > 100) {
     <span (click)="toggleReadMore()" class="read-more">
       {{ isCollapsed ? "more" : "less" }}
     </span>
+    }
+
+    @if(currentText && isEditing) {
+      <form [formGroup]="editCommentFormGroup" (ngSubmit)="onSaveNewComment()">
+        <textarea
+            type="textarea"
+            rows="3"
+            class="form-control textarea mb-3"
+            formControlName="text"
+          >
+          </textarea>
+
+          <div class="btn-container d-flex justify-content-between mt-5">
+            <button type="button" class="btn btn-cancel" (click)="cancelEditMode()">
+              Cancel
+            </button>
+            
+            <button
+            type="submit"
+            class="btn"
+            >
+            @if (isLoadingEditingRequest) {
+            <app-loading-spinner [size]="loadingSize.small"/>
+            }
+            @else {
+              Save
+            }
+          </button>
+        </div>
+      </form>
     }
 
     <div class="d-flex gap-3">

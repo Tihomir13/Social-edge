@@ -1,0 +1,35 @@
+@use '../../../../../../../../../../../../../styles.scss' as styles;
+
+.post-menu {
+    background-color: styles.$post-light-color;
+    border-radius: styles.$border-radius;
+    border: 1px solid styles.$primary-purple;
+    max-width: 130px;
+    margin-bottom: 0px;
+    width: 100%;
+
+    .option {
+        height: 40px;
+        width: 100%;
+        cursor: pointer;
+        transition: all 0.3s ease-out;
+
+        &:hover {
+            background-color: styles.$light-purple;
+            color: white;
+        }
+    }
+
+    .first-option {
+        border-radius: styles.$border-radius styles.$border-radius 0px 0px;
+    }
+
+    .delete-option {
+        border-radius: 0px 0px styles.$border-radius styles.$border-radius;
+
+        &:hover {
+            background-color: red;
+            color: white;
+        }
+    }
+}

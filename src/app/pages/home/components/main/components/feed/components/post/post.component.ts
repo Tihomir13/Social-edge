@@ -65,6 +65,7 @@ export class PostComponent implements OnInit, OnDestroy {
   isShareModalOpened: boolean = false;
   isCollapsed = true;
   isOptionsClicked = false;
+  isLoadingComment = false;
 
   likeTimer: Subscription | null = null;
 
@@ -164,6 +165,12 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   onComment(): void {
+    if (this.isLoadingComment) {
+      return;
+    }
+
+    this.isLoadingComment = true;
+
     const comment = this.commentFormGroup.value.comment.trim();
 
     if (this.commentFormGroup.valid) {
@@ -176,9 +183,12 @@ export class PostComponent implements OnInit, OnDestroy {
               response.formattedComment
             );
             console.log(response);
+
+            this.isLoadingComment = false;
           },
           error: (error) => {
             console.log(error);
+            this.isLoadingComment = false;
           },
         })
       );
@@ -250,6 +260,13 @@ export class PostComponent implements OnInit, OnDestroy {
 
   showShareModal() {
     this.isShareModalOpened = true;
+  }
+
+  onKeyDown(event: any): void {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      this.onComment();
+    }
   }
 
   onChoseOptionProfile(modalOption: string): void {
