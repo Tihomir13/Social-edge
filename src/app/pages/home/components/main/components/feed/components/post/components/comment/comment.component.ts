@@ -1,48 +1,55 @@
 import { SlicePipe } from '@angular/common';
 import { Component, inject, input, output, Renderer2 } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+
+import { Subscription, timer } from 'rxjs';
+
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
 
 import { TimeAgoPipe } from '../../../../../../../../../../shared/pipes/time-ago.pipe';
 import { MainStateService } from '../../../../../../shared/services/main-state.service';
-import { Subscription, timer } from 'rxjs';
 import { PostsRequestsService } from '../../services/posts-requests.service';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
 import { OptionsMenuComponent } from './components/options-menu/options-menu.component';
 import { UtilitySessionService } from '../../../../../../../../../../shared/services/utility/utility.service';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+
 import { ToxicityService } from '../../../../../../../../shared/services/AI/toxicity.service';
+import { LoadingSpinnerComponent, size } from '../../../../../../../../../../shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-comment',
-  imports: [SlicePipe, TimeAgoPipe, FontAwesomeModule, OptionsMenuComponent, ReactiveFormsModule],
+  imports: [SlicePipe, TimeAgoPipe, FontAwesomeModule, OptionsMenuComponent, ReactiveFormsModule, LoadingSpinnerComponent],
   templateUrl: './comment.component.html',
   styleUrl: './comment.component.scss',
 })
 export class CommentComponent {
+  loadingSize = size;
+
   postId = input<string>();
   commentId = input<string>();
-
-  deleteOutput = output<string>()
-
   authorProfileImage = input<any>();
   text = input<string>();
-  currentText: string = "";
+  currentText?: string;
   username = input<string>();
   date = input(new Date());
   initialTotalLikes = input<number>(0);
   initialIsLiked = input<boolean>();
   createdAt = input();
+
+  deleteOutput = output<string>()
+
   isLiked: boolean | undefined;
   totalLikes: number | undefined;
 
   subscriptions = new Subscription();
-
 
   isEditing = false;
   dotsIcon = faEllipsis;
   isMenuOpened = false;
   likeTimer: Subscription | null = null;
   isCollapsed = true;
+
+  isLoadingEditingRequest = false;
 
   private unlistenOptionsMenu!: () => void;
 
@@ -55,15 +62,23 @@ export class CommentComponent {
 
   editCommentFormGroup!: FormGroup;
 
+  ngOnChanges(): void {
+    if (this.text()) {
+      this.currentText = this.text()
+      this.editCommentFormGroup = this.fb.group({
+        text: this.fb.control(this.currentText),
+      });
+    }
+  }
+
   ngOnInit(): void {
-    this.currentText = this.text() ?? "";
+    console.log(this.text());
 
-    this.isLiked = this.initialIsLiked();
+
+    console.log(this.currentText);
+
     this.totalLikes = this.initialTotalLikes();
-
-    this.editCommentFormGroup = this.fb.group({
-      text: this.fb.control(this.text()),
-    });
+    this.isLiked = this.initialIsLiked();
   }
 
   toggleReadMore(): void {
@@ -123,10 +138,12 @@ export class CommentComponent {
   }
 
   async onSaveNewComment(): Promise<void> {
-    if (this.editCommentFormGroup.value.text === this.text() && !this.editCommentFormGroup.valid) {
+    if (this.editCommentFormGroup.value.text === this.text() && !this.editCommentFormGroup.valid && !this.isLoadingEditingRequest) {
       this.isEditing = false;
       return;
     }
+
+    this.isLoadingEditingRequest = true;
 
     const isToxicNewText = await this.toxicityService.checkToxicText(this.editCommentFormGroup.value.text)
 
@@ -139,10 +156,12 @@ export class CommentComponent {
       next: () => {
         this.currentText = this.editCommentFormGroup.value.text;
         this.isEditing = false;
+        this.isLoadingEditingRequest = false;
       },
       error: (error) => {
         console.log(error);
         this.isEditing = false;
+        this.isLoadingEditingRequest = false;
       }
     }))
   }
@@ -165,15 +184,6 @@ export class CommentComponent {
           ))
 
         this.deleteOutput.emit(this.commentId()!)
-
-        // if (this.mainState.openedPost()) {
-        //   this.mainState.openedPost.update(post => {
-        //     return {
-        //       ...post,
-        //       comments: post.comments.filter((comment: any) => comment._id !== this.commentId())
-        //     }
-        //   })
-        // }
       },
       error: (error) => {
         console.log(error);

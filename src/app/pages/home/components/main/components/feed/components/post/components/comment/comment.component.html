@@ -61,15 +61,20 @@
           </textarea>
 
           <div class="btn-container d-flex justify-content-between mt-5">
-            <button type="button" class="btn btn-warning btn-cancel" (click)="cancelEditMode()">
+            <button type="button" class="btn btn-cancel" (click)="cancelEditMode()">
               Cancel
             </button>
             
             <button
             type="submit"
-            class="btn btn-primary"
+            class="btn"
             >
-            Save
+            @if (isLoadingEditingRequest) {
+            <app-loading-spinner [size]="loadingSize.small"/>
+            }
+            @else {
+              Save
+            }
           </button>
         </div>
       </form>
