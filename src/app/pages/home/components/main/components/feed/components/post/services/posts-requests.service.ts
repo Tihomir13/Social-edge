@@ -59,7 +59,7 @@ export class PostsRequestsService {
   showMoreComments(
     postId: string,
     page: number,
-    limit: number = 10
+    limit: number
   ): Observable<any> {
     return this.http.get(`${api}/comments/get`, {
       params: { postId, page: page.toString(), limit: limit.toString() },
