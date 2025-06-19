@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnInit, signal } from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 import { FriendListComponent } from './components/friend-list/friend-list.component';
@@ -51,24 +51,20 @@ export class MainComponent implements OnInit {
   ngOnInit(): void {
     this.state.currentChatHeads = this.state.currentChatHeads;
 
-    this.mainSocketService.onNewMessage().subscribe((message) => {
-      console.log('Получено съобщение:', message);
+    if (!this.state.isChatActive()) {
+      this.mainSocketService.onNewMessage().subscribe((message) => {
+        console.log('Получено съобщение:', message);
 
-      const senderUsername = message.sender
+        const senderUsername = message.sender
 
-      console.log(this.mainState.friends());
-
-      if (!this.state.isChatActive()) {
         this.mainState.friends.update((friends) => friends.map(friend => {
           if (friend.username === senderUsername) {
             return { ...friend, hasNewMessage: true };
           }
           return friend;
         }))
-      }
-
-      console.log(this.mainState.friends());
-    });
+      });
+    }
   }
 
   onMinimizeChat(user: any): void {

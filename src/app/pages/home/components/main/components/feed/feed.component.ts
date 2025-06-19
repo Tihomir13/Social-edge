@@ -7,6 +7,7 @@ import { PostComponent } from './components/post/post.component';
 import { PostsRequestsService } from './components/post/services/posts-requests.service';
 import { MainStateService } from '../../shared/services/main-state.service';
 import { LoadingSpinnerComponent } from '../../../../../../shared/components/loading-spinner/loading-spinner.component';
+import { postsLimitPerFetch } from '../../../../../../shared/constants/settings';
 
 @Component({
   selector: 'app-feed',
@@ -25,7 +26,7 @@ export class FeedComponent implements OnInit {
   private postRequests = inject(PostsRequestsService);
 
   ngOnInit(): void {
-    this.getPosts();
+    this.getInitialPosts();
     window.addEventListener('scroll', this.onWindowScroll);
   }
 
@@ -43,20 +44,13 @@ export class FeedComponent implements OnInit {
     return scrollTop + windowHeight >= docHeight - 200;
   }
 
-  getPosts(): void {
+  getInitialPosts(): void {
     this.isLoadingPosts = true;
 
     this.subscriptions.add(
-      this.postRequests.getPosts(this.nextCursor, 10).subscribe({
+      this.postRequests.getPosts(this.nextCursor, postsLimitPerFetch).subscribe({
         next: (response: any) => {
-          console.log(response.posts);
-
-          if (this.mainState.posts().length === 0) {
-            this.mainState.setPosts(response.posts);
-          }
-          else {
-            this.mainState.updatePosts(response.posts);
-          }
+          this.mainState.setPosts(response.posts);
 
           if (response.nextCursor) {
             this.nextCursor = response.nextCursor;
@@ -66,7 +60,6 @@ export class FeedComponent implements OnInit {
             this.nextCursor = null;
           }
 
-          console.log(this.mainState.posts());
           this.isLoadingPosts = false;
         },
         error: (error) => {
@@ -81,9 +74,33 @@ export class FeedComponent implements OnInit {
     );
   }
 
-  // onShowMoreComments(post: { postId: string; pageNum: number }): void {
+  getPosts(): void {
+    this.isLoadingPosts = true;
 
-  // }
+    this.subscriptions.add(
+      this.postRequests.getPosts(this.nextCursor, postsLimitPerFetch).subscribe({
+        next: (response: any) => {
+          console.log(response.posts);
+          this.mainState.updatePosts(response.posts);
+
+          if (response.nextCursor) {
+            this.nextCursor = response.nextCursor;
+          } else if (response.posts && response.posts.length > 0) {
+            this.nextCursor = response.posts[response.posts.length - 1].id;
+          } else {
+            this.nextCursor = null;
+          }
+
+          this.isLoadingPosts = false;
+        },
+        error: (error) => {
+          console.log(error);
+
+          this.isLoadingPosts = false;
+        },
+      })
+    );
+  }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
