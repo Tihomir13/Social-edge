@@ -5,11 +5,10 @@ import {
   input,
   OnDestroy,
   OnInit,
-  output,
   Renderer2,
   ViewChild,
 } from '@angular/core';
-import { DatePipe, NgClass, SlicePipe } from '@angular/common';
+import { NgClass, SlicePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 

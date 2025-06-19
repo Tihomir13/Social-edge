@@ -14,7 +14,7 @@ import {
   FormGroup,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { NgClass, SlicePipe } from '@angular/common';
 
 import { debounceTime, Subscription, timer } from 'rxjs';
