@@ -28,10 +28,9 @@ import { OptionsMenuComponent } from '../post/components/options-menu/options-me
 import { UtilitySessionService } from '../../../../../../../../shared/services/utility/utility.service';
 import { CustomModalComponent } from '../../../../../../../../shared/components/custom-modal/custom-modal.component';
 import { ShareModalComponent } from '../../../../../../../../shared/components/share-modal/share-modal.component';
-import { AutoResizeChatTextareaDirective } from '../../../../../../../../shared/directives/auto-resize-chat-textarea.directive';
 import { TimeAgoPipe } from '../../../../../../../../shared/pipes/time-ago.pipe';
-import { ToxicityClassifier } from '@tensorflow-models/toxicity';
 import { ToxicityService } from '../../../../../../shared/services/AI/toxicity.service';
+import { commentsLimitPerFetch } from '../../../../../../../../shared/constants/settings';
 
 @Component({
   selector: 'app-post-modal',
@@ -238,7 +237,7 @@ export class PostModalComponent {
   showMoreComments(initial = false): void {
     this.subscriptions.add(
       this.postRequests
-        .showMoreComments(this.postId(), this.commentsPageNum)
+        .showMoreComments(this.postId(), this.commentsPageNum, commentsLimitPerFetch)
         .subscribe({
           next: (response: any) => {
             if (initial) {

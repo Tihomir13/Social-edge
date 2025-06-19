@@ -21,6 +21,7 @@ import { MessagesRequestService } from './services/messages-request.service';
 import { LoadingSpinnerComponent } from '../../../../../../shared/components/loading-spinner/loading-spinner.component';
 import { TimeAgoPipe } from '../../../../../../shared/pipes/time-ago.pipe';
 import { DatePipe } from '@angular/common';
+import { chatLimitMessagesPerFetch } from '../../../../../../shared/constants/settings';
 
 @Component({
   selector: 'app-chat',
@@ -92,7 +93,7 @@ export class ChatComponent implements OnInit {
     if (this.isOnTop() && this.nextCursor && !this.isLoadingMessages) {
       this.isLoadingMessages = true;
       this.msgRequestService
-        .getMessages(this.currChatUser(), this.nextCursor, 20)
+        .getMessages(this.currChatUser(), this.nextCursor, chatLimitMessagesPerFetch)
         .subscribe({
           next: (response) => {
             this.messages.update(messages => [...messages, ...response.messages])
