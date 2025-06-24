@@ -1,14 +1,13 @@
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
 
 import { Subscription } from 'rxjs';
 
 import { PostComponent } from '../../../../feed/components/post/post.component';
 import { ProfileRequestsService } from '../../services/profile-requests.service';
 import { MainStateService } from '../../../../../shared/services/main-state.service';
-import { PostsRequestsService } from '../../../../feed/components/post/services/posts-requests.service';
 import { LoadingSpinnerComponent, size } from '../../../../../../../../../shared/components/loading-spinner/loading-spinner.component';
+import { postsLimitPerFetch } from '../../../../../../../../../shared/constants/settings';
 
 @Component({
   selector: 'app-user-posts',
@@ -70,7 +69,7 @@ export class UserPostsComponent {
     this.isLoadingPosts = true;
 
     this.subscriptions.add(
-      this.profileRequestService.getUserPosts(this.username, this.nextCursor, 10).subscribe({
+      this.profileRequestService.getUserPosts(this.username, this.nextCursor, postsLimitPerFetch).subscribe({
         next: (response: any) => {
           if (this.posts().length === 0) {
             this.posts.set(response.posts);

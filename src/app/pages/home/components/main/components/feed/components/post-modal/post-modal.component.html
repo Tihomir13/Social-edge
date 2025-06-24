@@ -307,7 +307,7 @@
               (deleteOutput)="onCommentDelete($event)"
 
             ></app-comment>
-            } @if (totalCommentsCount() < comments().length) {
+            } @if ( comments().length < totalCommentsCount()) {
             <div
               class="view-more-btn my-3 mb-md-0 d-flex justify-content-center align-items-center"
               (click)="showMoreComments()"

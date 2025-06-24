@@ -16,7 +16,7 @@ import { Subscription } from 'rxjs';
 import { UtilityService } from '../../../../../../../../shared/services/utility/array-utility.service';
 import { StatusPickerComponent } from './status-picker/status-picker.component';
 import { statuses } from '../../../../../../../../shared/constants/arrays';
-import { maxImageSize } from '../../../../../../../../shared/constants/settings';
+import { maxImageSize, validImageFileTypes } from '../../../../../../../../shared/constants/settings';
 import { NewPostStateService } from './services/new-post-state.service';
 import { NewPostRequestsService } from './services/new-post-requests.service';
 import { NewPostFormServiceService } from '../../../../../../shared/services/new-post-form-service.service';
@@ -127,6 +127,7 @@ export class NewPostComponent implements OnDestroy {
         continue;
       }
 
+      // TODO Might change
       const isValidType = this.isValidFileType(file);
       if (!isValidType) {
         this.newPostState.errorMsgPhoto =
@@ -175,7 +176,7 @@ export class NewPostComponent implements OnDestroy {
   }
 
   isValidFileType(file: File): boolean {
-    const validFileTypes = ['image/png', 'image/jpeg'];
+    const validFileTypes = validImageFileTypes
     return validFileTypes.includes(file.type);
   }
 
@@ -306,11 +307,11 @@ export class NewPostComponent implements OnDestroy {
     this.isSubmitting = true;
 
     setTimeout(() => {
-      if(this.isSubmitting) {
+      if (this.isSubmitting) {
         this.isSubmitting = false;
       }
-    },30000);
-    
+    }, 30000);
+
     if (this.newPostFormService.newPostFormGroup().get('title')?.value !== null) {
       const isTitleToxic = await this.toxicityService.checkToxicText(
         this.newPostFormService.newPostFormGroup().get('title')!.value
@@ -321,7 +322,7 @@ export class NewPostComponent implements OnDestroy {
         return;
       }
     }
-    
+
 
     if (this.newPostFormService.newPostFormGroup().get('text')?.value !== null) {
       const isTextToxic = await this.toxicityService.checkToxicText(

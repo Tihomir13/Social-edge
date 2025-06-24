@@ -1,7 +1,6 @@
 import {
   Component,
   ElementRef,
-  HostListener,
   inject,
   OnDestroy,
   OnInit,
@@ -17,7 +16,7 @@ import { ProfileRequestsService } from './services/profile-requests.service';
 import { ProfileStateService } from './services/profile-state.service';
 import { ModalService } from '../../../../../shared/services/modal.service';
 import { CustomModalComponent } from '../../../../../../../shared/components/custom-modal/custom-modal.component';
-import { maxImageSize } from '../../../../../../../shared/constants/settings';
+import { maxImageSize, validImageFileTypes } from '../../../../../../../shared/constants/settings';
 import { MainStateService } from '../../../shared/services/main-state.service';
 import { NotificationsService } from '../../../../header/components/notifications-window/services/notifications.service';
 import { NsfwService } from '../../../../../shared/services/AI/nsfw.service';
@@ -418,7 +417,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   isValidFileType(file: File): boolean {
-    const validFileTypes = ['image/png', 'image/jpeg'];
+    const validFileTypes = validImageFileTypes;
     return validFileTypes.includes(file.type);
   }
 

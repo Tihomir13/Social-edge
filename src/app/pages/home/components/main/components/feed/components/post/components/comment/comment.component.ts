@@ -72,11 +72,6 @@ export class CommentComponent {
   }
 
   ngOnInit(): void {
-    console.log(this.text());
-
-
-    console.log(this.currentText);
-
     this.totalLikes = this.initialTotalLikes();
     this.isLiked = this.initialIsLiked();
   }
