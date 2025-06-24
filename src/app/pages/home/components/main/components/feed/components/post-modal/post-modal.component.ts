@@ -14,7 +14,7 @@ import {
   FormGroup,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { NgClass, SlicePipe } from '@angular/common';
 
 import { debounceTime, Subscription, timer } from 'rxjs';
@@ -28,10 +28,9 @@ import { OptionsMenuComponent } from '../post/components/options-menu/options-me
 import { UtilitySessionService } from '../../../../../../../../shared/services/utility/utility.service';
 import { CustomModalComponent } from '../../../../../../../../shared/components/custom-modal/custom-modal.component';
 import { ShareModalComponent } from '../../../../../../../../shared/components/share-modal/share-modal.component';
-import { AutoResizeChatTextareaDirective } from '../../../../../../../../shared/directives/auto-resize-chat-textarea.directive';
 import { TimeAgoPipe } from '../../../../../../../../shared/pipes/time-ago.pipe';
-import { ToxicityClassifier } from '@tensorflow-models/toxicity';
 import { ToxicityService } from '../../../../../../shared/services/AI/toxicity.service';
+import { commentsLimitPerFetch } from '../../../../../../../../shared/constants/settings';
 
 @Component({
   selector: 'app-post-modal',
@@ -238,7 +237,7 @@ export class PostModalComponent {
   showMoreComments(initial = false): void {
     this.subscriptions.add(
       this.postRequests
-        .showMoreComments(this.postId(), this.commentsPageNum)
+        .showMoreComments(this.postId(), this.commentsPageNum, commentsLimitPerFetch)
         .subscribe({
           next: (response: any) => {
             if (initial) {
@@ -260,8 +259,12 @@ export class PostModalComponent {
     );
   }
 
+  onCommentDelete(commentId: string): void {
+    this.comments.update(comments => comments.filter((comment: any) => comment._id !== commentId))
+  }
+
   onComment(): void {
-    if(this.isLoadingComment) {
+    if (this.isLoadingComment) {
       return;
     }
 

@@ -1,4 +1,4 @@
-@import "../../../../styles.scss";
+@use "../../../../styles.scss" as *;
 
 .google-auth-container {
   cursor: pointer;

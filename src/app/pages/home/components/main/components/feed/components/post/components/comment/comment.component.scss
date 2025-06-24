@@ -10,9 +10,47 @@
     cursor: pointer;
   }
 
+  .options-dots {
+    cursor: pointer;
+  }
+
+  .options-menu-container {
+    right: 0px;
+    top: 30px;
+  }
+
+  .btn {
+    height: 45px;
+    background-color: styles.$primary-purple;
+    color: rgb(255, 255, 255);
+    border-radius: 11px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    transition: 0.2s;
+    min-width: 76.81px;
+
+    &:hover {
+      background-color: styles.$light-purple;
+    }
+  }
+
+  .btn-loading {
+    filter: brightness(90%);
+  }
+
+  .btn-cancel {
+    background-color: transparent;
+    color: red;
+    border-color: red;
+
+    &:hover {
+      color: white;
+      background-color: red;
+    }
+  }
+
   .content {
     max-width: 380px;
-    
+
     @include styles.mobile {
       max-width: 280px;
     }

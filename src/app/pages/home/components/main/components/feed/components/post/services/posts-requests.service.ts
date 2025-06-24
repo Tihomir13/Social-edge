@@ -25,7 +25,7 @@ export class PostsRequestsService {
       headers: this.utility.headers,
     });
   }
-  
+
   getPostById(postId: string): Observable<any> {
     return this.http.get(`${api}/posts/${postId}`, this.headers);
   }
@@ -59,7 +59,7 @@ export class PostsRequestsService {
   showMoreComments(
     postId: string,
     page: number,
-    limit: number = 10
+    limit: number
   ): Observable<any> {
     return this.http.get(`${api}/comments/get`, {
       params: { postId, page: page.toString(), limit: limit.toString() },
@@ -68,17 +68,30 @@ export class PostsRequestsService {
   }
 
   editPost(postId: string, formData: FormData): Observable<any> {
-
-    console.log(postId, formData);
-
-
     return this.http.patch(`${api}/posts/edit${postId}`, formData, {
       headers: this.utility.headers,
     });
   }
 
+  editComment(postId: string, commentId: string, newText: string): Observable<any> {
+    const body = {
+      commentId,
+      newText
+    };
+
+    return this.http.patch(`${api}/comments/edit${postId}`, body, {
+      headers: this.utility.headers,
+    });
+  }
+
+  deleteComment(postId: string, commentId: string): Observable<any> {
+    return this.http.delete(`${api}/posts/${postId}/comment/${commentId}`, {
+      headers: this.utility.headers,
+    });
+  }
+
   deletePost(postId: string): Observable<any> {
-    return this.http.delete(`${api}/posts/delete${postId}`, {
+    return this.http.delete(`${api}/posts/${postId}`, {
       headers: this.utility.headers,
     });
   }
