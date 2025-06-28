@@ -34,7 +34,7 @@ export class NewPostRequestsService {
       console.log(key, value);
     });
 
-    return this.http.post(`${api}/new-posts`, formData, {
+    return this.http.post(`${api}/posts/create`, formData, {
       headers: this.utility.headers,
     });
   }
