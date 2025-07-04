@@ -6,7 +6,7 @@
     </div>
 
     <h2 class="fs-4 text-dark container-text d-flex align-items-center mt-2 mb-3 justify-content-center">
-        {{ user().username }}
+        {{ user().username | maxLengthPipe:10:true}}
     </h2>
 
     <div class='container-btn'>

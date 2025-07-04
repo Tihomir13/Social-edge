@@ -296,11 +296,28 @@ export class NewPostComponent implements OnDestroy {
     }
   }
 
+  isFormEmpty(): boolean {
+    if (this.newPostFormService.newPostFormGroup()?.value.images.length === 0
+      && this.newPostFormService.newPostFormGroup()?.value.tags.length === 0
+      && this.newPostFormService.newPostFormGroup()?.value.status === null
+      && this.newPostFormService.newPostFormGroup()?.value.text === null
+      && this.newPostFormService.newPostFormGroup()?.value.title === null) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
   async onSubmit(): Promise<void> {
     if (
       !this.newPostFormService.newPostFormGroup()?.valid ||
       this.isSubmitting
     ) {
+      return;
+    }
+
+    if (this.isFormEmpty()) {
       return;
     }
 
