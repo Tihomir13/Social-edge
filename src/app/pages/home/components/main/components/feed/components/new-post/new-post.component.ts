@@ -340,7 +340,6 @@ export class NewPostComponent implements OnDestroy {
       }
     }
 
-
     if (this.newPostFormService.newPostFormGroup().get('text')?.value !== null) {
       const isTextToxic = await this.toxicityService.checkToxicText(
         this.newPostFormService.newPostFormGroup().get('text')!.value

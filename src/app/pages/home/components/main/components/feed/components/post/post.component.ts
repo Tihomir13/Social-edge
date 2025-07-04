@@ -26,6 +26,8 @@ import { PostMethodsService } from './services/post-methods.service';
 import { CustomModalComponent } from '../../../../../../../../shared/components/custom-modal/custom-modal.component';
 import { ShareModalComponent } from '../../../../../../../../shared/components/share-modal/share-modal.component';
 import { TimeAgoPipe } from '../../../../../../../../shared/pipes/time-ago.pipe';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-post',
@@ -40,6 +42,7 @@ import { TimeAgoPipe } from '../../../../../../../../shared/pipes/time-ago.pipe'
     CustomModalComponent,
     ShareModalComponent,
     TimeAgoPipe,
+    FontAwesomeModule
   ],
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss',
@@ -65,6 +68,8 @@ export class PostComponent implements OnInit, OnDestroy {
   isCollapsed = true;
   isOptionsClicked = false;
   isLoadingComment = false;
+
+  dotsIcon = faEllipsis;
 
   likeTimer: Subscription | null = null;
 

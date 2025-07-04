@@ -32,12 +32,7 @@
 
     @if(this.utilityService.userInfo.username === username()) {
       <div class="options-container">
-        <img
-          class="options-icon"
-          src="assets/icons/more.svg"
-          alt=""
-          (click)="toggleOptionsMenu()"
-        />
+        <fa-icon class='options-icon fs-3' [icon]="dotsIcon" (click)="toggleOptionsMenu()"></fa-icon>
 
         @if(isOptionsClicked) {
         <app-options-menu
