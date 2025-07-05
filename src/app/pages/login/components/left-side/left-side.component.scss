@@ -1,15 +1,26 @@
+@use "../../../../../styles.scss" as *;
+
 .image-container {
   margin-left: 85px;
 
   img {
     margin-bottom: 5%;
     border-radius: 11px;
-    width: 300px;
+    width: 350px;
   }
 
   .slogan {
-    font-size: 26px;
-    font-family: 'Roboto', 'sans-serif';
+    font-size: 32px;
+    font-weight: 300;
+    font-family: "Montserrat", "sans-serif";
+  }
+
+  .span-1 {
+    color: rgb(110, 1, 173);
+  }
+
+  .span-2 {
+    color: rgb(160, 41, 248);
   }
 }
 

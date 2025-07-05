@@ -72,6 +72,10 @@ $border-radius: 11px;
   }
 }
 
+.montserrat-font {
+  font-family: Montserrat, sans-serif;
+}
+
 .border-radius {
   border-radius: $border-radius !important;
 }
@@ -114,7 +118,7 @@ $border-radius: 11px;
     max-width: 1100px;
     width: 100%;
     z-index: 1001;
-    
+
     &.without-image {
       max-width: 500px;
     }
