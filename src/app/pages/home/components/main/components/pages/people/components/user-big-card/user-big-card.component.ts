@@ -1,14 +1,15 @@
 import { Component, inject, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+import { Subscription } from 'rxjs';
+
 import { MainStateService } from '../../../../../shared/services/main-state.service';
 import { ProfileRequestsService } from '../../../profile/services/profile-requests.service';
-
-import { Subscription } from 'rxjs';
+import { MaxLengthPipe } from '../../../../../../../../../shared/pipes/max-length.pipe';
 
 @Component({
   selector: 'app-user-big-card',
-  imports: [RouterLink],
+  imports: [RouterLink, MaxLengthPipe],
   templateUrl: './user-big-card.component.html',
   styleUrl: './user-big-card.component.scss',
 })
