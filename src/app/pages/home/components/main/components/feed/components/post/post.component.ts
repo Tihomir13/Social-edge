@@ -25,6 +25,7 @@ import { OptionsMenuComponent } from './components/options-menu/options-menu.com
 import { PostMethodsService } from './services/post-methods.service';
 import { CustomModalComponent } from '../../../../../../../../shared/components/custom-modal/custom-modal.component';
 import { ShareModalComponent } from '../../../../../../../../shared/components/share-modal/share-modal.component';
+import { ToxicityService } from '../../../../../../shared/services/AI/toxicity.service';
 import { TimeAgoPipe } from '../../../../../../../../shared/pipes/time-ago.pipe';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
@@ -42,7 +43,7 @@ import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
     CustomModalComponent,
     ShareModalComponent,
     TimeAgoPipe,
-    FontAwesomeModule
+    FontAwesomeModule,
   ],
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss',
@@ -105,6 +106,7 @@ export class PostComponent implements OnInit, OnDestroy {
   mainState = inject(MainStateService);
   utilityService = inject(UtilitySessionService);
   formBuilder = inject(FormBuilder);
+  toxicityService = inject(ToxicityService);
 
   ngOnChanges() {
     this.totalLikes = this.totalLikes$();
@@ -168,7 +170,7 @@ export class PostComponent implements OnInit, OnDestroy {
     }
   }
 
-  onComment(): void {
+  async onComment(): Promise<void> {
     if (this.isLoadingComment) {
       return;
     }
@@ -176,6 +178,13 @@ export class PostComponent implements OnInit, OnDestroy {
     this.isLoadingComment = true;
 
     const comment = this.commentFormGroup.value.comment.trim();
+
+    const isCommentToxic = await this.toxicityService.checkToxicText(comment);
+
+    if (isCommentToxic) {
+      this.isLoadingComment = false;
+      return;
+    }
 
     if (this.commentFormGroup.valid) {
       this.subscriptions.add(
