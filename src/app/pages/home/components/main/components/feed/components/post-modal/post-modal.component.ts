@@ -237,7 +237,11 @@ export class PostModalComponent {
   showMoreComments(initial = false): void {
     this.subscriptions.add(
       this.postRequests
-        .showMoreComments(this.postId(), this.commentsPageNum, commentsLimitPerFetch)
+        .showMoreComments(
+          this.postId(),
+          this.commentsPageNum,
+          commentsLimitPerFetch
+        )
         .subscribe({
           next: (response: any) => {
             if (initial) {
@@ -260,10 +264,12 @@ export class PostModalComponent {
   }
 
   onCommentDelete(commentId: string): void {
-    this.comments.update(comments => comments.filter((comment: any) => comment._id !== commentId))
+    this.comments.update((comments) =>
+      comments.filter((comment: any) => comment._id !== commentId)
+    );
   }
 
-  onComment(): void {
+  async onComment(): Promise<void> {
     if (this.isLoadingComment) {
       return;
     }
@@ -271,6 +277,13 @@ export class PostModalComponent {
     this.isLoadingComment = true;
 
     const comment = this.commentFormGroup.value.comment.trim();
+
+    const isCommentToxic = await this.toxicityService.checkToxicText(comment);
+
+    if (isCommentToxic) {
+      this.isLoadingComment = false;
+      return;
+    }
 
     if (this.commentFormGroup.valid) {
       this.subscriptions.add(
