@@ -4,7 +4,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { UtilitySessionService } from '../../../../../../../../../shared/services/utility/utility.service';
-import { api } from '../../../../../../../../../shared/constants/api';
+import { environment } from '../../../../../../../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -20,14 +20,14 @@ export class PostsRequestsService {
   getPosts(cursor: string | null, limit: number): Observable<any> {
     const params: any = { limit };
     if (cursor) params.cursor = cursor;
-    return this.http.get(`${api}/posts`, {
+    return this.http.get(`${environment.api}/posts`, {
       params,
       headers: this.utility.headers,
     });
   }
 
   getPostById(postId: string): Observable<any> {
-    return this.http.get(`${api}/posts/${postId}`, this.headers);
+    return this.http.get(`${environment.api}/posts/${postId}`, this.headers);
   }
 
   likePost(postId: string): Observable<any> {
@@ -35,7 +35,7 @@ export class PostsRequestsService {
       id: postId,
     };
 
-    return this.http.patch(`${api}/posts/like`, body, this.headers);
+    return this.http.patch(`${environment.api}/posts/like`, body, this.headers);
   }
 
   likeComment(postId: string, commentId: string): Observable<any> {
@@ -44,7 +44,7 @@ export class PostsRequestsService {
       commentId,
     };
 
-    return this.http.patch(`${api}/comments/like`, body, this.headers);
+    return this.http.patch(`${environment.api}/comments/like`, body, this.headers);
   }
 
   commentPost(comment: string, postId: string): Observable<any> {
@@ -53,7 +53,7 @@ export class PostsRequestsService {
       comment,
     };
 
-    return this.http.patch(`${api}/comments/add`, body, this.headers);
+    return this.http.patch(`${environment.api}/comments/add`, body, this.headers);
   }
 
   showMoreComments(
@@ -61,14 +61,14 @@ export class PostsRequestsService {
     page: number,
     limit: number
   ): Observable<any> {
-    return this.http.get(`${api}/comments/get`, {
+    return this.http.get(`${environment.api}/comments/get`, {
       params: { postId, page: page.toString(), limit: limit.toString() },
       headers: this.utility.headers,
     });
   }
 
   editPost(postId: string, formData: FormData): Observable<any> {
-    return this.http.patch(`${api}/posts/edit${postId}`, formData, {
+    return this.http.patch(`${environment.api}/posts/edit${postId}`, formData, {
       headers: this.utility.headers,
     });
   }
@@ -79,19 +79,19 @@ export class PostsRequestsService {
       newText
     };
 
-    return this.http.patch(`${api}/comments/edit${postId}`, body, {
+    return this.http.patch(`${environment.api}/comments/edit${postId}`, body, {
       headers: this.utility.headers,
     });
   }
 
   deleteComment(postId: string, commentId: string): Observable<any> {
-    return this.http.delete(`${api}/posts/${postId}/comment/${commentId}`, {
+    return this.http.delete(`${environment.api}/posts/${postId}/comment/${commentId}`, {
       headers: this.utility.headers,
     });
   }
 
   deletePost(postId: string): Observable<any> {
-    return this.http.delete(`${api}/posts/${postId}`, {
+    return this.http.delete(`${environment.api}/posts/${postId}`, {
       headers: this.utility.headers,
     });
   }

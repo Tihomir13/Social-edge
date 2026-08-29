@@ -3,7 +3,7 @@ import { inject, Injectable, Signal, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import io from 'socket.io-client';
-import { api } from '../../constants/api';
+import { environment } from '../../../../environments/environment';
 import { MainStateService } from '../../../pages/home/components/main/shared/services/main-state.service';
 import { UtilitySessionService } from '../utility/utility.service';
 
@@ -16,7 +16,7 @@ export class MainSocketService {
   private utilitySessionStorage = inject(UtilitySessionService);
 
   token = this.utilitySessionStorage.getToken();
-  private socket = io(`${api}?token=${this.token}`);
+  private socket = io(`${environment.api}?token=${this.token}`);
 
   sendStatus() {
     this.socket.emit('set-status');

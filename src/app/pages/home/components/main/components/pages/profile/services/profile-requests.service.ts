@@ -4,7 +4,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { UtilitySessionService } from '../../../../../../../../shared/services/utility/utility.service';
-import { api } from '../../../../../../../../shared/constants/api';
+import { environment } from '../../../../../../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -18,13 +18,13 @@ export class ProfileRequestsService {
   };
 
   getInitialUserData(username: string): Observable<any> {
-    return this.http.get(`${api}/profiles/${username}`, this.headers);
+    return this.http.get(`${environment.api}/profiles/${username}`, this.headers);
   }
 
   getUserPosts(username: string, cursor: string | null, limit: number): Observable<any> {
     const params: any = { limit };
     if (cursor) params.cursor = cursor;
-    return this.http.get(`${api}/profiles/${username}/posts`, {
+    return this.http.get(`${environment.api}/profiles/${username}/posts`, {
       params,
       headers: this.utility.headers,
     });
@@ -33,18 +33,18 @@ export class ProfileRequestsService {
   getPosts(cursor: string | null, limit: number): Observable<any> {
     const params: any = { limit };
     if (cursor) params.cursor = cursor;
-    return this.http.get(`${api}/posts`, {
+    return this.http.get(`${environment.api}/posts`, {
       params,
       headers: this.utility.headers,
     });
   }
 
   getUserInfo(username: string): Observable<any> {
-    return this.http.get(`${api}/profiles/${username}/info`, this.headers);
+    return this.http.get(`${environment.api}/profiles/${username}/info`, this.headers);
   }
 
   addUserInfo(body: any): Observable<any> {
-    return this.http.post(`${api}/profiles/info`, body, this.headers);
+    return this.http.post(`${environment.api}/profiles/info`, body, this.headers);
   }
 
   addNewProfilePhoto(
@@ -52,7 +52,7 @@ export class ProfileRequestsService {
     newProfilePhoto: any
   ): Observable<Object> {
     return this.http.post(
-      `${api}/profiles/${username}/new-profile-photo`,
+      `${environment.api}/profiles/${username}/new-profile-photo`,
       newProfilePhoto,
       {
         headers: this.utility.headers,
@@ -62,7 +62,7 @@ export class ProfileRequestsService {
 
   removeProfilePhoto(username: string | null): Observable<Object> {
     return this.http.delete(
-      `${api}/profiles/${username}/profile-photo-remove`,
+      `${environment.api}/profiles/${username}/profile-photo-remove`,
       {
         headers: this.utility.headers,
       }
@@ -74,7 +74,7 @@ export class ProfileRequestsService {
     newBannerPhoto: any
   ): Observable<Object> {
     return this.http.post(
-      `${api}/profiles/${username}/new-banner-photo`,
+      `${environment.api}/profiles/${username}/new-banner-photo`,
       newBannerPhoto,
       {
         headers: this.utility.headers,
@@ -83,35 +83,35 @@ export class ProfileRequestsService {
   }
 
   removeBannerPhoto(username: string | null): Observable<Object> {
-    return this.http.delete(`${api}/profiles/${username}/banner-photo-remove`, {
+    return this.http.delete(`${environment.api}/profiles/${username}/banner-photo-remove`, {
       headers: this.utility.headers,
     });
   }
 
   addNewFriend(username: string | null): Observable<any> {
     return this.http.get(
-      `${api}/profiles/${username}/add-friend`,
+      `${environment.api}/profiles/${username}/add-friend`,
       this.headers
     );
   }
 
   removeFriendRequestByUsername(username: string | null): Observable<any> {
     return this.http.delete(
-      `${api}/profiles/${username}/remove-friend-request`,
+      `${environment.api}/profiles/${username}/remove-friend-request`,
       this.headers
     );
   }
 
   removeFriend(username: string | null): Observable<any> {
     return this.http.delete(
-      `${api}/profiles/${username}/remove-friend`,
+      `${environment.api}/profiles/${username}/remove-friend`,
       this.headers
     );
   }
 
   acceptFriendRequestById(notificationId: string): Observable<any> {
     return this.http.post(
-      `${api}/profiles/friend-requests/accept`,
+      `${environment.api}/profiles/friend-requests/accept`,
       {
         notificationId,
       },
@@ -121,7 +121,7 @@ export class ProfileRequestsService {
 
   removeFriendRequestById(notificationId: string): Observable<any> {
     return this.http.post(
-      `${api}/profiles/friend-requests/reject`,
+      `${environment.api}/profiles/friend-requests/reject`,
       {
         notificationId,
       },
@@ -130,36 +130,36 @@ export class ProfileRequestsService {
   }
 
   getProfileSettings(): Observable<any> {
-    return this.http.get(`${api}/profiles/profile-settings`, this.headers);
+    return this.http.get(`${environment.api}/profiles/profile-settings`, this.headers);
   }
 
   getProfileImage(): Observable<any> {
-    return this.http.get(`${api}/profiles/profile-image`, this.headers);
+    return this.http.get(`${environment.api}/profiles/profile-image`, this.headers);
   }
 
   getSuggestedProfiles(): Observable<any> {
-    return this.http.get(`${api}/profiles/suggested-people`, this.headers);
+    return this.http.get(`${environment.api}/profiles/suggested-people`, this.headers);
   }
 
   getUserFriends(username: any): Observable<any> {
-    return this.http.get(`${api}/profiles/${username}/friends`, this.headers);
+    return this.http.get(`${environment.api}/profiles/${username}/friends`, this.headers);
   }
 
   editProfileSettings(formData: any): Observable<any> {
     return this.http.patch(
-      `${api}/profiles/profile-settings`,
+      `${environment.api}/profiles/profile-settings`,
       formData,
       this.headers
     );
   }
 
   changePassword(newData: any): Observable<any> {
-    return this.http.patch(`${api}/profiles/change-password`, newData, {
+    return this.http.patch(`${environment.api}/profiles/change-password`, newData, {
       headers: this.utility.headers,
     });
   }
 
   sendDeletionEmail(): Observable<any> {
-    return this.http.get(`${api}/profiles/send-deletion-email`, this.headers);
+    return this.http.get(`${environment.api}/profiles/send-deletion-email`, this.headers);
   }
 }

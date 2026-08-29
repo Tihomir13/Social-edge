@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
-import { api } from '../../../shared/constants/api';
+import { environment } from '../../../../environments/environment';
 
 @Injectable()
 export class RegisterRequestsService {
@@ -15,6 +15,6 @@ export class RegisterRequestsService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
-    return this.http.post(`${api}/register`, userData, { headers });
+    return this.http.post(`${environment.api}/register`, userData, { headers });
   }
 }

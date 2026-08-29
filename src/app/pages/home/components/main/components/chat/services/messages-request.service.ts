@@ -4,7 +4,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { UtilitySessionService } from '../../../../../../../shared/services/utility/utility.service';
-import { api } from '../../../../../../../shared/constants/api';
+import { environment } from '../../../../../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +24,7 @@ export class MessagesRequestService {
       limit
     };
     
-    return this.http.post(`${api}/messages/get`, body, {
+    return this.http.post(`${environment.api}/messages/get`, body, {
       headers: this.utility.headers,
     });
   }

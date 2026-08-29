@@ -4,7 +4,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { UtilitySessionService } from '../../../../../../../shared/services/utility/utility.service';
-import { api } from '../../../../../../../shared/constants/api';
+import { environment } from '../../../../../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +14,7 @@ export class NotificationsService {
   utility = inject(UtilitySessionService);
 
   getNotifications(): Observable<any> {
-    return this.http.get(`${api}/notifications`, { headers: this.utility.headers });
+    return this.http.get(`${environment.api}/notifications`, { headers: this.utility.headers });
   }
 
    // Създаваме signal със стартова стойност 0

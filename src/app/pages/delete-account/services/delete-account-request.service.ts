@@ -4,7 +4,7 @@ import { UtilitySessionService } from '../../../shared/services/utility/utility.
 
 import { Observable } from 'rxjs';
 
-import { api } from '../../../shared/constants/api';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +14,6 @@ export class DeleteAccountRequestService {
   utility = inject(UtilitySessionService);
 
   verifyLink(token: string): Observable<any> {
-    return this.http.get(`${api}/delete-account?token=${token}`);
+    return this.http.get(`${environment.api}/delete-account?token=${token}`);
   }
 }

@@ -4,7 +4,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { UtilitySessionService } from '../../../../shared/services/utility/utility.service';
-import { api } from '../../../../shared/constants/api';
+import { environment } from '../../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +18,6 @@ export class JwtSenderService {
   };
 
   getNewJwt(): Observable<any> {
-    return this.http.get(`${api}/jwt-send`, this.headers);
+    return this.http.get(`${environment.api}/jwt-send`, this.headers);
   }
 }

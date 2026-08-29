@@ -4,7 +4,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { UtilitySessionService } from '../../../shared/services/utility/utility.service';
-import { api } from '../../../shared/constants/api';
+import { environment } from '../../../../environments/environment';
 
 @Injectable()
 export class ForgottenPasswordRequestsService {
@@ -12,6 +12,6 @@ export class ForgottenPasswordRequestsService {
   utility = inject(UtilitySessionService);
 
   searchForAccount(credentials: string): Observable<any> {
-    return this.http.post(`${api}/forgot-password`, { credentials });
+    return this.http.post(`${environment.api}/forgot-password`, { credentials });
   }
 }

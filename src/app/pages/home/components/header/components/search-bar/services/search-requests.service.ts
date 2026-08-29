@@ -4,7 +4,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { UtilitySessionService } from '../../../../../../../shared/services/utility/utility.service';
-import { api } from '../../../../../../../shared/constants/api';
+import { environment } from '../../../../../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +14,6 @@ export class SearchRequestsService {
   utility = inject(UtilitySessionService);
 
   getSearchedProfiles(searchedText: string): Observable<any> {
-    return this.http.get(`${api}/search/${searchedText}`, { headers: this.utility.headers });
+    return this.http.get(`${environment.api}/search/${searchedText}`, { headers: this.utility.headers });
   }
 }

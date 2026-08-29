@@ -4,7 +4,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { UtilitySessionService } from '../../../../../../../shared/services/utility/utility.service';
-import { api } from '../../../../../../../shared/constants/api';
+import { environment } from '../../../../../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +18,6 @@ export class FriendListRequestsService {
   };
 
   getAllFriends(username: string): Observable<any> {
-    return this.http.get(`${api}/profiles/${username}/friends-chat`, this.headers);
+    return this.http.get(`${environment.api}/profiles/${username}/friends-chat`, this.headers);
   }
 }

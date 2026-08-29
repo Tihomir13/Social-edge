@@ -1,5 +1,5 @@
 import { Component, HostListener, input, output, signal } from '@angular/core';
-import { feApi } from '../../constants/api';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-share-modal',
@@ -27,7 +27,7 @@ export class ShareModalComponent {
   ngOnInit() {
     console.log(this.postId());
 
-    this.link = `${feApi}/posts/${this.postId()}`;
+    this.link = `${environment.feApi}/posts/${this.postId()}`;
   }
 
   onChosenOption(optionName: string) {

@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
-import { api } from '../../../../../../../../../shared/constants/api';
+import { environment } from '../../../../../../../../../../environments/environment';
 import { UtilitySessionService } from '../../../../../../../../../shared/services/utility/utility.service';
 
 @Injectable()
@@ -34,7 +34,7 @@ export class NewPostRequestsService {
       console.log(key, value);
     });
 
-    return this.http.post(`${api}/posts/create`, formData, {
+    return this.http.post(`${environment.api}/posts/create`, formData, {
       headers: this.utility.headers,
     });
   }
