@@ -84,6 +84,10 @@ export class PostModalComponent {
     return this.editPostFormGroup?.get('tags') as FormArray;
   }
 
+  get isLoggedIn(): boolean {
+    return !!this.utilityService.userInfo;
+  }
+
   errorMsgTag: string = '';
 
   commentsPageNum: number = 1;
