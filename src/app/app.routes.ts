@@ -21,6 +21,7 @@ import { BlankComponent } from './pages/blank/blank.component';
 import { ProfileSettingsComponent } from './pages/home/components/main/components/pages/profile-settings/profile-settings.component';
 import { SecurityComponent } from './pages/home/components/main/components/pages/profile-settings/components/security/security.component';
 import { DeleteAccountComponent } from './pages/delete-account/delete-account.component';
+import { postLinkGuard } from './shared/guards/post-link.guard';
 
 export const routes: Routes = [
   {
@@ -49,6 +50,11 @@ export const routes: Routes = [
     component: ResetPasswordComponent,
   },
   {
+    path: 'posts/:id',
+    component: BlankComponent,
+    canActivate: [postLinkGuard],
+  },
+  {
     path: '',
     component: HomeComponent,
     canActivate: [AuthGuard],
@@ -59,7 +65,7 @@ export const routes: Routes = [
         // children: [{ path: ':postId', component: UserPostsComponent }],
       },
       {
-        path: 'posts/:id',
+        path: 'p/:id',
         component: BlankComponent,
         // children: [{ path: ':id', component: PostModalComponent }],
       },
